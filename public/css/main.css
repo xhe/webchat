@@ -27,8 +27,8 @@ float: none;
 }
 
 .divProfileImageItem{
-	width: 165px;
-	height: 165px;
+	width: 65px;
+	height: 65px;
 	cursor: pointer;
 	float:left;
 	text-align: center;
@@ -36,8 +36,8 @@ float: none;
 }
 
 .divProfileImageItem table{
-	width: 160px;
-	height: 100%;
+	width: 60px;
+	height: 60%;
 }
 
 .divProfileImageItem table td{

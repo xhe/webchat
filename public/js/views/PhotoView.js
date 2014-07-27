@@ -76,6 +76,11 @@ define(function(require){
 			"click .tabProfileImageItem": "clickProfileImageItem",
 			"click #btnDeleteSelectedImages": "deleteSelectedImages",
 			"click #btnChangeHeaderImage": "changeHeaderImage",
+			"dblclick .tabProfileImageItem": "dblClickProfileImageItem",
+		},
+		
+		dblClickProfileImageItem: function(){
+			alert ("double clicked");
 		},
 		
 		deleteSelectedImages: function(){
@@ -103,6 +108,7 @@ define(function(require){
 			}
 			
 			var showChangeHead = true;
+			var showBigHead = false;
 			if(photoIds.length>0){
 				if(photoIds.length==1){
 					for(var i=0; i<this.model.models.length;i++){
@@ -110,6 +116,7 @@ define(function(require){
 							showChangeHead=false;
 						}
 					}
+					showBigHead = true;
 				}else{
 					showChangeHead=false;
 				}
@@ -122,6 +129,14 @@ define(function(require){
 			}else{
 				$("#btnChangeHeaderImage").hide();
 			}
+			
+			if(showBigHead){
+				$("#btnViewHeaderImage").show();
+			}else{
+				$("#btnViewHeaderImage").hide();
+			}
+			
+			
 			_self.selectedPhotoIds = photoIds;
 		},
 	
