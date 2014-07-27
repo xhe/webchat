@@ -1,0 +1,9 @@
+http://docs.mongodb.org/manual/tutorial/getting-started/
+show dbs
+use mydb
+help
+show collections
+db.testData.find().pretty()
+
+list all indexes:
+db.people.getIndexes()

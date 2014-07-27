@@ -1,0 +1,52 @@
+.center{
+	text-align: center;
+}
+
+#tbl_transactions{
+	width:100%;
+}
+
+#tbl_transactions th td{
+	width:33%;
+	text-align: center;
+}
+
+.error {
+color: red;
+font-size: 16px;
+font-weight: normal;
+line-height: 1.4;
+margin-top: 0.5em;
+width: 100%;
+float: none;
+}
+
+#divSuggestedName{
+	color: green;
+	font-size: 16px;
+}
+
+.divProfileImageItem{
+	width: 165px;
+	height: 165px;
+	cursor: pointer;
+	float:left;
+	text-align: center;
+
+}
+
+.divProfileImageItem table{
+	width: 160px;
+	height: 100%;
+}
+
+.divProfileImageItem table td{
+	vertical-align: middle;
+	text-align: center;
+}
+
+.profileImageItemSelected{
+	border-width: 1px;
+	border-color: #008000;
+	border-style: solid;
+}
