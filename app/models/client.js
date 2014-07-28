@@ -24,7 +24,11 @@ PhotoRenderSchema.post('remove', function (doc) {
 var PhotoSchema = new Schema({
 	filename: String,
 	use_as_head: Boolean,
-	renders: [ PhotoRenderSchema ]
+	title: String,
+	description: String,
+	renders: [ PhotoRenderSchema ],
+	
+	
 });
 
 PhotoSchema.post('remove', function (doc) {
@@ -236,9 +240,22 @@ UserSchema.methods.updateDefaultHead = function(photoId, callback){
 			}
 		});
 	};
-
 	updateOnePhoto();
 };
+
+UserSchema.methods.updatePhotoDescription = function(photoId, title, description, callback){
+	var photo = this.photos.id(photoId);
+	photo.title = title;
+	photo.description = description;
+	this.save(function(err){
+		if(err){
+			console.log(err);
+		}else{
+			callback();
+		}
+	});
+};
+
 
 
 

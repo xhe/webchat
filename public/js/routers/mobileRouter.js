@@ -4,7 +4,8 @@ define(function(require){
 		HomeView = require('views/HomeView'),
 		LoginView		= require('views/LoginView'),
 		RegisterView		= require('views/RegisterView'),	
-		PhotoView = require('views/PhotoView'),	
+		PhotosView = require('views/PhotosView'),	
+		PhotoView = require('views/PhotoView'),
 		util = require('common/utils')
 		;
     // Extends Backbone.Router
@@ -12,10 +13,6 @@ define(function(require){
 
         // The Router constructor
         initialize: function() {
-        	 $('.back').on('click', function(event) {
-                 window.history.back();
-                 return false;
-             }); 
         	 Backbone.history.start();
         },
 
@@ -25,7 +22,8 @@ define(function(require){
             "": "home",
             "logout":"logout",
             "register":"register",
-            "photos":"photos"
+            "photos":"photos",
+            "photo/:id":"photo"
         },
         
         login: function(){
@@ -54,8 +52,8 @@ define(function(require){
         	if (this.login())
         		return;
         	
-        	photoView = new PhotoView();
-        	this.changePage(photoView);
+        	photosView = new PhotosView();
+        	this.changePage(photosView);
         },
         // Home method
         home: function() {
@@ -66,6 +64,14 @@ define(function(require){
         	this.changePage(homeView);
         },
         
+        photo: function(id){
+        	if (this.login())
+        		return;
+        	
+        	photoView = new PhotoView();
+        	photoView.setPhotoId(id);
+        	this.changePage(photoView);
+        },
         
         changePage: function (page) {
           $(page.el).attr('data-role', 'page');

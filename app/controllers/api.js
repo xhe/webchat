@@ -38,6 +38,14 @@ exports.update_default = function(req, res){
 	});
 };
 
+exports.update_photo = function(req, res){
+	console.log( req.body )
+	req.user.updatePhotoDescription(req.body.photoId, req.body.title, req.body.description, function(){
+		res.jsonp({status:"success"});
+	});
+};
+
+
 exports.delete_photos = function(req, res){
 	req.user.removePhoto(req.body.photoIds, function(){
 		res.jsonp({status:"success"});

@@ -3,12 +3,27 @@ define(function (require) {
 	var config = require('common/app-config');
 	
 	Photo = Backbone.Model.extend({
-		urlRoot: config.serverUrl + 'myphotos/'
+		
+		urlRoot: config.serverUrl + 'myphotos',
+		updatePhotoContent: function(photoId, title, description){
+			var _this = this;
+			$.post( config.serverUrl+'update_photo', 
+					{
+						photoId: photoId,
+						title: title,
+						description: description
+					},
+					function(result){
+						alert("Photo detail has been updated.");
+					}
+			);
+		}
+		
 	});
 	
 	PhotoCollection = Backbone.Collection.extend({
 		model: Photo,
-		url: config.serverUrl + 'myphotos/',
+		url: config.serverUrl + 'myphotos',
 		
 		updateDefault: function(photoId){
 			var _this = this;
@@ -39,12 +54,26 @@ define(function (require) {
 			});
 		},
 		
-		
 	});
+	
+	currentCollection= null ;
+	
+	findPhotoModel  = function(id, collection){
+		if(!collection)
+			return null;
+		for(var i=0; i<collection.length;i++){
+			if(collection[i].get("_id") == id ){
+				return collection[i];
+			}
+		}
+		return null;
+	};
 	
 	return {
 				Photo: Photo,
-				PhotoCollection: PhotoCollection
+				PhotoCollection: PhotoCollection,
+				currentCollection: currentCollection,
+				findPhotoModel: findPhotoModel
 		   }
 
 });
