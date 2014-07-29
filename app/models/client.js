@@ -17,18 +17,12 @@ var PhotoRenderSchema = new Schema({
 	dimension: Number
 });
 
-PhotoRenderSchema.post('remove', function (doc) {
-	console.log('%s has been removed - render ', doc._id);
-});
-
 var PhotoSchema = new Schema({
 	filename: String,
 	use_as_head: Boolean,
 	title: String,
 	description: String,
 	renders: [ PhotoRenderSchema ],
-	
-	
 });
 
 PhotoSchema.post('remove', function (doc) {
@@ -42,7 +36,24 @@ PhotoSchema.post('remove', function (doc) {
 	
 });
 
-
+var ChatRoom = new Schema({
+	
+	name: String,
+	creator: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Client'
+			},
+		
+	created: {
+		type: Date,
+		default: Date.now
+	},
+	
+	members:[{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Client'
+				}]
+});
 
 var UserSchema = new Schema({
 	 
