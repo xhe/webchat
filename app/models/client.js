@@ -12,6 +12,9 @@ var mongoose = require('mongoose'),
 	 _ = require('lodash')
 	;
 
+var ChatRoom = mongoose.model('ChatRoom');
+
+
 var PhotoRenderSchema = new Schema({
 	filename: String,
 	dimension: Number
@@ -36,24 +39,6 @@ PhotoSchema.post('remove', function (doc) {
 	
 });
 
-var ChatRoom = new Schema({
-	
-	name: String,
-	creator: {
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Client'
-			},
-		
-	created: {
-		type: Date,
-		default: Date.now
-	},
-	
-	members:[{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Client'
-				}]
-});
 
 var UserSchema = new Schema({
 	 
@@ -267,7 +252,17 @@ UserSchema.methods.updatePhotoDescription = function(photoId, title, description
 	});
 };
 
+UserSchema.methods.getMyOwnChatrooms = function(cb){
+	ChatRoom.find({ creator: this }).sort('-created').exec(function(err, chatrooms){
+		cb(chatrooms);
+	});
+};
 
+UserSchema.methods.getMyParticipatedChatrooms = function(cb){
+	ChatRoom.find({ members: this, creator: { '$ne': this } }).sort('-created').exec(function(err, chatrooms){
+		cb(chatrooms);
+	});
+};
 
 
 mongoose.model('Client', UserSchema);

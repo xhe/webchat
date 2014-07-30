@@ -6,6 +6,8 @@ define(function(require){
 		RegisterView		= require('views/RegisterView'),	
 		PhotosView = require('views/PhotosView'),	
 		PhotoView = require('views/PhotoView'),
+		ChatRoomView = require('views/ChatRoomView'),
+		NewChatRoomView = require('views/NewChatroomView'),
 		util = require('common/utils')
 		;
     // Extends Backbone.Router
@@ -23,7 +25,9 @@ define(function(require){
             "logout":"logout",
             "register":"register",
             "photos":"photos",
-            "photo/:id":"photo"
+            "photo/:id":"photo",
+            "chatrooms" :"chatrooms",
+            "newchatroom":"newchatroom"
         },
         
         login: function(){
@@ -71,6 +75,21 @@ define(function(require){
         	photoView = new PhotoView();
         	photoView.setPhotoId(id);
         	this.changePage(photoView);
+        },
+        
+        chatrooms: function(){
+        	if (this.login())
+        		return;
+        	
+        	chatRoomView = new ChatRoomView();
+        	this.changePage(chatRoomView);
+        },
+        
+        newchatroom: function(){
+        	if (this.login())
+        		return;
+        	newChatRoomView = new NewChatRoomView();
+        	this.changePage(newChatRoomView);
         },
         
         changePage: function (page) {

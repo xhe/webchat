@@ -19,7 +19,13 @@ define(function(require){
         },
         events:{
         	"submit #file-form": "upload",
-        	"click .hrefShowType": "changeShowType"
+        	"click .hrefShowType": "changeShowType",
+        	"click .back": "back"
+        },
+        
+        back: function(){
+        	window.history.back();
+            return false;
         },
         
         changeShowType: function(event){

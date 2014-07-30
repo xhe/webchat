@@ -1,0 +1,33 @@
+<section id="splashPage">
+		
+		<div data-role="header">
+			<a class="back" data-theme="a">Back</a>
+			<h1>New Chat Rooms</h1>
+			<a href='#logout' >Logout</a>
+		</div>
+		
+		<div data-role="content">
+			
+			<h4>Please enter chat room info:<h4>
+					
+				<div data-role="fieldcontain" class="ui-hide-label">
+					<label for="txtChatRoomTitle">Chat Room Name:</label>
+					<input type="text" id="txtChatRoomTitle" 
+							value="" placeholder="Chat Room Name" />
+				</div>
+				
+				<div data-role="fieldcontain" class="ui-hide-label">
+					<label id='txtChatRoomDesc'></label>
+					<textarea  id='txtChatRoomDesc' ></textarea>
+				</div>
+			
+			<input type='button' id="btnSubmitNewChatRoom" value='Submit'/>
+			
+		</div>
+		
+		<footer data-role="footer" data-position="fixed">
+			<div class="center">
+				 Let's Chat
+			</div>		
+		</footer>
+</section>

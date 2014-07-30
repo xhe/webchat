@@ -1,16 +1,16 @@
 <section id="splashPage">
 		
 		<div data-role="header">
-			<a >Welcome, <%= user.screenName%></a>
-			<h1>What are we doing?</h1>
+			<a class="back" data-theme="a">Back</a>
+			<h1>Chat Rooms</h1>
 			<a href='#logout' >Logout</a>
 		</div>
 		
 		<div data-role="content">
-				
-			<a href="#photos" data-role="button">My Photos</a>
-			<a href="#chatrooms" data-role="button">My Chatrooms</a>
 			
+			<input type='button' id="btnNewChatRoom" value='New Chat Room'/>
+
+			<div id='divChatRoomList'/>
 			
 		</div>
 		
