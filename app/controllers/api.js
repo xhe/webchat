@@ -52,12 +52,14 @@ exports.delete_photos = function(req, res){
 }
 
 exports.chatrooms = function(req, res){
-	
 	req.user.getMyOwnChatrooms(function(rooms){
 		ownRooms = rooms;
 		req.user.getMyParticipatedChatrooms(function(rooms){
 			res.jsonp({own_rooms: ownRooms, join_rooms: rooms});
 		})
 	});
+}
+
+exports.createChatrooms = function(req, res){
 	
 }

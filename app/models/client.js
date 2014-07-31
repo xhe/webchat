@@ -264,6 +264,19 @@ UserSchema.methods.getMyParticipatedChatrooms = function(cb){
 	});
 };
 
+UserSchema.methods.createChatRoom = function(title, description, cb){
+	ChatRoom.find({creator: this, name:title}).exec(function(err, chatrooms){
+		if(chatrooms){
+			cb({status:"failed", message:"name is used already, please select another name."});
+		}else{
+			var room = new ChatRoom({
+				name: title,
+				creator: this,
+				description: description,
+			});
+		}
+	});
+};
 
 mongoose.model('Client', UserSchema);
 mongoose.model('PhotoSchema', PhotoSchema);

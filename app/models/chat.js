@@ -10,7 +10,8 @@ var ChatRoomSchema = new Schema({
 				type: mongoose.Schema.Types.ObjectId,
 				ref: 'Client'
 			},
-		
+	description: String,
+	
 	created: {
 		type: Date,
 		default: Date.now

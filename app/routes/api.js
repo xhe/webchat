@@ -13,8 +13,8 @@ module.exports = function(app){
 	app.route('/api/update_photo').post(user_service.requiresLogin,  api.update_photo);
 	app.route('/api/myphotos').delete(user_service.requiresLogin,  api.delete_photos);
 	
-	app.route('/api/chatrooms').get(user_service.requiresLogin,  api.chatrooms );
-	
+	app.route('/api/chatrooms').get(user_service.requiresLogin,  api.chatrooms);
+	app.route('/api/chatrooms').post(user_service.requiresLogin,  api.createChatrooms);
 	app.route('/api/upload_profile_file').post(user_service.requiresLogin,  api.upload_profile_file);
 	
 	
