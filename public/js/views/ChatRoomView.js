@@ -45,7 +45,7 @@ define(function(require){
 		},
 		
 		render: function(){
-    		$(this.el).html(_.template( chatroom_list_tpl, { own_rooms: this.model.own_rooms, join_rooms: this.model.join_rooms }));
+    		$(this.el).html(_.template( chatroom_list_tpl, { own_rooms: this.model.result.own_rooms, join_rooms: this.model.result.join_rooms }));
     		
 		}
     });

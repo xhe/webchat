@@ -1,3 +1,19 @@
 <h2>
-	Chatroom List
+Your created room
 </h2>
+<% _.each(own_rooms, function(room){%>
+	
+	<%= room.name%>
+	<%= room.description%>
+	<hr/>
+<%})%>
+
+<h2>
+Your joined room
+</h2>
+<% _.each(join_rooms, function(room){%>
+	
+	<%= room.name%>
+	<%= room.description%>
+	<hr/>
+<%})%>

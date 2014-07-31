@@ -17,7 +17,8 @@ define(function (require) {
 			util.ajax_get(config.serverUrl+'chatrooms', this.callback);
 		},
 		
-		callback: function(){
+		callback: function(data){
+			_self.result = data;
 			_self.reset();
 		}
 		

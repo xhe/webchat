@@ -265,14 +265,23 @@ UserSchema.methods.getMyParticipatedChatrooms = function(cb){
 };
 
 UserSchema.methods.createChatRoom = function(title, description, cb){
+	var _this = this;
 	ChatRoom.find({creator: this, name:title}).exec(function(err, chatrooms){
-		if(chatrooms){
+		
+		if(chatrooms.length>0){
 			cb({status:"failed", message:"name is used already, please select another name."});
 		}else{
 			var room = new ChatRoom({
 				name: title,
-				creator: this,
+				creator: _this,
 				description: description,
+			});
+			room.save(function(err){
+				if(err){
+					cb({status:"failed", error: err});
+				}else{
+					cb({status:"success", content: room });
+				}
 			});
 		}
 	});

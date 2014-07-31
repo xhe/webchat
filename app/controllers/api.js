@@ -61,5 +61,7 @@ exports.chatrooms = function(req, res){
 }
 
 exports.createChatrooms = function(req, res){
-	
+	req.user.createChatRoom(req.body.title, req.body.description, function(data){
+		res.jsonp(data);
+	});
 }
