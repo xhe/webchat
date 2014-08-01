@@ -14,19 +14,17 @@ define(function (require) {
 		
 		getChatrooms: function(){
 			_self = this;
-			util.ajax_get(config.serverUrl+'chatrooms', this.callback);
+			util.ajax_get(config.serverUrl+'chatrooms', this.callback, true);
 		},
 		
 		callback: function(data){
 			_self.result = data;
 			_self.reset();
 		}
-		
-		
 	});
 	
 	return {
 			Chatroom: Chatroom,
-			ChatroomCollection: ChatroomCollection
+			ChatroomCollection: ChatroomCollection,
 		   }
 });

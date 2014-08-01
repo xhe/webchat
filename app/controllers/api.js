@@ -65,3 +65,9 @@ exports.createChatrooms = function(req, res){
 		res.jsonp(data);
 	});
 }
+
+exports.deleteChatrooms = function(req, res){
+	req.user.deleteChatRoom(req.params.roomId, function(data){
+		res.jsonp(data);
+	});
+}

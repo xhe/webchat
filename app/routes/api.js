@@ -15,6 +15,8 @@ module.exports = function(app){
 	
 	app.route('/api/chatrooms').get(user_service.requiresLogin,  api.chatrooms);
 	app.route('/api/chatrooms').post(user_service.requiresLogin,  api.createChatrooms);
+	app.route('/api/chatrooms/:roomId').delete(user_service.requiresLogin,  api.deleteChatrooms);
+	
 	app.route('/api/upload_profile_file').post(user_service.requiresLogin,  api.upload_profile_file);
 	
 	

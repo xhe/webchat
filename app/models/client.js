@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
 	config = require('../../config/config'),
 	 _ = require('lodash')
 	;
-
+var ObjectId = require('mongoose').Types.ObjectId; 
 var ChatRoom = mongoose.model('ChatRoom');
 
 
@@ -286,6 +286,28 @@ UserSchema.methods.createChatRoom = function(title, description, cb){
 		}
 	});
 };
+
+UserSchema.methods.deleteChatRoom = function(roomId, cb){
+	var _this=this;
+	
+	ChatRoom.findById( new ObjectId(roomId), function(err,room){
+		if(err){
+			cb({status: 'failed', error: err})
+		}else{
+			if(room.creator.toString()!=_this._id.toString()){
+				cb({status: 'failed', error: "You can only delete your own room."});
+			}else{
+				room.remove(function(err){
+					if(err){
+						cb({status: 'failed', error: err})
+					}else{
+						cb({status:"success"});
+					}
+				})
+			}
+		}
+	});
+}; 
 
 mongoose.model('Client', UserSchema);
 mongoose.model('PhotoSchema', PhotoSchema);

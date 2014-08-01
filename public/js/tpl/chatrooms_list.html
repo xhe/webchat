@@ -1,19 +1,41 @@
-<h2>
-Your created room
-</h2>
-<% _.each(own_rooms, function(room){%>
-	
-	<%= room.name%>
-	<%= room.description%>
-	<hr/>
-<%})%>
 
-<h2>
-Your joined room
-</h2>
-<% _.each(join_rooms, function(room){%>
+
+<% if (own_rooms.length>0){%>
 	
-	<%= room.name%>
-	<%= room.description%>
-	<hr/>
-<%})%>
+	<h4>Rooms created by you (<%= own_rooms.length%>) </h4>
+	
+	<ul data-role="listview" data-split-theme="a" data-split-icon="delete" class="listview" >
+	
+	<% _.each(own_rooms, function(room){%>
+		
+		<li> <a href="#chatroom/<%= room._id%>">
+				<%= room.name%>
+			 </a> 
+			<a class="hrefDeleteRoom" data-roomid="<%= room._id%>">Delete</a>	 
+		</li>
+	<%})%>
+	</ul>
+<%}else{%>
+	<h4>You have not created any rooms yet.</h4>	
+<%}%>
+
+<hr/>
+
+<% if (join_rooms.length>0){%>
+	
+	<h4>Rooms you have joined <%= join_rooms.length%></h4>
+	<ul data-role="listview" data-split-theme="a" data-split-icon="delete" >
+	
+	<% _.each(join_rooms, function(room){%>
+		
+		<li> <a href="#chatroom/<%= room._id%>">
+				<%= room.name%>
+			 </a> 
+			<a href="#chatroom/"></a>	 
+		</li>
+	<%})%>
+	</ul>
+	
+<%}else{%>
+	<h4>You have not joined any room yet.</h4>
+<%}%>

@@ -18,7 +18,25 @@ define(function(require){
         },
         events:{
         	"click .back": "back",
-        	"click #btnNewChatRoom": "newChatRoom"
+        	"click #btnNewChatRoom": "newChatRoom",
+        	"click .hrefDeleteRoom": "deleteChatRoom"
+        },
+        
+        deleteChatRoom: function(event){
+        	if(confirm("Are you sure you want to remove this chatroom?")){
+        		var room = new Chatroom.Chatroom({
+        			id: event.target.getAttribute("data-roomid")
+        		});
+        		self=this;
+        		room.destroy(
+        				{
+        					type: 'DELETE',
+        					success: function(model, response) {
+        						self.chatroomCollection.getChatrooms();
+        					}
+        				}
+        		);
+        	}
         },
         
         newChatRoom: function(){
@@ -46,6 +64,7 @@ define(function(require){
 		
 		render: function(){
     		$(this.el).html(_.template( chatroom_list_tpl, { own_rooms: this.model.result.own_rooms, join_rooms: this.model.result.join_rooms }));
+    		$( ".listview" ).listview().listview( "refresh" );
     		
 		}
     });
