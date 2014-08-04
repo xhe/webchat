@@ -1,0 +1,31 @@
+<% if (contacts.length==0){%>
+	<h3>No user has been found</h3>
+<%}else{%>
+	
+	<h3>Search Result ( <%= contacts.length%> )</h3>
+		
+		<ul data-role="listview" data-split-theme="a"  class="listview" >
+	
+		<% _.each(contacts, function(contact){%>
+			
+			<li> <a href="#request_friend/<%= contact._id%>" style="min-height: 0px;">
+					
+					<%_.each(contact.photos, function(photo){%>
+						<% if(photo.use_as_head){%>
+							<%_.each(photo.renders, function(render){%>
+								<% if(render.dimension==100){%>
+										<img src="/uploads/thumb/<%= render.filename%>">
+								<%}%>
+							<%})%>
+						<%}%>
+					<%})%>
+					
+					<h3><%= contact.firstName%> <%= contact.lastName%></h3>
+				 </a> 
+			</li>
+		<%})%>
+		</ul>
+		
+	
+	
+<%}%>

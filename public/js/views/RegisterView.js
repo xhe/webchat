@@ -5,7 +5,8 @@ define(function(require){
 		appConfig = require('common/app-config'),
 		CountryCollection = require('models/countryModel'),
 		util = require('common/utils'),
-		User = require('models/userModel')
+		User = require('models/userModel'),
+		FooterView = require('views/FooterView')
 		;
 		
 
@@ -89,6 +90,7 @@ define(function(require){
         
         render: function() {           
             $(this.el).html(this.template({ countries: this.countries }));
+            new FooterView({ el: $(".footerContent", this.el)}).render();
             new CountryListView({model: new CountryCollection.CountryCollection()});
             return this;
         }

@@ -4,7 +4,9 @@ define(function(require){
 		chatroom_tpl		= require('text!tpl/chatrooms.html'),
 		chatroom_list_tpl		= require('text!tpl/chatrooms_list.html'),
 		util = require('common/utils'),
-		Chatroom = require('models/chatroomModel')
+		Chatroom = require('models/chatroomModel'),
+		HeaderView = require('views/HeaderView'),
+		FooterView = require('views/FooterView')
 		;
 		
 
@@ -17,7 +19,6 @@ define(function(require){
         	 this.chatroomCollection = new Chatroom.ChatroomCollection();
         },
         events:{
-        	"click .back": "back",
         	"click #btnNewChatRoom": "newChatRoom",
         	"click .hrefDeleteRoom": "deleteChatRoom"
         },
@@ -42,13 +43,11 @@ define(function(require){
         newChatRoom: function(){
         	$.mobile.navigate("#newchatroom");
         },
-        
-        back: function(){
-        	window.history.back();
-            return false;
-        },
+       
         render: function() {           
           	$(this.el).html(this.template({ user: util.getLoggedInUser(), own_rooms: this.chatroomCollection.own_rooms, join_rooms:this.chatroomCollection.join_rooms  }));
+          	new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Chat Rooms").render();
+          	new FooterView({ el: $(".footerContent", this.el)}).render();
             
           	this.chatRoomListView = new ChatRoomListView({ el: $("#divChatRoomList", this.el), model: this.chatroomCollection });
             this.chatroomCollection.getChatrooms();

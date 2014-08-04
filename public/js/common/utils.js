@@ -21,6 +21,7 @@ define(function(require){
 		setLoggedInUser: function(user){
 			window.user = user;
 			window.user.loggedIn = true;
+			window.user.thumbFileName=user.thumbFileName;
 			delete user.photos
 			$.cookie('token', JSON.stringify(user));
 		},

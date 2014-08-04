@@ -71,3 +71,22 @@ exports.deleteChatrooms = function(req, res){
 		res.jsonp(data);
 	});
 }
+
+exports.search = function(req, res){
+	var type = req.params.type;
+	if(type=="contacts"){
+		var criterias = {
+				phoneNumber: req.body.phoneNumber.toString().replace( /^\D+/g, ''),
+				email: req.body.email
+		};
+		user_service.search_friends( criterias, req.user, function(data){
+			res.jsonp(data);
+		});
+	}else if(type=="contact"){
+		user_service.search_friend( req.body.userId, function(data){
+			res.jsonp(data);
+		});
+	}
+	
+}
+

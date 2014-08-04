@@ -5,7 +5,9 @@ define(function(require){
 		photos_list_tpl = require('text!tpl/photos_list.html'),
 		photos_detail_tpl = require('text!tpl/photos_detail.html'),
 		util = require('common/utils'),
-		Photo			= require('models/photoModel')
+		Photo			= require('models/photoModel'),
+		HeaderView = require('views/HeaderView'),
+		FooterView = require('views/FooterView')
 		;
 		
 
@@ -19,14 +21,9 @@ define(function(require){
         },
         events:{
         	"submit #file-form": "upload",
-        	"click .hrefShowType": "changeShowType",
-        	"click .back": "back"
+        	"click .hrefShowType": "changeShowType"
         },
-        
-        back: function(){
-        	window.history.back();
-            return false;
-        },
+       
         
         changeShowType: function(event){
         	if( event.target.getAttribute('data-type') == 'grid'){
@@ -75,6 +72,8 @@ define(function(require){
         
         render: function() {           
             $(this.el).html(this.template({ user: util.getLoggedInUser() }));
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("My Photos").render();
+            new FooterView({ el: $(".footerContent", this.el)}).render();
             this.photoListView = new PhotoListView({ el: $("#divPhotoList", this.el), model: this.photoCollection });
             this.photoCollection.fetch({reset: true});
             return this;

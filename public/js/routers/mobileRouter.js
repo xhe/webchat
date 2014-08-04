@@ -8,7 +8,9 @@ define(function(require){
 		PhotoView = require('views/PhotoView'),
 		ChatRoomView = require('views/ChatRoomView'),
 		NewChatRoomView = require('views/NewChatroomView'),
-		util = require('common/utils')
+		util = require('common/utils'),
+		FriendSearchView = require('views/FriendSearchView'),
+		FriendRequestView = require('views/FriendRequestView')
 		;
     // Extends Backbone.Router
 	return Backbone.Router.extend( {
@@ -27,7 +29,26 @@ define(function(require){
             "photos":"photos",
             "photo/:id":"photo",
             "chatrooms" :"chatrooms",
-            "newchatroom":"newchatroom"
+            "newchatroom":"newchatroom",
+            "add_friend":"add_friend",
+            "request_friend/:id":"reques_friend"
+        },
+        
+        reques_friend: function(id){
+        	if (this.login())
+        		return;
+        	
+        	friendRequestView = new FriendRequestView();
+        	friendRequestView.setContactId(id);
+        	this.changePage(friendRequestView);
+        },
+        
+        add_friend: function(){
+        	if (this.login())
+        		return;
+        	
+        	friendSearchView = new FriendSearchView();
+        	this.changePage(friendSearchView);
         },
         
         login: function(){

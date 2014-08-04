@@ -1,6 +1,7 @@
 define(function(require){
 	var appConfig = {		
-			serverUrl: "/api/"
+			serverUrl: "/api/",
+			thumb_dir: "/uploads/thumb/"
 	};
 	return appConfig;
 });

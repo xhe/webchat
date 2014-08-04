@@ -1,6 +1,9 @@
 var mongoose = require('mongoose'),
 	Client = mongoose.model('Client'),
-	crypto = require('crypto');
+	crypto = require('crypto'),
+	utils = require('./utils'),
+	ObjectId = require('mongoose').Types.ObjectId
+	;
 
 exports.createUser = function(req, res){
 	var client = new Client(req.body);
@@ -49,12 +52,11 @@ exports.autologin = function(req, res){
 		Client.findByUsername(screenName,function(client){
 			if(client){
 				if(client.token==token){
-					client.password = undefined;
-					client.password_salt = undefined;
-					client.token_date =undefined;
-					client.token_expire_date = undefined;
+					client = utils.simplifyUser(client, false);
 					req.session.screenName = client.screenName;
 					req.session.token = client.token;
+					client.thumbFileName = client.getThumb(config.profile_image_sizes[0]);
+					req.session.client = client;
 					res.jsonp({'status':'success', 'user':client });
 				}else{
 					res.jsonp({'status':'failed'});
@@ -68,7 +70,7 @@ exports.autologin = function(req, res){
 
 
 var updateToken = function(user, req, res){
-	user.updateToken(function(client){
+	user.updateToken(function(client){ 
 		if(client.code){
 			res.jsonp({'status':'failed', 'errors': client});
 		}else{
@@ -102,7 +104,32 @@ exports.requiresLogin = function(req, res, next) {
 		return res.send(401, {
 			message: 'User is not logged in'
 		});
-	}
-
-	
+	}	
 };
+
+exports.search_friends = function(criterias, excluded_user, cb){
+	Client.search( criterias, function(data){
+		var results = [];
+		if(excluded_user){
+			for(var i=0; i<data.length; i++){
+				if(data[i]._id.toString()!=excluded_user._id.toString()){
+					results.push(data[i]);
+				}
+			}
+		}else{
+			results = data;
+		}
+		cb(results);
+	});
+};
+
+exports.search_friend = function(id, cb){
+	
+	Client.findById( new ObjectId(id), function(err, client){
+		if(err){
+			cb({ status: 'failed',  error: err })
+		}else{
+			cb({ status: 'success', client: utils.simplifyUser(client, true) })
+		}
+	});
+}

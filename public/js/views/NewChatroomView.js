@@ -3,7 +3,9 @@ define(function(require){
 	var Backbone 		= require('backbone'),
 		new_chatroom_tpl		= require('text!tpl/new_chatroom_view.html'),
 		util = require('common/utils'),
-		Chatroom = require('models/chatroomModel')
+		Chatroom = require('models/chatroomModel'),
+		HeaderView = require('views/HeaderView'),
+		FooterView = require('views/FooterView')
 		;
 		
 
@@ -15,7 +17,6 @@ define(function(require){
         	 this.template = _.template( new_chatroom_tpl );
         },
         events:{
-        	"click .back": "back",
         	"click #btnSubmitNewChatRoom": "createNewRoom"
         },
         
@@ -43,13 +44,11 @@ define(function(require){
 	        			}
         			);
         },
-        
-        back: function(){
-        	window.history.back();
-            return false;
-        },
+       
         render: function() {           
             $(this.el).html(this.template({ user: util.getLoggedInUser() }));
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Create Room").render();
+            new FooterView({ el: $(".footerContent", this.el)}).render();
             return this;
         }
     } );

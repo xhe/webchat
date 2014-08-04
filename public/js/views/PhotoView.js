@@ -3,7 +3,10 @@ define(function(require){
 	var Backbone 		= require('backbone'),
 		photo_tpl		= require('text!tpl/photo.html'),
 		util = require('common/utils'),
-		Photo			= require('models/photoModel')
+		Photo			= require('models/photoModel'),
+		HeaderView = require('views/HeaderView'),
+		FooterView = require('views/FooterView')
+		
 		;
 		
 
@@ -16,13 +19,9 @@ define(function(require){
         },
         
         events: {
-        	"click .back": "back",
         	"click #btnPhotoEdit": "editPhotoContent"
         },
-        back: function(){
-        	window.history.back();
-            return false;
-        },
+        
         editPhotoContent: function(){
         	var photo = new Photo.Photo();
         	photo.updatePhotoContent( this.photo.get("_id"), $("#photoTitle").val(),  $("#photoDescription").val());
@@ -40,6 +39,9 @@ define(function(require){
         	}else{
         		$(this.el).html(this.template({ user: util.getLoggedInUser(), item: this.photo }));
            }
+        	new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Find Friends").render();
+            new FooterView({ el: $(".footerContent", this.el)}).render();
+           
            return this;
         }
     } );

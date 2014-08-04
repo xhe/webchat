@@ -3,7 +3,8 @@ define(function(require){
 	var Backbone 		= require('backbone'),
 		login_tpl		= require('text!tpl/login.html'),
 		appConfig = require('common/app-config'),
-		util = require('common/utils')
+		util = require('common/utils'),
+		FooterView = require('views/FooterView')
 		;
 		
 
@@ -39,6 +40,8 @@ define(function(require){
         
         render: function() {           
             $(this.el).html(this.template());
+            new FooterView({ el: $(".footerContent", this.el)}).render();
+            
             return this;
         }
     } );

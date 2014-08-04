@@ -9,7 +9,8 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	crypto = require('crypto'),
 	config = require('../../config/config'),
-	 _ = require('lodash')
+	 _ = require('lodash'),
+	 utils = require('../services/utils')
 	;
 var ObjectId = require('mongoose').Types.ObjectId; 
 var ChatRoom = mongoose.model('ChatRoom');
@@ -48,7 +49,7 @@ var UserSchema = new Schema({
 	},
 	
 	phoneNumber: {
-		type: Number,
+		type: String,
 		required: 'Phone number cannot be blank',
 		index: true
 	},
@@ -116,11 +117,26 @@ var UserSchema = new Schema({
 	
 	photos: [ PhotoSchema ],
 	
+	thumbFileName: {
+		type: String,
+		default: ''
+	},
+	
 	created: {
 		type: Date,
 		default: Date.now
 	},
 	
+});
+
+UserSchema.pre('save', function (next) {
+	this.phoneNumber = this.phoneNumber.toString().replace( /^\D+/g, '');
+	if(this.phoneNumber==""){
+		self.invalidate("phoneNumber", "Phone number must have digits");
+		next(new Error("Phone number must have digits."));
+	}else{
+		next();
+	}
 });
 
 UserSchema.methods.hashPassword = function(password){
@@ -146,6 +162,43 @@ UserSchema.statics.findByUsername = function(screenName, cb){
 	});
 };
 
+
+UserSchema.statics.search = function(criterias, cb){
+	var searchArray = [];
+	for (var key in criterias){
+		if( criterias[key].length>0 ){
+			var tmp = {};
+			tmp[key] = criterias[key];
+			searchArray.push(tmp);
+		}
+	}
+	this.find({ $or: searchArray }, function(err, users){
+		if(err){
+			console.log(err);
+		}else{
+			var results = [];
+			_.forEach(users, function(user){
+				results.push( utils.simplifyUser(user, true));
+			});
+			cb(results);
+		}
+	});
+};
+
+
+UserSchema.methods.getThumb = function(dimension){
+	for(var i=0; i<this.photos.length; i++){
+		if(this.photos[i].use_as_head){
+			for(var j=0;j<this.photos[i].renders.length;j++){
+				if(this.photos[i].renders[j].dimension == dimension){
+					return this.photos[i].renders[j].filename;
+				}
+			}
+		}
+	}
+	return "";
+},
+
 UserSchema.methods.updateToken = function(cb, valid_period){
 	this.token = crypto.createHash("md5").update(this.screenName+":"+ this.phoneNumber+ ":"+ this.email +":" + Date.now()).digest('hex');
 	var now = new Date().getTime();
@@ -155,6 +208,7 @@ UserSchema.methods.updateToken = function(cb, valid_period){
 	}else{
 		this.token_expire_date = new Date(now+valid_period*1000);
 	}
+	this.thumbFileName = this.getThumb(config.profile_image_sizes[0]);
 	var _this=this
 	this.save(function(err){
 		if(err){

@@ -23,5 +23,30 @@ var ChatRoomSchema = new Schema({
 				}]
 });
 
+var InvitationSchema = new Schema({
+	from: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Client'
+		   },
+	to: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Client'
+   },
+   message: {
+	   		type: String,
+   			default: '',
+   			trim: true,
+   },
+   room: {
+  		type: mongoose.Schema.Types.ObjectId,
+		ref: 'ChatRoom'
+   },
+   created: {
+		type: Date,
+		default: Date.now
+	},
+   
+});
 
 mongoose.model('ChatRoom', ChatRoomSchema);
+mongoose.model('Invitation', InvitationSchema);
