@@ -18,7 +18,7 @@ module.exports = function(app){
 	app.route('/api/chatrooms/:roomId').delete(user_service.requiresLogin,  api.deleteChatrooms);
 	
 	app.route('/api/search/:type').post(user_service.requiresLogin,  api.search);
-	
+	app.route('/api/invite/:id').post(user_service.requiresLogin,  api.invite);
 	
 	app.route('/api/upload_profile_file').post(user_service.requiresLogin,  api.upload_profile_file);
 	

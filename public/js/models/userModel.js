@@ -26,9 +26,11 @@ define(function (require) {
 					}
 			);
 		},
+		inviteeId: null,
 		
 		getRequestedUser: function(id){
 			var _this = this;
+			this.inviteeId = id;
 			$.post( config.serverUrl+'search/contact', 
 					{
 						userId: id
@@ -42,7 +44,16 @@ define(function (require) {
 			);
 		},
 		
-		
+		invite: function(msg, cb){
+			$.post( config.serverUrl+'invite/'+this.inviteeId, 
+					{
+						message: msg
+					},
+					function(result){
+						cb(result);
+					}
+			);
+		},
 	});
 	
 	searchedUsers = null;

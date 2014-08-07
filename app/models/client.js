@@ -14,7 +14,7 @@ var mongoose = require('mongoose'),
 	;
 var ObjectId = require('mongoose').Types.ObjectId; 
 var ChatRoom = mongoose.model('ChatRoom');
-
+var Invitation = mongoose.model('Invitation');
 
 var PhotoRenderSchema = new Schema({
 	filename: String,

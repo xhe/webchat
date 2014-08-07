@@ -37,6 +37,10 @@ var InvitationSchema = new Schema({
    			default: '',
    			trim: true,
    },
+   status:{
+	   		type: Number,
+	   		default: 0,
+   },
    room: {
   		type: mongoose.Schema.Types.ObjectId,
 		ref: 'ChatRoom'
@@ -45,7 +49,10 @@ var InvitationSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-   
+    updated: {
+    	type: Date,
+		default: Date.now
+    }
 });
 
 mongoose.model('ChatRoom', ChatRoomSchema);

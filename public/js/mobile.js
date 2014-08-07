@@ -10,7 +10,8 @@ require.config( {
             "underscore": "libs/underscore",
             "backbone": "libs/backbone",
             "text":    "libs/text",
-            "jquery.cookie": "libs/jquery.cookie"
+            "jquery.cookie": "libs/jquery.cookie",
+            "socket.io": '/socket.io/socket.io'
       },
       // Sets the configuration for your third party scripts that are not AMD compatible
       shim: {
@@ -27,10 +28,12 @@ require.config( {
 } );
 
 // Includes File Dependencies
-require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "common/utils", "jquery.cookie" ],
-		function( $, Backbone, Mobile, appConfig, utils ) {
+require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "common/utils", "socket.io", "jquery.cookie" ],
+		function( $, Backbone, Mobile, appConfig, utils, io ) {
 	
 	Backbone.emulateHTTP = true;
+	
+	var io = new io();
 	
 	$( document ).on( "mobileinit",
 		// Set up the "mobileinit" handler before requiring jQuery Mobile's module
@@ -56,6 +59,8 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 			router = new Mobile();
 		});
 	
+		
+		
 	});
 	
 } );

@@ -18,9 +18,7 @@ define(function(require){
         initialize: function() {
         	 this.template = _.template( request_friend_tpl );
         	 this.userCollection = new User.UserCollection();
-        	 
         },
-      
         
         setContactId: function(id){
         	this.userCollection.getRequestedUser(id);
@@ -41,13 +39,20 @@ define(function(require){
     	 initialize: function() {
     		 this.model.bind("reset", this.render, this);
     	 },
-    	 
     	  
          events:{
          	"click #btnSendFriendRequest": "sendFriendRequest"
          },
     	 
          sendFriendRequest: function(){
+        	 this.model.invite( $("#friendRequestMsg").val(), function(result){
+        		if(result.status=="success"){
+        			alert("User invitation has been sent.");
+        			$.mobile.navigate("#");
+        		}else{
+        			alert("Following error happened: \n" +result.error );
+        		}
+        	 });
          },
          
     	 render: function(){
