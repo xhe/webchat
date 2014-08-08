@@ -13,6 +13,10 @@ define(function(require){
         // The View Constructor
         initialize: function() {
         	 this.template = _.template( room_chatting_view_tpl );
+        	 window.socket.on('chat message', 
+        			 function(msg){
+        		    $('#messages').append($('<li>').text(msg));
+        	 });
         },
         
         setRoomId: function(id){

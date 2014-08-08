@@ -13,9 +13,11 @@ var server = app.listen(config.port);
 var io = require('socket.io')(server);
 
 io.on("connection", function(socket){
-	console.log('connected');
-	 socket.on('chat message', function(msg){
+	socket.broadcast.emit('hi');
+	
+	socket.on('chat message', function(msg){
 		    console.log('message: ' + msg);
+		    io.sockets.emit('chat message', msg);
 	 });
 	
 	socket.on('disconnect', function(){
