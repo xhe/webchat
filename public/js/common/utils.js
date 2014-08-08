@@ -4,6 +4,10 @@ define(function(require){
 	var User = require('models/userModel');
 	
 	var util = {		
+			
+		setSocket : function(socket){
+			window.socket = socket;
+		},
 		
 		isUserLoggedIn: function(){
 				

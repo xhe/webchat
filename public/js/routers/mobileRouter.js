@@ -11,7 +11,8 @@ define(function(require){
 		util = require('common/utils'),
 		FriendSearchView = require('views/FriendSearchView'),
 		FriendRequestView = require('views/FriendRequestView'),
-		RoomChattingView = require('views/RoomChattingView')
+		RoomChattingView = require('views/RoomChattingView'),
+		io = require("socket.io")
 		;
     // Extends Backbone.Router
 	return Backbone.Router.extend( {
@@ -20,7 +21,9 @@ define(function(require){
         initialize: function() {
         	 Backbone.history.start();
         },
-
+        
+       
+        
         // Backbone.js Routes
         routes: {
         	 // When there is no hash bang on the url, the home method is called

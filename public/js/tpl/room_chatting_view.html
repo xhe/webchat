@@ -1,3 +1,33 @@
-<h4>ChatRoom</h4>
-<textarea></textarea>
-<input type="button" value="Submit"/>
+<section id="splashPage">
+		
+		<div class="headerContent"></div>
+		
+		<div data-role="content">
+				
+			 <ul id="messages"></ul>
+			 
+		     	<table style="width:100%" id='tblChat'>
+		     		<tr>
+		     			<td><input id="txtMsg" autocomplete="off" />
+		    			</td>
+		    			<td style="width:50px">
+		    				<a data-role="button" data-icon="check" data-mini="true"  data-iconpos='notext' id='btnSubmit'>Save</a> 	
+		    			</td>
+		     		</tr>
+		     	</table>
+		    
+		    </div>
+	
+		
+</section>
+
+<style>
+	  #tblChat {
+	  	position: absolute;
+	  	bottom: 0px;
+	  	width: 100%;
+	  }
+	   #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+</style>
