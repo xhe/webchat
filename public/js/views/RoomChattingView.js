@@ -20,10 +20,9 @@ define(function(require){
         },
         
         setRoomId: function(id){
-        	console.log("setting " + id);
+        	//console.log("setting " + id);
         },
-        
-        
+       
         events: {
         	"click #btnSubmit": "sendMessage"
         },

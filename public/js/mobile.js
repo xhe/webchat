@@ -34,7 +34,7 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 	Backbone.emulateHTTP = true;
 	
 	var io = new io();
-	var socket = io.connect('http://localhost:3000');
+	var socket = io.connect('/');
 	utils.setSocket(socket);	
 	
 	
@@ -61,9 +61,6 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 		utils.autoLogin(function(){
 			router = new Mobile();
 		});
-	
-		
-		
 	});
 	
 } );

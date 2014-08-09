@@ -12,19 +12,6 @@ var app = require('./config/express')(db);
 var server = app.listen(config.port);
 var io = require('socket.io')(server);
 
-io.on("connection", function(socket){
-	socket.broadcast.emit('hi');
-	
-	socket.on('chat message', function(msg){
-		    console.log('message: ' + msg);
-		    io.sockets.emit('chat message', msg);
-	 });
-	
-	socket.on('disconnect', function(){
-		io.sockets.emit('user disconnect');
-	});
-});
-
-
+require("./app/sockets/events")(io);
 //Logging initialization
 console.log('MEAN.JS application started on port ' + config.port);

@@ -18,11 +18,9 @@ define(function(require){
 	return Backbone.Router.extend( {
 
         // The Router constructor
-        initialize: function() {
+        initialize: function(socket) {
         	 Backbone.history.start();
         },
-        
-       
         
         // Backbone.js Routes
         routes: {
@@ -35,7 +33,7 @@ define(function(require){
             "chatrooms" :"chatrooms",
             "newchatroom":"newchatroom",
             "add_friend":"add_friend",
-            "request_friend/:id":"reques_friend",
+            "request_friend/:id":"request_friend",
             "chatroom/:id": "chatroom"
         },
         
@@ -47,7 +45,7 @@ define(function(require){
         	this.changePage(roomChattingView);
         },
         
-        reques_friend: function(id){
+        request_friend: function(id){
         	if (this.login())
         		return;
         	
