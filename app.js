@@ -10,8 +10,11 @@ var app = require('./config/express')(db);
 
 //Start the app by listening on <port>
 var server = app.listen(config.port);
-var io = require('socket.io')(server);
 
-require("./app/sockets/events")(io);
+var io = require('socket.io')(server);
+var socketService = require('./app/services/sockets');
+socketService()['init'](io);
+
+
 //Logging initialization
 console.log('MEAN.JS application started on port ' + config.port);

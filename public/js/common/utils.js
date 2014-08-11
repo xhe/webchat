@@ -5,10 +5,7 @@ define(function(require){
 	
 	var util = {		
 			
-		setSocket : function(socket){
-			window.socket = socket;
-		},
-		
+			
 		isUserLoggedIn: function(){
 				
 			if(window.user){
@@ -28,6 +25,10 @@ define(function(require){
 			window.user.thumbFileName=user.thumbFileName;
 			delete user.photos
 			$.cookie('token', JSON.stringify(user));
+			
+			//set socket here
+			window.socket = window.io.connect('/');
+			window.socket.emit("login", user.screenName);
 		},
 		
 		getLoggedInUser: function(){
@@ -35,6 +36,7 @@ define(function(require){
 		},
 		
 		logout: function(){
+			window.socket.emit("logout");
 			window.user = new User.User();
 			$.removeCookie('token');
 			return false;

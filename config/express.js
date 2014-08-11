@@ -62,17 +62,21 @@ module.exports = function(db) {
 	app.enable('jsonp callback');
 
 	// CookieParser should be above session
-	app.use(cookieParser());
+	app.cookieParser = cookieParser()
+	app.use(app.cookieParser);
 
 	// Express MongoDB session storage
-	app.use(session({
-		secret: config.sessionSecret,
-		store: new mongoStore({
+	app.sessionStore =  new mongoStore({
 			db: db.connection.db,
 			collection: config.sessionCollection
-		})
+		});
+	app.use(session({
+		secret: config.sessionSecret,
+		store: app.sessionStore 
 	}));
-
+	
+	
+	
 	// use passport session
 	app.use(passport.initialize());
 	app.use(passport.session());
@@ -126,6 +130,8 @@ module.exports = function(db) {
 	
 	app.locals.jsFiles = config.getJavaScriptAssets();
 	app.locals.cssFiles = config.getCSSAssets();
+
+	//return app;
 
 	return app;
 };

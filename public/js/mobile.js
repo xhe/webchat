@@ -33,10 +33,8 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 	
 	Backbone.emulateHTTP = true;
 	
-	var io = new io();
-	var socket = io.connect('/');
-	utils.setSocket(socket);	
-	
+	//asssign IO to windows object, and connet will be initiated in utils. setLogginUser
+	window.io = new io();
 	
 	$( document ).on( "mobileinit",
 		// Set up the "mobileinit" handler before requiring jQuery Mobile's module
