@@ -4,7 +4,8 @@ var mongoose = require('mongoose'),
 	crypto = require('crypto'),
 	utils = require('./utils'),
 	ObjectId = require('mongoose').Types.ObjectId,
-	socket_serivce = require('./sockets')()
+	socket_serivce = require('./sockets')(),
+	utils = require('./utils')
 	;
 
 exports.invite = function(invitor, inviteeId, msg, cb){
@@ -33,10 +34,12 @@ exports.invite = function(invitor, inviteeId, msg, cb){
 									cb({status:"failed", error: err});
 								}else{
 									Invitation.findById( new ObjectId(invitation._id)).
-									populate('from',['firstName', 'lastName', 'screenName']).
-									populate('to',['firstName', 'lastName', 'screenName']).
+									populate('from').
+									populate('to').
 									exec(function(err, invitation){
 										//notify socket
+										invitation.from = utils.simplifyUser(invitation.from, true);
+										invitation.to =   utils.simplifyUser(invitation.to, true);
 										socket_serivce["sendInvitation"](invitation);
 										cb({status:"success", content: invitation });
 									});
