@@ -20,6 +20,8 @@ module.exports = function(app){
 	app.route('/api/search/:type').post(user_service.requiresLogin,  api.search);
 	app.route('/api/invite/:id').post(user_service.requiresLogin,  api.invite);
 	
+	app.route('/api/received_pending_invitations').get(user_service.requiresLogin,  api.received_pending_invitations);
+	
 	app.route('/api/upload_profile_file').post(user_service.requiresLogin,  api.upload_profile_file);
 	
 	

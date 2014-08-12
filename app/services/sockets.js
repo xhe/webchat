@@ -17,16 +17,13 @@ module.exports =  function(){
 				sockets_socketid_username[socket.id] = name;
 				allSockets[socket.id] = socket;
 				
-				console.log("now having " + JSON.stringify(sockets_username_socket))
-				
 			});
 			
 			socket.on(EVENT_LOGOUT, function(){
 				
 				delete sockets_username_socket[sockets_socketid_username[socket.id]];
 				delete allSockets[socket.id];
-				
-				console.log("after logout now having " + Object.keys(sockets_username_socket).length);
+			
 			});
 			
 			socket.on('chat message', function(msg){
@@ -36,8 +33,7 @@ module.exports =  function(){
 			socket.on(EVENT_DISCONNECT, function(){
 				delete sockets_username_socket[sockets_socketid_username[socket.id]];
 				delete allSockets[socket.id];
-				
-				console.log("now having " + Object.keys(sockets_username_socket).length);
+	
 				//io.sockets.emit('user disconnect');
 			});
 		});
@@ -45,12 +41,9 @@ module.exports =  function(){
 	
 	
   var sendInvitation = function(invitation){
-	  console.log(invitation.from.screenName +" invites " + invitation.to.screenName);
-	  console.log('socket id' +  sockets_username_socket[invitation.to.screenName] );
-	  console.log(JSON.stringify( sockets_username_socket) );
-	  console.log(allSockets[ sockets_username_socket[invitation.to.screenName] ]);
-	  
-	  getSocketFromUserName(invitation.to.screenName).emit(EVENT_NOTIFY_INVITATION, JSON.stringify(invitation));
+	  var socket = getSocketFromUserName(invitation.to.screenName);
+	  if (socket)
+		  socket.emit(EVENT_NOTIFY_INVITATION, JSON.stringify(invitation));
   };	
   
   

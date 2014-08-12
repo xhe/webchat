@@ -2,6 +2,7 @@ var country_service =  require('../services/country');
 var user_service =  require('../services/user');
 var core_service =   require('../services/core');
 var chat_service = require('../services/chat');
+var invitation_service = require('../services/invitation');
 
 exports.countries = function(req, res){
 	country_service.getAll(req, res);
@@ -94,6 +95,12 @@ exports.invite = function(req, res){
 	var inviteeId = req.params.id;
 	var msg = req.body.message;
 	chat_service.invite(req.user, inviteeId, msg, function(data){
+		res.jsonp(data);
+	});
+}
+
+exports.received_pending_invitations = function(req, res){
+	invitation_service.getMyInvitation(req.user, invitation_service.STATUS_PENDING, function(data){
 		res.jsonp(data);
 	});
 }
