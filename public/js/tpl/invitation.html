@@ -1,0 +1,32 @@
+<h4>Your pending invitations (<%= invitations.length%>) </h4>
+	
+	<ul data-role="listview" class="listview" data-inset="true" >
+	
+	<% _.each(invitations, function(invitation){%>
+
+		<li> 
+		
+			<a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#invitation/<%= invitation._id%>">
+				<% if (invitation.from.photos.length>0) {%>
+					<% _.each(invitation.from.photos, function(item){%>
+						<% if (item.use_as_head){ %>	
+							<% _.each(item.renders, function(render){%>
+								<% if(render.dimension==100){%>
+									<img src="/uploads/thumb/<%= render.filename%>"/>
+								<%}%>
+							<%})%>
+						<%}%>
+					<%})%>
+				<%}%>
+				
+				<h3><%= invitation.from.firstName%> <%= invitation.from.lastName%></h3>
+				<p></p>
+			</a>
+		</li>
+	
+	<%})%>
+	
+</ul>
+
+
+

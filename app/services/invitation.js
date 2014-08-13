@@ -17,7 +17,7 @@ exports.getMyInvitation = function(invitee, status, cb){
 				.populate('from')
 				.exec(function(err, docs){
 					for(var i=0; i<docs.length; i++){
-						docs[i].from = utils.simplifyUser(docs[i].from);
+						docs[i].from = utils.simplifyUser(docs[i].from, true);
 					}
 					cb(docs);
 				});

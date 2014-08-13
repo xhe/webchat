@@ -30,11 +30,15 @@ define(function(require){
         			'passWord': password
         		  },
         		  function(data){
+        			 $("#loginError").hide(); 
         			 if(data.status=='success'){
         				 util.setLoggedInUser( data.user );
         				 router.navigate('#'+Math.random());
         		         router.navigate('#', {trigger:true});
+        			 }else{
+        				 $("#loginError").show(); 
         			 } 
+        			 
         		  });
         },
         

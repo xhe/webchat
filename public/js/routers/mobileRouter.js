@@ -12,6 +12,7 @@ define(function(require){
 		FriendSearchView = require('views/FriendSearchView'),
 		FriendRequestView = require('views/FriendRequestView'),
 		RoomChattingView = require('views/RoomChattingView'),
+		InvitationsView = require('views/InvitationsView')
 		io = require("socket.io")
 		;
     // Extends Backbone.Router
@@ -34,7 +35,15 @@ define(function(require){
             "newchatroom":"newchatroom",
             "add_friend":"add_friend",
             "request_friend/:id":"request_friend",
-            "chatroom/:id": "chatroom"
+            "chatroom/:id": "chatroom",
+            "invitations": "invitations"
+        },
+        
+        invitations: function(){
+        	if (this.login())
+        		return;
+        	invitationsView = new InvitationsView();
+        	this.changePage(invitationsView);
         },
         
         chatroom: function(id){
