@@ -105,4 +105,9 @@ exports.received_pending_invitations = function(req, res){
 	});
 }
 
+exports.invitationDetail = function(req, res){
+	invitation_service.findInvitationById(req.params.id, function(inv){
+		res.jsonp(inv);
+	});
+}
 

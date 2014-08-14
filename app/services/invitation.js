@@ -10,7 +10,6 @@ var mongoose = require('mongoose'),
 exports.STATUS_PENDING = 0;
 
 exports.getMyInvitation = function(invitee, status, cb){
-	console.log("here " + invitee._id +":"+status );
 	
 	Invitation.find({ to: new ObjectId(invitee._id), status: status})
 				.sort('-created')
@@ -21,6 +20,15 @@ exports.getMyInvitation = function(invitee, status, cb){
 					}
 					cb(docs);
 				});
-	
+};
+
+exports.findInvitationById = function(id, cb){
+	Invitation.findById( new ObjectId(id))
+			  .populate('from')
+			  .exec(function(err, invitation){
+				 invitation.from = utils.simplifyUser(invitation.from , true); 
+				 cb(invitation);
+			  });
+	;
 };
 

@@ -21,6 +21,8 @@ module.exports = function(app){
 	app.route('/api/invite/:id').post(user_service.requiresLogin,  api.invite);
 	
 	app.route('/api/received_pending_invitations').get(user_service.requiresLogin,  api.received_pending_invitations);
+	app.route('/api/invitation/:id').get(user_service.requiresLogin,  api.invitationDetail);
+	
 	
 	app.route('/api/upload_profile_file').post(user_service.requiresLogin,  api.upload_profile_file);
 	

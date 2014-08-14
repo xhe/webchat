@@ -5,6 +5,17 @@ define(function (require) {
 	
 	Invitation = Backbone.Model.extend({
 		urlRoot: config.serverUrl + 'invitations',
+		
+		getInvitationById: function(id){
+			_self = this;
+			util.ajax_get(config.serverUrl+'invitation/'+id, this.callback, true);
+		},
+		
+		callback: function(data){
+			_self.result = data;
+			_self.trigger('reset');
+		}
+		
 	});
 	
 	InvitationCollection = Backbone.Collection.extend({
