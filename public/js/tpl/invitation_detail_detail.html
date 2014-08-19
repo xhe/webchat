@@ -1,1 +1,27 @@
-this is detial detail
+<h4><%=invitation.from.firstName%> <%=invitation.from.lastName %></h4>
+<% if (invitation.from.photos.length>0) {%>
+					<% _.each(invitation.from.photos, function(item){%>
+						<% if (item.use_as_head){ %>	
+							<% _.each(item.renders, function(render){%>
+								<% if(render.dimension>200 && render.dimension<300 ){%>
+									<img src="/uploads/thumb/<%= render.filename%>"/>
+								<%}%>
+							<%})%>
+						<%}%>
+					<%})%>
+<%}%>
+<p>
+<%= invitation.message %>
+</p>
+
+<hr/>
+
+<h4>Short message to inviter</h4>	
+				
+<textarea id="friendRequestReplyMsg"></textarea>	
+				
+<input type='button' id="btnFriendRequestAccept" value='Accept'/>
+
+<input type='button' id="btnFriendRequestReject" value='Reject'/>
+				
+			

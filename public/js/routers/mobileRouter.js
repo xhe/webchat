@@ -44,7 +44,7 @@ define(function(require){
         invitation: function(id){
         	if (this.login())
         		return;
-        	invitationView = new InvitationView();
+        	var invitationView = new InvitationView();
         	invitationView.setId(id);
         	this.changePage(invitationView);
         },

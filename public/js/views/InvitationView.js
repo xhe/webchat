@@ -15,20 +15,35 @@ define(function(require){
         // The View Constructor
         initialize: function() {
         	 this.template = _.template( invitation_detail_tpl );
-        	 this.invitation = new InvitationModel.Invitation();
+        	 this.invitationCollection = new InvitationModel.InvitationCollection();
         },
+
+        events: {
+       	"click #btnFriendRequestAccept": "acceptInvitation",
+       	"click #btnFriendRequestReject": "rejectInvitation",
+       	},
+        
+       	acceptInvitation: function(){
+       		console.log("accept")
+       	},
+       	rejectInvitation: function(){
+       		console.log('rej')
+       	},	
         
         setId: function(id){
         	this.id = id;
+        	var _self= this;
+        	 setTimeout( function(){
+        		 _self.invitationCollection.getInvitationById(id);
+        	 }, 1 );
         },
         
         render: function() { 
             $(this.el).html(this.template({ user: util.getLoggedInUser() }));
             new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Invitation").render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
-            var detailView = new InvitationDetailDetailView({ model: this.invitation});
-            detailView.setId(this.id);
-            return this;
+            var detailView = new InvitationDetailDetailView({ model: this.invitationCollection});
+             return this;
         }
     } );
     
@@ -36,18 +51,17 @@ define(function(require){
     	 initialize: function() {
          	 this.model.on('reset', this.render);
          },
+        
          
-         setId: function(id){
-        	 var _self = this;
-        	 setTimeout( function(){
-        		 _self.model.getInvitationById(id);
-        	 }, 1 );
-         },
          
          render: function(){
         	 this.template = _.template( invitation_detail_detail_tpl );
-        	 $("#divInvDetail").html( "this is an error content" );
-        	 
+        	 $("#divInvDetail").html( this.template({ invitation: this.result }) );
+         
+        	 $("#friendRequestReplyMsg").textinput().textinput("refresh");
+    		 $( "#btnFriendRequestAccept" ).button().button( "refresh" );
+    		 $( "#btnFriendRequestReject" ).button().button( "refresh" );
+         	
          }
     });
     

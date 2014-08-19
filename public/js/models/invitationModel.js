@@ -4,18 +4,7 @@ define(function (require) {
 	var util = 	 require('common/utils');
 	
 	Invitation = Backbone.Model.extend({
-		urlRoot: config.serverUrl + 'invitations',
-		
-		getInvitationById: function(id){
-			_self = this;
-			util.ajax_get(config.serverUrl+'invitation/'+id, this.callback, true);
-		},
-		
-		callback: function(data){
-			_self.result = data;
-			_self.trigger('reset');
-		}
-		
+		urlRoot: config.serverUrl + 'invitations'
 	});
 	
 	InvitationCollection = Backbone.Collection.extend({
@@ -31,6 +20,20 @@ define(function (require) {
 		callback: function(data){
 			_self.result = data;
 			_self.reset();
+		},
+		
+		getInvitationById: function(id){
+			_self = this;
+			util.ajax_get(config.serverUrl+'invitation/'+id, this.callback, true);
+		},
+		
+		callback: function(data){
+			_self.result = data;
+			_self.reset();
+		},
+		
+		handleInvitation: function(id, action, msg){
+			
 		}
 	});
 	
