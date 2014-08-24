@@ -10,8 +10,14 @@
 		
 		<li> <a href="#chatroom/<%= room._id%>">
 				<%= room.name%>
+				<% if(room.members.length==0){%>
+					(Yourself only)
+				<%}else{%>
+					(You and <%= room.members.length%> other)
+				<%}%>
+						
 			 </a> 
-			<a class="hrefDeleteRoom" data-roomid="<%= room._id%>">Delete</a>	 
+			<a class="hrefDeleteRoom" data-roomid="<%= room._id%>" data-action='delete'>Delete</a>	 
 		</li>
 	<%})%>
 	</ul>
@@ -30,8 +36,13 @@
 		
 		<li> <a href="#chatroom/<%= room._id%>">
 				<%= room.name%>
+				<% if(room.members.length==0){%>
+					(Yourself only)
+				<%}else{%>
+					(You and <%= room.members.length%> other)
+				<%}%>
 			 </a> 
-			<a href="#chatroom/"></a>	 
+			<a class="hrefDeleteRoom" data-roomid="<%= room._id%>" data-action='leave'>Leave</a>	 
 		</li>
 	<%})%>
 	</ul>

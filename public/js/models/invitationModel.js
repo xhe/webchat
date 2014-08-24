@@ -17,11 +17,6 @@ define(function (require) {
 			util.ajax_get(config.serverUrl+'received_pending_invitations', this.callback, true);
 		},
 		
-		callback: function(data){
-			_self.result = data;
-			_self.reset();
-		},
-		
 		getInvitationById: function(id){
 			_self = this;
 			util.ajax_get(config.serverUrl+'invitation/'+id, this.callback, true);
@@ -32,8 +27,18 @@ define(function (require) {
 			_self.reset();
 		},
 		
-		handleInvitation: function(id, action, msg){
-			
+		handleInvitation: function(invitation_id, action, msg){
+			var _this = this;
+			$.post( config.serverUrl+'invitation', 
+					{
+						invitation_id: invitation_id,
+						action: action,
+						msg: msg
+					},
+					function(result){
+						_this.trigger('action_done');
+					}
+			);
 		}
 	});
 	

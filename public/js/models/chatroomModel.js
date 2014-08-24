@@ -20,7 +20,8 @@ define(function (require) {
 		callback: function(data){
 			_self.result = data;
 			_self.reset();
-		}
+		},
+		
 	});
 	
 	return {

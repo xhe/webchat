@@ -7,3 +7,6 @@ db.testData.find().pretty()
 
 list all indexes:
 db.people.getIndexes()
+
+
+db.invitations.update({}, {$set: {status: 0}}, {multi: true})

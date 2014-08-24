@@ -16,18 +16,25 @@ define(function(require){
         initialize: function() {
         	 this.template = _.template( invitation_detail_tpl );
         	 this.invitationCollection = new InvitationModel.InvitationCollection();
+        	 this.invitationCollection.on('action_done', this.action_done);
         },
 
         events: {
-       	"click #btnFriendRequestAccept": "acceptInvitation",
-       	"click #btnFriendRequestReject": "rejectInvitation",
+	       	"click #btnFriendRequestAccept": "acceptInvitation",
+	       	"click #btnFriendRequestReject": "rejectInvitation",
        	},
         
-       	acceptInvitation: function(){
-       		console.log("accept")
+       	action_done: function(){
+       		alert('Action has been submitted successfully.');
+       		$.mobile.navigate("#");
        	},
+       	
+       	acceptInvitation: function(){
+       		this.invitationCollection.handleInvitation(this.id, 'accept', $("#friendRequestReplyMsg").val() );
+       	},
+       	
        	rejectInvitation: function(){
-       		console.log('rej')
+       		this.invitationCollection.handleInvitation(this.id, 'refuse', $("#friendRequestReplyMsg").val());
        	},	
         
         setId: function(id){

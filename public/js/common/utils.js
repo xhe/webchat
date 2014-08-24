@@ -177,7 +177,18 @@ define(function(require){
 			}else{
 				return "";
 			}
+		},
+		
+		retrieveThumbNailPath: function(user, dimention){
+			 var photos = user.photos;
+			 for(var i=0; i<photos.length; i++)
+     			if(photos[i].use_as_head)
+     				for(var j=0;j<photos[i].renders.length;j++)
+     					if(photos[i].renders[j].dimension==dimention)
+     						fileName = photos[i].renders[j].filename;
+     		 return '/uploads/thumb/' + fileName;	
 		}
+		
 	};
 
 	return util;

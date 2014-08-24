@@ -24,7 +24,7 @@ define(function(require){
         },
         
         deleteChatRoom: function(event){
-        	if(confirm("Are you sure you want to remove this chatroom?")){
+        	if(confirm("Are you sure you want to "+ event.target.getAttribute("data-action") +" this chatroom?")){
         		var room = new Chatroom.Chatroom({
         			id: event.target.getAttribute("data-roomid")
         		});

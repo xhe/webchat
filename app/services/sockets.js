@@ -6,6 +6,9 @@ var EVENT_LOGIN = "login";
 var EVENT_LOGOUT = "logout";
 var EVENT_DISCONNECT = "disconnect";
 var EVENT_NOTIFY_INVITATION="invited";
+var EVENT_NOTIFY_INVITATION_REPLY="replied";
+var EVENT_NOTIFY_CHAT_MESSAGE="chat_message";
+
 module.exports =  function(){
 	
 	var initSocket = function(io){
@@ -33,8 +36,6 @@ module.exports =  function(){
 			socket.on(EVENT_DISCONNECT, function(){
 				delete sockets_username_socket[sockets_socketid_username[socket.id]];
 				delete allSockets[socket.id];
-	
-				//io.sockets.emit('user disconnect');
 			});
 		});
 	};
@@ -42,9 +43,28 @@ module.exports =  function(){
 	
   var sendInvitation = function(invitation){
 	  var socket = getSocketFromUserName(invitation.to.screenName);
-	  if (socket)
-		  socket.emit(EVENT_NOTIFY_INVITATION, JSON.stringify(invitation));
+	  if (socket){
+		  console.log("socket: sending " + EVENT_NOTIFY_INVITATION)
+		   socket.emit(EVENT_NOTIFY_INVITATION, JSON.stringify(invitation));
+	  }
+		 
   };	
+  
+  var replyInvitation = function(invitation){
+	  var socket = getSocketFromUserName(invitation.from.screenName);
+	  if (socket){
+		  console.log("socket: sending " + EVENT_NOTIFY_INVITATION_REPLY)
+		  socket.emit(EVENT_NOTIFY_INVITATION_REPLY, JSON.stringify(invitation));
+	  } 
+  };
+  
+  var sentChatMessage = function(message, member){
+	  var socket = getSocketFromUserName(member.screenName);
+	  if(socket){
+		  console.log("socket: sending msg " + EVENT_NOTIFY_CHAT_MESSAGE)
+		  socket.emit(EVENT_NOTIFY_CHAT_MESSAGE, JSON.stringify(message));
+	  }
+  };
   
   
   var getSocketFromUserName = function(userName){
@@ -53,7 +73,9 @@ module.exports =  function(){
   
   return {
 	  init: initSocket,
-	  sendInvitation: sendInvitation
+	  sendInvitation: sendInvitation,
+	  replyInvitation: replyInvitation,
+	  sentChatMessage: sentChatMessage
   }
 	
 }

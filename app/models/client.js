@@ -349,7 +349,17 @@ UserSchema.methods.deleteChatRoom = function(roomId, cb){
 			cb({status: 'failed', error: err})
 		}else{
 			if(room.creator.toString()!=_this._id.toString()){
-				cb({status: 'failed', error: "You can only delete your own room."});
+				//if not creator, we jsut remove from room members
+				//room.members.id( new ObjectId(_this._id)).remove();
+				for(var i=0; i<room.members.length;i++){
+					if(room.members[i].toString()==_this._id.toString()){
+						room.members.splice(i,1);
+						room.save(function(){
+							cb({status:"success"});
+						})
+						break;
+					}
+				}
 			}else{
 				room.remove(function(err){
 					if(err){

@@ -1,54 +1,102 @@
 var mongoose = require('mongoose'),
 	Client = mongoose.model('Client'),
-	Invitation = mongoose.model('Invitation'),
-	crypto = require('crypto'),
 	utils = require('./utils'),
 	ObjectId = require('mongoose').Types.ObjectId,
 	socket_serivce = require('./sockets')(),
-	utils = require('./utils')
+	utils = require('./utils'),
+	ChatRoom = mongoose.model('ChatRoom'),
+	ChatMessage = mongoose.model('ChatMessage'),
+	ChatRoomVisitLog = mongoose.model('ChatRoomVisitLog'),
+	socket_serivce = require('./sockets')(),
+	_ = require('lodash')
 	;
 
-exports.invite = function(invitor, inviteeId, msg, cb){
-		
-	Client.findById(new ObjectId(inviteeId), function(err, invitee){
-		
-		if(err){
-			cb({status: 'failed', error: err})
-		}else{
-			Invitation.find(
+exports.retrieveChatMessages = function(user, roomId, cb){
+console.log(roomId)
+	//1. get last visit dt for this room
+	ChatRoomVisitLog
+		.findOneAndUpdate(
 					{
-						from: invitor._id,
-						to:	  invitee._id
-					}, function(err, docs){
-						if(docs.length>0){
-							cb({status: 'failed', error: 'You have invited the person already, no need to invite again'});
-						}else{
-							invitation = new Invitation({
-								from: invitor._id,
-								to:	  invitee._id,
-								message: msg,
-								status: 0
-							});
-							invitation.save(function(err){
-								if(err){
-									cb({status:"failed", error: err});
-								}else{
-									Invitation.findById( new ObjectId(invitation._id)).
-									populate('from').
-									populate('to').
-									exec(function(err, invitation){
-										//notify socket
-										invitation.from = utils.simplifyUser(invitation.from, true);
-										invitation.to =   utils.simplifyUser(invitation.to, true);
-										socket_serivce["sendInvitation"](invitation);
-										cb({status:"success", content: invitation });
-									});
-									
-								}
-							});
-						}
+						visitor: user,
+						room: new ObjectId(roomId)
+					},
+					{
+						visited: Date.now()
+					}
+				)
+		.exec(function(err, doc){
+				if(err){
+					console.log(err);
+				}else{
+					//let's retrieve
+					var q= ChatMessage.find({
+						room:	 new ObjectId(roomId)
 					});
+					q.sort('-created');
+					q.limit(20);
+					q.populate('creator');
+					q.exec(function(err, docs){
+						for(var i=0; i<docs.length; i++){
+							docs[i].creator = utils.simplifyUser(docs[i].creator, true);
+						}
+						cb(docs);
+					});
+				}
+		}
+		);
+};
+
+exports.addChatMessage = function(user, roomId, msg, cb){
+	var message = new ChatMessage({
+		creator: user,
+		room:	 new ObjectId(roomId),
+		message: msg,
+		created: Date.now()
+	});
+	message.save( function(err) {
+		if(err){
+			console.log(err);
+		}else{
+			ChatMessage
+			.findById(message._id)
+			.populate('creator')
+			.exec(function(err, message){
+				
+				message.creator = utils.simplifyUser(message.creator, true);
+				cb(message);
+				
+				broadcastMessage( message);
+				ChatRoomVisitLog.findOneAndUpdate(
+					{
+						visitor: user,
+						room: new ObjectId(roomId)  
+					},
+					{
+						visited: Date.now()
+					},
+					function(err, log){
+						if(err){
+							console.log(err);
+						}else{
+							//cb(log);
+						}
+					}
+				);
+			});
 		}
 	});
 };
 
+var broadcastMessage = function(message){
+	//1. find room
+	ChatRoom
+		.findById( message.room )
+		.populate('members')
+		.populate('creator')
+		.exec(function(err, room){
+			_.forEach(room.members, function(member){
+				socket_serivce['sentChatMessage'](message,member);
+			});
+			socket_serivce['sentChatMessage'](message,room.creator);
+		});
+}

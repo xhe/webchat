@@ -94,10 +94,11 @@ exports.search = function(req, res){
 exports.invite = function(req, res){
 	var inviteeId = req.params.id;
 	var msg = req.body.message;
-	chat_service.invite(req.user, inviteeId, msg, function(data){
+	invitation_service.invite(req.user, inviteeId, msg, function(data){
 		res.jsonp(data);
 	});
 }
+
 
 exports.received_pending_invitations = function(req, res){
 	invitation_service.getMyInvitation(req.user, invitation_service.STATUS_PENDING, function(data){
@@ -111,3 +112,26 @@ exports.invitationDetail = function(req, res){
 	});
 }
 
+exports.invitationReply = function(req, res){
+	invitation_service.replyInvitation(req.user, 
+			req.body.invitation_id,
+			req.body.action, 
+			req.body.msg, 
+			function(data){
+				res.jsonp(data);
+			}
+	);
+}
+
+
+exports.chatmessages = function(req, res){
+	chat_service.retrieveChatMessages(req.user, req.params.roomId, function(data){
+		res.jsonp(data);
+	});
+}
+
+exports.addChatMessage = function(req, res){
+	chat_service.addChatMessage(req.user, req.body.roomId, req.body.message, function(data){
+		res.jsonp(data);
+	});
+}

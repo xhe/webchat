@@ -59,7 +59,7 @@ define(function(require){
         chatroom: function(id){
         	if (this.login())
         		return;
-        	roomChattingView = new RoomChattingView();
+        	var roomChattingView = new RoomChattingView();
         	roomChattingView.setRoomId(id);
         	this.changePage(roomChattingView);
         },
