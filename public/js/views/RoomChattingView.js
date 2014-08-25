@@ -23,8 +23,9 @@ define(function(require){
         		 window.socket.on('chat_message', 
 	        			function(msg){
 	        			 	 var chat = JSON.parse(msg);
-	        			 	 if(current_roomId === chat.room )
-			        			 $('#messages')
+	        			 	 if(current_roomId === chat.room ){
+	        			 		 var oldscrollHeight = $('#messages')[0].scrollHeight;
+	        		        	 $('#messages')
 			            		 	.append( 
 		            		 				$('<li>').html(
 		            		 						 _.template( room_chatting_item_view_tpl,
@@ -36,6 +37,12 @@ define(function(require){
 		            		 								  )		
 		            		 				)		
 		            		 			);
+	        		        	 var newscrollHeight = $('#messages')[0].scrollHeight;
+	        	        		 if(newscrollHeight > oldscrollHeight){ //COMPARES
+	        	        		        $("#messages").scrollTop($("#messages")[0].scrollHeight); //Scrolls
+	        	        		  }
+	        			 	 }
+			        			 
         		 		}
         		 );
         		 chat_message_event_initialized = true;
@@ -82,6 +89,7 @@ define(function(require){
         	 while(this.result.length>0){
         		 var chat = this.result.pop();
         		 var photoPath = util.retrieveThumbNailPath(chat.creator, 50);
+        		 var oldscrollHeight = $('#messages')[0].scrollHeight;
         		 $('#messages')
         		 	.append( 
         		 				$('<li>').html(this.template({ 
@@ -90,10 +98,17 @@ define(function(require){
         		 					user: util.getLoggedInUser() 	
         		 				}))
         		 			);
+        		 var newscrollHeight = $('#messages')[0].scrollHeight;
+        		 if(newscrollHeight > oldscrollHeight){ //COMPARES
+        		        $("#messages").scrollTop($("#messages")[0].scrollHeight); //Scrolls
+        		  }
         	 }
          }
     });
     
+    var scrollToBottom = function(){
+    	
+    };
     
     return RoomChattingView;
    
