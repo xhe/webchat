@@ -11,8 +11,35 @@ var mongoose = require('mongoose'),
 	_ = require('lodash')
 	;
 
+exports.chatRoomNewChatMsg = function(user, room, cb ){
+	ChatRoomVisitLog
+	.findOne({
+		visitor: user,
+		room: room
+	})
+	.exec(function(err, doc){
+		var lastVisit = null;
+		if(doc){
+			lastVisit = doc.visited;
+		}
+		var query = { room: room }
+		if(lastVisit){
+			query['created'] =  { $gte: lastVisit };
+		}
+		ChatMessage.count(query, function(err, count){
+			cb(count);
+		});
+	});
+};
+
+
+exports.populateNewMsgCountForRooms = function(rooms, user, cb){
+	
+}
+
+
 exports.retrieveChatMessages = function(user, roomId, cb){
-console.log(roomId)
+
 	//1. get last visit dt for this room
 	ChatRoomVisitLog
 		.findOneAndUpdate(

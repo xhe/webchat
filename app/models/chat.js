@@ -59,6 +59,28 @@ var ChatRoomSchema = new Schema({
 				}]
 });
 
+ChatRoomSchema.methods.havingUnviewedMsg = function(user, room, cb){
+	ChatRoomVisitLog
+		.findOne({
+			visitor: user,
+			room: room
+		})
+		.exec(function(err, doc){
+			var lastVisit = null;
+			if(doc){
+				lastVisit = doc.visited;
+			}
+			var query = { room: room }
+			if(lastVisit){
+				query['created'] =  { $gte: lastVisit };
+			}
+			ChatMessage.count(query, function(err, count){
+				cb(count);
+			});
+		});
+	
+};
+
 var InvitationSchema = new Schema({
 	from: {
 				type: mongoose.Schema.Types.ObjectId,

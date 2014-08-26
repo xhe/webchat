@@ -308,6 +308,7 @@ UserSchema.methods.updatePhotoDescription = function(photoId, title, description
 
 UserSchema.methods.getMyOwnChatrooms = function(cb){
 	ChatRoom.find({ creator: this }).sort('-created').exec(function(err, chatrooms){
+		
 		cb(chatrooms);
 	});
 };
