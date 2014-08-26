@@ -306,19 +306,6 @@ UserSchema.methods.updatePhotoDescription = function(photoId, title, description
 	});
 };
 
-UserSchema.methods.getMyOwnChatrooms = function(cb){
-	ChatRoom.find({ creator: this }).sort('-created').exec(function(err, chatrooms){
-		
-		cb(chatrooms);
-	});
-};
-
-UserSchema.methods.getMyParticipatedChatrooms = function(cb){
-	ChatRoom.find({ members: this, creator: { '$ne': this } }).sort('-created').exec(function(err, chatrooms){
-		cb(chatrooms);
-	});
-};
-
 UserSchema.methods.createChatRoom = function(title, description, cb){
 	var _this = this;
 	ChatRoom.find({creator: this, name:title}).exec(function(err, chatrooms){

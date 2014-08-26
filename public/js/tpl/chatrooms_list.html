@@ -15,7 +15,9 @@
 				<%}else{%>
 					(You and <%= room.members.length%> other)
 				<%}%>
-						
+				<% if(room.new_messages>0){%>
+				<span class='notice'>( <%= room.new_messages%> )</span>	
+				<%}%>	
 			 </a> 
 			<a class="hrefDeleteRoom" data-roomid="<%= room._id%>" data-action='delete'>Delete</a>	 
 		</li>
@@ -41,6 +43,9 @@
 				<%}else{%>
 					(You and <%= room.members.length%> other)
 				<%}%>
+				<% if(room.new_messages>0){%>
+				<span class='notice'>( <%= room.new_messages%> )</span>	
+				<%}%>	
 			 </a> 
 			<a class="hrefDeleteRoom" data-roomid="<%= room._id%>" data-action='leave'>Leave</a>	 
 		</li>

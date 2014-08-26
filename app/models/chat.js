@@ -53,6 +53,8 @@ var ChatRoomSchema = new Schema({
 		default: Date.now
 	},
 	
+	new_messages: Number,
+	
 	members:[{
 				type: mongoose.Schema.Types.ObjectId,
 				ref: 'Client'

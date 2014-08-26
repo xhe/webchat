@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
 	ChatMessage = mongoose.model('ChatMessage'),
 	ChatRoomVisitLog = mongoose.model('ChatRoomVisitLog'),
 	socket_serivce = require('./sockets')(),
+	chat_service = require('./chat'),
 	_ = require('lodash')
 	;
 
@@ -33,25 +34,64 @@ exports.chatRoomNewChatMsg = function(user, room, cb ){
 };
 
 
-exports.populateNewMsgCountForRooms = function(rooms, user, cb){
-	
+exports.findUserCreatedRooms = function(user, cb){
+	ChatRoom.find({ creator: user }).sort('-created').exec(function(err, chatrooms){
+		if( chatrooms.length>0 ){
+			populateNewMsgsForRooms(chatrooms, user, function(rooms){
+				cb(rooms);
+			});
+		}else{
+			cb([]);
+		}
+	});
 }
 
+exports.findUserParticipatedRooms = function(user, cb){
+	ChatRoom.find({ members: user, creator: { '$ne': user } }).sort('-created').exec(function(err, chatrooms){
+		if( chatrooms.length>0 ){
+			populateNewMsgsForRooms(chatrooms, user, function(rooms){
+				cb(rooms);
+			});
+		}else{
+			cb([]);
+		}
+	});
+}
+
+//needs to show if new msg
+var populateNewMsgsForRooms = function(chatrooms, user, cb){
+	var totalRooms = chatrooms.length;
+	var finalRooms = [];
+	while(chatrooms.length>0){
+		var room = chatrooms.shift();
+		(function(room){
+			chat_service.chatRoomNewChatMsg( user, room, function(count){
+				room.new_messages = count;
+				finalRooms.push(room);
+				if(finalRooms.length == totalRooms)
+					cb(finalRooms);
+			})
+		})(room)
+	}
+}
 
 exports.retrieveChatMessages = function(user, roomId, cb){
-
 	//1. get last visit dt for this room
 	ChatRoomVisitLog
 		.findOneAndUpdate(
-					{
+					{	
 						visitor: user,
 						room: new ObjectId(roomId)
 					},
 					{
 						visited: Date.now()
+					},
+					{
+						upsert: true
 					}
 				)
 		.exec(function(err, doc){
+			
 				if(err){
 					console.log(err);
 				}else{

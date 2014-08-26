@@ -106,10 +106,6 @@ define(function(require){
          }
     });
     
-    var scrollToBottom = function(){
-    	
-    };
-    
     return RoomChattingView;
    
 } );
