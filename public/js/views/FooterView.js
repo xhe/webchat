@@ -12,28 +12,70 @@ define(function(require){
     	 // The View Constructor
         initialize: function() {
         	var _this = this;
-        	if(window.socket && !eventInitialized){
-        		window.socket.on('invited', 
-	           			 function(invitation){
-        					_this.notice(invitation, "Invited from ", "#invitations");
+        	if(!eventInitialized){
+        		
+        		window.socketEventService.on( window.socketEventService.EVENT_TYPE_INVITED, 
+        				function(invitation){
+        					_this.notify('hrefFooterInvitation');
         				}
         		);
-        		window.socket.on('replied', 
-	           			 function(invitation){
-        					var msg = null; 
-        					if (JSON.parse(invitation).status==1){
-        						 msg = 'Invitation accepted by ';
-        					}else{
-        						msg = 'Invitation refused by ';
-        					}
-        					
-        					_this.notice(invitation, msg, "#chatrooms");
+        		
+        		window.socketEventService.on( window.socketEventService.EVENT_TYPE_REPLIED, 
+        				function(invitation){
+        					_this.notify('hrefFooterInvitation');
         				}
         		);
+        		
+        		window.socketEventService.on( window.socketEventService.EVENT_TYPE_CHATMESSAGE, 
+        				function(msg){
+        			 		var chat = JSON.parse(msg);
+        			 		if( chat.room !== _this.roomId){
+        			 			if(  chat.creator._id !== util.getLoggedInUser()._id ){
+        			 				_this.notify('hrefFooterChatroom');
+        			 			}
+        			 		}	
+        				}
+        		);
+        		
+        		
+        		window.socketEventService.on( window.socketEventService.EVENT_TYPE_REPLIED, 
+        				function(invitation){
+        					_this.notify('hrefFooterInvitation');
+        				}
+        		);
+        	
+        		 window.socketEventService.on(window.socketEventService.EVENT_NOTIFY_MEMBER_ON_LINE,
+         				function(){
+        			 		_this.notify('hrefFooterContact');
+         		 		}
+         		 );
+         		 
+         		 window.socketEventService.on(window.socketEventService.EVENT_NOTIFY_MEMBER_OFF_LINE,
+      				 	function(){
+         			 		_this.notify('hrefFooterContact', true);
+      		 			}
+         		 );
+        		
+        		
         		eventInitialized = true;
         	}
+        	this.roomId = null;
+        	return this;
         },
     	
+        setRoomId: function(id){
+        	this.roomId = id;
+        },
+        
+        notify: function(type, remove){
+        	
+        	if(remove){
+        		$("#"+type).removeClass('spanFooterReminder');
+            }else{
+        		$("#"+type).addClass('spanFooterReminder');
+        	}
+        },
+        
         notice: function(invitation, msg, link){
         	invitation=JSON.parse(invitation);
         	if(link){
@@ -42,8 +84,11 @@ define(function(require){
         	}else{
         		$("#divNotification").html(msg + invitation.from.firstName+" "+invitation.from.lastName);
    			}
-        	
-   		    $("#divNotification").addClass('notice');
+        	showEffect();
+        },
+        
+        showEffect: function(){
+        	$("#divNotification").addClass('notice');
        	    $("#divNotification").fadeOut(10000, function(){
        	    	$("#divNotification").removeClass('notice');
        	    	$("#divNotification").html("Let's chat");
@@ -53,6 +98,7 @@ define(function(require){
         
     	render: function(){
     		$(this.el).html(_.template( footer_tpl));
+    		return this;
 		}
     });
       

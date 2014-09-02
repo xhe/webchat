@@ -2,9 +2,8 @@ define(function(require){
 	
 	var appConfig = require('common/app-config');
 	var User = require('models/userModel');
-	
-	var util = {		
-			
+
+	var util = {
 			
 		isUserLoggedIn: function(){
 				
@@ -27,8 +26,7 @@ define(function(require){
 			$.cookie('token', JSON.stringify(user));
 			
 			//set socket here
-			window.socket = window.io.connect('/');
-			window.socket.emit("login", user.screenName);
+			window.socketEventService.connect(user.screenName)
 		},
 		
 		getLoggedInUser: function(){
@@ -36,7 +34,9 @@ define(function(require){
 		},
 		
 		logout: function(){
-			window.socket.emit("logout");
+			
+			window.socketEventService.logout();
+			
 			window.user = new User.User();
 			$.removeCookie('token');
 			return false;
@@ -184,9 +184,11 @@ define(function(require){
 			 for(var i=0; i<photos.length; i++)
      			if(photos[i].use_as_head)
      				for(var j=0;j<photos[i].renders.length;j++)
-     					if(photos[i].renders[j].dimension==dimention)
+     					if(photos[i].renders[j].dimension==dimention){
      						fileName = photos[i].renders[j].filename;
-     		 return '/uploads/thumb/' + fileName;	
+     						return '/uploads/thumb/' + fileName;
+     					}
+     		return "";		
 		}
 		
 	};

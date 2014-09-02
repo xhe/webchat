@@ -11,7 +11,8 @@ require.config( {
             "backbone": "libs/backbone",
             "text":    "libs/text",
             "jquery.cookie": "libs/jquery.cookie",
-            "socket.io": '/socket.io/socket.io'
+            "socket.io": '/socket.io/socket.io',
+            "jquery.endless": 'libs/jquery.endlessscroll'
       },
       // Sets the configuration for your third party scripts that are not AMD compatible
       shim: {
@@ -22,19 +23,23 @@ require.config( {
             "jquery.cookie":{
             	 "deps": [ "jquery" ],
                  "exports": "jquery.cookie"  //attaches "Backbone" to the window object
+            },
+            "jquery.endless":{
+            	"deps": [ "jquery" ]
             }
       } // end Shim Configuration
 
 } );
 
 // Includes File Dependencies
-require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "common/utils", "socket.io", "jquery.cookie" ],
-		function( $, Backbone, Mobile, appConfig, utils, io ) {
+require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "common/utils", "socket.io",  "services/socketEvents", "jquery.cookie", "jquery.endless" ],
+		function( $, Backbone, Mobile, appConfig, utils, io, SocketEventService ) {
 	
 	Backbone.emulateHTTP = true;
 	
-	//asssign IO to windows object, and connet will be initiated in utils. setLogginUser
-	window.io = new io();
+	
+	window.socketEventService = new SocketEventService(  new io() );
+	_.extend( window.socketEventService,  Backbone.Events  );		
 	
 	$( document ).on( "mobileinit",
 		// Set up the "mobileinit" handler before requiring jQuery Mobile's module
@@ -50,7 +55,6 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 			$('div[data-role="page"]').live('pagehide', function (event, ui) {
 			    $(event.currentTarget).remove();
 			});
-			
 		}
 	)
 	

@@ -8,6 +8,9 @@ define(function(require){
 		HeaderView = require('views/HeaderView'),
 		FooterView = require('views/FooterView')
 		;
+	
+	var user_on_off_line_event_initialized = false;
+	var chatroomCollection = null;
 		
 
 	// Extends Backbone.View
@@ -16,7 +19,26 @@ define(function(require){
         // The View Constructor
         initialize: function() {
         	 this.template = _.template( chatroom_tpl );
-        	 this.chatroomCollection = new Chatroom.ChatroomCollection();
+        	 chatroomCollection = new Chatroom.ChatroomCollection();
+        	 
+        	 if(!user_on_off_line_event_initialized){
+        		 _self = this;
+        		 window.socketEventService.on(window.socketEventService.EVENT_NOTIFY_MEMBER_ON_LINE,
+        				function(){
+        			 		chatroomCollection.reset();
+        		 		}
+        		 );
+        		 
+        		 window.socketEventService.on(window.socketEventService.EVENT_NOTIFY_MEMBER_OFF_LINE,
+     				 	function(){
+        			 		chatroomCollection.reset();
+     		 			}
+        		 );
+        		 
+        		 user_on_off_line_event_initialized = true;
+        	 }
+        	 
+        	 
         },
         events:{
         	"click #btnNewChatRoom": "newChatRoom",
@@ -33,7 +55,7 @@ define(function(require){
         				{
         					type: 'DELETE',
         					success: function(model, response) {
-        						self.chatroomCollection.getChatrooms();
+        						chatroomCollection.getChatrooms();
         					}
         				}
         		);
@@ -45,12 +67,12 @@ define(function(require){
         },
        
         render: function() {           
-          	$(this.el).html(this.template({ user: util.getLoggedInUser(), own_rooms: this.chatroomCollection.own_rooms, join_rooms:this.chatroomCollection.join_rooms  }));
+          	$(this.el).html(this.template({ user: util.getLoggedInUser() }));
           	new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Chat Rooms").render();
           	new FooterView({ el: $(".footerContent", this.el)}).render();
             
-          	this.chatRoomListView = new ChatRoomListView({ el: $("#divChatRoomList", this.el), model: this.chatroomCollection });
-            this.chatroomCollection.getChatrooms();
+          	this.chatRoomListView = new ChatRoomListView({ el: $("#divChatRoomList", this.el), model: chatroomCollection });
+            chatroomCollection.getChatrooms();
           	return this;
         }
     });
@@ -62,7 +84,25 @@ define(function(require){
 		},
 		
 		render: function(){
-    		$(this.el).html(_.template( chatroom_list_tpl, { own_rooms: this.model.result.own_rooms, join_rooms: this.model.result.join_rooms }));
+			
+			_.each(this.model.result.own_rooms, function(room){
+				_.each(room.members, function(member){
+					member.headImg = util.retrieveThumbNailPath( member, 50);
+					member.isOnline = window.socketEventService.isUserOnline(member);
+				});
+			});
+			
+			_.each(this.model.result.join_rooms, function(room){
+				room.creator.headImg = util.retrieveThumbNailPath( room.creator, 50);
+				room.creator.isOnline = window.socketEventService.isUserOnline(room.creator);
+				_.each(room.members, function(member){
+					member.headImg = util.retrieveThumbNailPath( member, 50);
+					member.isOnline = window.socketEventService.isUserOnline(member);
+				});
+			});
+			
+			
+    		$(this.el).html(_.template( chatroom_list_tpl, { own_rooms: this.model.result.own_rooms, join_rooms: this.model.result.join_rooms, user: util.getLoggedInUser() }));
     		$( ".listview" ).listview().listview( "refresh" );
     		
 		}

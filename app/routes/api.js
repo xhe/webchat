@@ -26,7 +26,11 @@ module.exports = function(app){
 	app.route('/api/invitation').post(user_service.requiresLogin,  api.invitationReply);
 	
 	app.route('/api/chatmessages/:roomId').get(user_service.requiresLogin,  api.chatmessages);
+	app.route('/api/chatmessages/:roomId/:endts').get(user_service.requiresLogin,  api.chatmessagesbefore);
+	
 	app.route('/api/chatmessages').post(user_service.requiresLogin,  api.addChatMessage);
+	
+	app.route('/api/contacts').get(user_service.requiresLogin,  api.getContacts);
 	
 	app.route('/api/upload_profile_file').post(user_service.requiresLogin,  api.upload_profile_file);
 	

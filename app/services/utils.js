@@ -7,5 +7,8 @@ exports.simplifyUser = function(client, noToken){
 	client.email = undefined;
 	if(noToken)
 		client.token = undefined;
+	client.phoneNumber = undefined;
+	client.countryCode = undefined;
+		
 	return client;
 }

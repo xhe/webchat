@@ -2,7 +2,9 @@ var mongoose = require('mongoose'),
 	Client = mongoose.model('Client'),
 	crypto = require('crypto'),
 	utils = require('./utils'),
-	ObjectId = require('mongoose').Types.ObjectId
+	ObjectId = require('mongoose').Types.ObjectId,
+	ChatRoom =mongoose.model('ChatRoom'),
+	_ = require("lodash")
 	;
 
 exports.createUser = function(req, res){
@@ -132,4 +134,45 @@ exports.search_friend = function(id, cb){
 			cb({ status: 'success', client: utils.simplifyUser(client, true) })
 		}
 	});
-}
+};
+
+exports.get_contacts = function(userName, cb){
+	//first find all rooms owned or participated
+	Client.findByUsername(userName, function(user){
+		var searchArray =[
+			   {
+					creator: user
+			   },
+			   {
+				   members: [user]
+			   }
+		   ]; 
+		var contacts = [];
+		ChatRoom
+			.find({$or:searchArray})
+			.populate('creator')
+			.populate('members')
+			.exec(function(err, rooms){
+				for(var i=0; i<rooms.length; i++){
+					var creator = rooms[i].creator;
+					var members = rooms[i].members;
+					contacts=_.union(contacts, [creator]);
+					contacts=_.union(contacts, members);
+				}
+				
+				var finalContacts = [];
+				var ids={};
+				_.forEach(contacts, function(contact){
+					if(contact.screenName!=userName ){
+						if( !(contact._id in ids) ){
+							ids[contact._id]=0;
+							finalContacts.push( utils.simplifyUser(contact, true));
+						}
+					}
+				});
+				
+				cb( finalContacts )
+			});
+		}
+	);
+};

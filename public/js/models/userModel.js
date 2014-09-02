@@ -44,10 +44,11 @@ define(function (require) {
 			);
 		},
 		
-		invite: function(msg, cb){
+		invite: function(msg, roomId, cb){
 			$.post( config.serverUrl+'invite/'+this.inviteeId, 
 					{
-						message: msg
+						message: msg,
+						roomId: roomId
 					},
 					function(result){
 						cb(result);

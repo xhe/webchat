@@ -10,6 +10,13 @@
 						<%}%>
 					<%})%>
 <%}%>
+
+<% if(invitation.room){%>
+	<p>
+		You are invited to join room: <strong><%= invitation.room.name%></strong>
+	</p>
+<%}%>
+
 <p>
 <%= invitation.message %>
 </p>

@@ -2,17 +2,23 @@
 		
 		<div class="headerContent"></div>
 		
-		<div data-role="content"> 
-		
+		<div style="margin:0px; padding:0px" data-role="content" > 
+				
+				
+				
+				<a data-icon="plus" data-role="button" data-inline="true" href="#invite/<%= roomId%>">Add Member</a>
+				<a  data-icon="arrow-u" data-role="button" id="btnMorePrev" data-inline="true">More Messages</a>
+				
+				
 				<ul id="messages">
-				 	</ul>
+				</ul>
 				
 				<table style="width:100%" id='tblChat'>
 		     		<tr>
 		     			<td><input id="txtMsg" autocomplete="off" />
 		    			</td>
 		    			<td style="width:50px">
-		    				<a data-role="button" data-icon="check" data-mini="true"  data-iconpos='notext' id='btnSubmit'>Save</a> 	
+		    				<a data-role="button" data-icon="check" data-mini="true"  id='btnSubmit'>Send</a> 	
 		    			</td>
 		     		</tr>
 		     	</table>
@@ -21,28 +27,3 @@
 	<div class="footerContent"></div>
 		
 </section>
-
-<style>
-		
-	  #tblChat {
-	  	position: absolute;
-	  	bottom: 12px;
-	  	width: 100%;
-	  }
-	  
-	  #messages { 
-	   	list-style-type: none; 
-	   	margin: 0; padding: 0; 
-	   	
-	   	
-	   	position: absolute;
-		top:51px;
-		bottom: 60px;
-		left: 0px;
-		right: 0px;
-		overflow: auto;
-	   }
-       
-       #messages li { padding: 5px 10px; }
-       #messages li:nth-child(odd) { background: #eee; }
-</style>

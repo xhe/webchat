@@ -10,8 +10,10 @@ define(function (require) {
 	ChatMessageCollection = Backbone.Collection.extend({
 		model: ChatMessage,
 		url: config.serverUrl + 'chatmessages',
+		roomId: null,
 		
 		getChatMessages: function(roomId){
+			this.roomId = roomId;
 			_self = this;
 			util.ajax_get(config.serverUrl+'chatmessages/'+roomId, this.callback, true);
 		},
@@ -27,6 +29,24 @@ define(function (require) {
 						cb(result);
 					}
 			);
+		},
+		
+		fetchPrev: function(cb){
+			
+			if(this.result.length>0){
+				_self = this;
+				var oldestedTime = this.result[ this.result.length-1 ].created;
+				util.ajax_get(config.serverUrl+'chatmessages/'+this.roomId +'/'+oldestedTime, 
+				function(data){
+					_self.result = data;
+					cb(data);
+				}, 
+				true);
+			}
+		},
+		
+		fetchNext: function(cb){
+			cb([])
 		},
 		
 		callback: function(data){

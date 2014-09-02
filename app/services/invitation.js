@@ -29,6 +29,7 @@ exports.getMyInvitation = function(invitee, status, cb){
 exports.findInvitationById = function(id, cb){
 	Invitation.findById( new ObjectId(id))
 			  .populate('from')
+			  .populate('room')
 			  .exec(function(err, invitation){
 				 invitation.from = utils.simplifyUser(invitation.from , true); 
 				 cb(invitation);
@@ -36,47 +37,85 @@ exports.findInvitationById = function(id, cb){
 	;
 };
 
-exports.invite = function(invitor, inviteeId, msg, cb){
-	
+exports.invite = function(invitor, inviteeId, msg, roomId,  cb){
 	Client.findById(new ObjectId(inviteeId), function(err, invitee){
 		
 		if(err){
 			cb({status: 'failed', error: err})
 		}else{
-			Invitation.find(
-					{
-						from: invitor._id,
-						to:	  invitee._id,
-						status: this.STATUS_PENDING
-					}, function(err, docs){
-						if(docs.length>0){
-							cb({status: 'failed', error: 'You have invited the person already, no need to invite again'});
-						}else{
-							invitation = new Invitation({
-								from: invitor._id,
-								to:	  invitee._id,
-								message: msg,
-								status: invitation_service.STATUS_PENDING
-							});
-							invitation.save(function(err){
-								if(err){
-									cb({status:"failed", error: err});
-								}else{
-									Invitation.findById( new ObjectId(invitation._id)).
-									populate('from').
-									populate('to').
-									exec(function(err, invitation){
-										//notify socket
-										invitation.from = utils.simplifyUser(invitation.from, true);
-										invitation.to =   utils.simplifyUser(invitation.to, true);
-										socket_serivce["sendInvitation"](invitation);
-										cb({status:"success", content: invitation });
-									});
-									
-								}
-							});
-						}
-					});
+			if(roomId){
+				Invitation.find(
+						{
+							from: invitor._id,
+							to:	  invitee._id,
+							status: invitation_service.STATUS_PENDING,
+							room: roomId
+						}, function(err, docs){
+							if(docs.length>0){
+								cb({status: 'failed', error: 'You have invited the person already, no need to invite again'});
+							}else{
+								invitation = new Invitation({
+									from: invitor._id,
+									to:	  invitee._id,
+									message: msg,
+									status: invitation_service.STATUS_PENDING,
+									room: roomId
+								});
+								invitation.save(function(err, doc){
+									if(err){
+										cb({status:"failed", error: err});
+									}else{
+										Invitation.findById( new ObjectId(invitation._id)).
+										populate('from').
+										populate('to').
+										exec(function(err, invitation){
+											//notify socket
+											invitation.from = utils.simplifyUser(invitation.from, true);
+											invitation.to =   utils.simplifyUser(invitation.to, true);
+											socket_serivce["sendInvitation"](invitation);
+											cb({status:"success", content: invitation });
+										});
+										
+									}
+								});
+							}
+						});
+			}else{
+				Invitation.find(
+						{
+							from: invitor._id,
+							to:	  invitee._id,
+							status: invitation_service.STATUS_PENDING
+						}, function(err, docs){
+							if(docs.length>0){
+								cb({status: 'failed', error: 'You have invited the person already, no need to invite again'});
+							}else{
+								invitation = new Invitation({
+									from: invitor._id,
+									to:	  invitee._id,
+									message: msg,
+									status: invitation_service.STATUS_PENDING
+								});
+								invitation.save(function(err){
+									if(err){
+										cb({status:"failed", error: err});
+									}else{
+										Invitation.findById( new ObjectId(invitation._id)).
+										populate('from').
+										populate('to').
+										exec(function(err, invitation){
+											//notify socket
+											invitation.from = utils.simplifyUser(invitation.from, true);
+											invitation.to =   utils.simplifyUser(invitation.to, true);
+											socket_serivce["sendInvitation"](invitation);
+											cb({status:"success", content: invitation });
+										});
+										
+									}
+								});
+							}
+						});
+			}
 		}
 	});
 };
@@ -85,7 +124,8 @@ exports.invite = function(invitor, inviteeId, msg, cb){
 exports.replyInvitation = function(invitee, invitation_id, action, msg, cb){
 	Invitation.findById( new ObjectId(invitation_id))
 	  .populate('to')
-	  .populate('from')	
+	  .populate('from')
+	  .populate('room')
 	  .exec(function(err, invitation){
 		  
 		  invitation.reply = msg;
@@ -103,30 +143,36 @@ exports.replyInvitation = function(invitee, invitation_id, action, msg, cb){
 			  	
 			  if(action=='accept'){
 				//create chat room here
-				  
-				  
-					ChatRoom.find({creator: invitation.from, members:[invitation.to]}).
-						exec(function(err, chatrooms){
-							
-							if(chatrooms.length==0){
-								
-								var room = new ChatRoom({
-									name: invitation.from.screenName+" - " + invitation.to.screenName,
-									creator: invitation.from,
-									description: "",
-									members: [ invitation.to ]
-								});
-								room.save(function(err){
-									if(err){
-										cb({status:"failed", error: err});
-									}
-								});
+				  	if(invitation.room){
+				  		
+				  		var room =invitation.room;
+				  		room.members.push( invitation.to )
+				  		room.save(function(err){
+							if(err){
+								cb({status:"failed", error: err});
 							}
-					});
-				  
-				  
-				  
-				  
+						});
+				  		
+				  	}else{
+				  		ChatRoom.find({creator: invitation.from, members:[invitation.to]}).
+							exec(function(err, chatrooms){
+								
+								if(chatrooms.length==0){
+									
+									var room = new ChatRoom({
+										name: invitation.from.screenName+" - " + invitation.to.screenName,
+										creator: invitation.from,
+										description: "",
+										members: [ invitation.to ]
+									});
+									room.save(function(err){
+										if(err){
+											cb({status:"failed", error: err});
+										}
+									});
+								}
+						});
+				  	}
 			  }
 			  
 		  });

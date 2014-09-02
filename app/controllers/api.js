@@ -62,6 +62,7 @@ exports.chatrooms = function(req, res){
 	})
 }
 
+
 exports.createChatrooms = function(req, res){
 	req.user.createChatRoom(req.body.title, req.body.description, function(data){
 		res.jsonp(data);
@@ -94,7 +95,9 @@ exports.search = function(req, res){
 exports.invite = function(req, res){
 	var inviteeId = req.params.id;
 	var msg = req.body.message;
-	invitation_service.invite(req.user, inviteeId, msg, function(data){
+	var roomId = req.body.roomId;
+
+	invitation_service.invite(req.user, inviteeId, msg, roomId, function(data){
 		res.jsonp(data);
 	});
 }
@@ -125,13 +128,25 @@ exports.invitationReply = function(req, res){
 
 
 exports.chatmessages = function(req, res){
-	chat_service.retrieveChatMessages(req.user, req.params.roomId, function(data){
+	chat_service.retrieveChatMessages(req.user, req.params.roomId, null, function(data){
+		res.jsonp(data);
+	});
+}
+
+exports.chatmessagesbefore = function(req, res){
+	chat_service.retrieveChatMessages(req.user, req.params.roomId, req.params.endts, function(data){
 		res.jsonp(data);
 	});
 }
 
 exports.addChatMessage = function(req, res){
 	chat_service.addChatMessage(req.user, req.body.roomId, req.body.message, function(data){
+		res.jsonp(data);
+	});
+}
+
+exports.getContacts = function(req, res){
+	user_service.get_contacts(req.user.screenName, function(data){
 		res.jsonp(data);
 	});
 }

@@ -35,26 +35,48 @@ exports.chatRoomNewChatMsg = function(user, room, cb ){
 
 
 exports.findUserCreatedRooms = function(user, cb){
-	ChatRoom.find({ creator: user }).sort('-created').exec(function(err, chatrooms){
-		if( chatrooms.length>0 ){
-			populateNewMsgsForRooms(chatrooms, user, function(rooms){
-				cb(rooms);
+	ChatRoom
+		.find({ creator: user })
+		.populate('creator')
+		.populate('members')
+		.sort('-created')
+		.exec(function(err, chatrooms){
+			_.forEach(chatrooms, function(r){
+				r.creator =  utils.simplifyUser(r.creator, true);
+				_.forEach(r.members, function(m){
+					m = utils.simplifyUser(m, true);
+				});
 			});
-		}else{
-			cb([]);
-		}
-	});
+			if( chatrooms.length>0 ){
+				populateNewMsgsForRooms(chatrooms, user, function(rooms){
+					cb(rooms);
+				});
+			}else{
+				cb([]);
+			}
+		});
 }
 
 exports.findUserParticipatedRooms = function(user, cb){
-	ChatRoom.find({ members: user, creator: { '$ne': user } }).sort('-created').exec(function(err, chatrooms){
-		if( chatrooms.length>0 ){
-			populateNewMsgsForRooms(chatrooms, user, function(rooms){
-				cb(rooms);
+	ChatRoom
+		.find({ members: user, creator: { '$ne': user } })
+		.populate('creator')
+		.populate('members')
+		.sort('-created')
+		.exec(function(err, chatrooms){
+			_.forEach(chatrooms, function(r){
+				r.creator =  utils.simplifyUser(r.creator, true);
+				_.forEach(r.members, function(m){
+					m = utils.simplifyUser(m, true);
+				});
 			});
-		}else{
-			cb([]);
-		}
+			if( chatrooms.length>0 ){
+				populateNewMsgsForRooms(chatrooms, user, function(rooms){
+					cb(rooms);
+				});
+			}else{
+				cb([]);
+			}
 	});
 }
 
@@ -75,7 +97,7 @@ var populateNewMsgsForRooms = function(chatrooms, user, cb){
 	}
 }
 
-exports.retrieveChatMessages = function(user, roomId, cb){
+exports.retrieveChatMessages = function(user, roomId, before_ts, cb){
 	//1. get last visit dt for this room
 	ChatRoomVisitLog
 		.findOneAndUpdate(
@@ -102,6 +124,11 @@ exports.retrieveChatMessages = function(user, roomId, cb){
 					q.sort('-created');
 					q.limit(20);
 					q.populate('creator');
+					
+					if(before_ts){
+						q.where('created').lt(before_ts);
+					}
+					
 					q.exec(function(err, docs){
 						for(var i=0; i<docs.length; i++){
 							docs[i].creator = utils.simplifyUser(docs[i].creator, true);
@@ -112,6 +139,8 @@ exports.retrieveChatMessages = function(user, roomId, cb){
 		}
 		);
 };
+
+
 
 exports.addChatMessage = function(user, roomId, msg, cb){
 	var message = new ChatMessage({

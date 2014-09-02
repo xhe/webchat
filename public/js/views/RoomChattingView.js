@@ -12,6 +12,30 @@ define(function(require){
 		
 	var chat_message_event_initialized = false;
 	var current_roomId = null;
+	
+	var  appendChatMsg = function(chat){
+      	if(current_roomId === chat.room ){
+		 		 var oldscrollHeight = $('#messages')[0].scrollHeight;
+	        	 $('#messages')
+     		 	.append( 
+ 		 				$('<li>').html(
+ 		 						 _.template( room_chatting_item_view_tpl,
+     		 								  { 
+ 		 							 			photoPath: util.retrieveThumbNailPath(chat.creator, 50), 
+ 		 							 			chat: chat,
+ 		 							 			user: util.getLoggedInUser() 
+     		 								  }
+ 		 								  )		
+ 		 				)		
+ 		 			);
+	        	 var newscrollHeight = $('#messages')[0].scrollHeight;
+	       		 if(newscrollHeight > oldscrollHeight){ //COMPARES
+	       		        $("#messages").scrollTop($("#messages")[0].scrollHeight); //Scrolls
+	       		  }
+			} 
+      };
+	
+	
 	// Extends Backbone.View
     var RoomChattingView = Backbone.View.extend( {
 
@@ -19,35 +43,40 @@ define(function(require){
         initialize: function() {
         	 this.template = _.template( room_chatting_view_tpl );
         	 this.chatMessageCollection = new ChatMessageModel.ChatMessageCollection();
-        	  if(window.socket && !chat_message_event_initialized){
-        		 window.socket.on('chat_message', 
-	        			function(msg){
-	        			 	 var chat = JSON.parse(msg);
-	        			 	 if(current_roomId === chat.room ){
-	        			 		 var oldscrollHeight = $('#messages')[0].scrollHeight;
-	        		        	 $('#messages')
-			            		 	.append( 
-		            		 				$('<li>').html(
-		            		 						 _.template( room_chatting_item_view_tpl,
-			            		 								  { 
-		            		 							 			photoPath: util.retrieveThumbNailPath(chat.creator, 50), 
-		            		 							 			chat: chat,
-		            		 							 			user: util.getLoggedInUser() 
-			            		 								  }
-		            		 								  )		
-		            		 				)		
-		            		 			);
-	        		        	 var newscrollHeight = $('#messages')[0].scrollHeight;
-	        	        		 if(newscrollHeight > oldscrollHeight){ //COMPARES
-	        	        		        $("#messages").scrollTop($("#messages")[0].scrollHeight); //Scrolls
-	        	        		  }
-	        			 	 }
-			        			 
-        		 		}
-        		 );
+        	 var _self = this;
+        	  if(!chat_message_event_initialized){
+        			window.socketEventService.on( window.socketEventService.EVENT_TYPE_CHATMESSAGE, 
+		            			function(msg){
+			        				appendChatMsg( JSON.parse(msg));
+			        			}
+            		);
         		 chat_message_event_initialized = true;
-        	 };
-        	 
+        	  };
+        },
+        
+      
+        
+        loadMorePrev: function(){
+        	this.chatMessageCollection.fetchPrev(function(data){
+	 				var tmpResults = JSON.parse(JSON.stringify(data));
+	 				if( tmpResults.length==0 )
+	 				{
+	 					$("#btnMorePrev").hide();
+	 				}else{
+	 					while(tmpResults.length>0){
+	 					 var chat = tmpResults.pop();
+	 					 var photoPath = util.retrieveThumbNailPath(chat.creator, 50);
+	 					 $('#messages')
+	 					 .prepend( 
+	        		 				$('<li>').html(_self.template({ 
+	        		 					photoPath: util.retrieveThumbNailPath(chat.creator, 50), 
+	        		 					chat: chat, 
+	        		 					user: util.getLoggedInUser() 	
+	        		 				}))
+	        		 			);
+	 					}
+	 				}
+       	 })
         },
         
         setRoomId: function(id){
@@ -59,7 +88,9 @@ define(function(require){
         },
        
         events: {
-        	"click #btnSubmit": "sendMessage"
+        	"click #btnSubmit": "sendMessage",
+        	 "click #btnMorePrev": "loadMorePrev"
+        	
         },
         
         sendMessage: function(){
@@ -68,10 +99,13 @@ define(function(require){
         	this.chatMessageCollection.addChatMessage(current_roomId, msg, function(chat){});
         },
         
-        render: function() {           
-          	$(this.el).html(this.template({ user: util.getLoggedInUser() }));
+        render: function() {  
+        	
+          	$(this.el).html(this.template({ user: util.getLoggedInUser(), roomId: current_roomId }));
           	new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Chatting").render();
-            new FooterView({ el: $(".footerContent", this.el)}).render();
+          	footerView = new FooterView({ el: $(".footerContent", this.el)}).render();
+          	footerView.setRoomId(current_roomId);
+            
             new RoomChattingListView({ model: this.chatMessageCollection});
             return this;
         }
@@ -86,23 +120,10 @@ define(function(require){
          render: function(){
         	 this.template = _.template( room_chatting_item_view_tpl );
         	 $('#messages').empty();
-        	 while(this.result.length>0){
-        		 var chat = this.result.pop();
-        		 var photoPath = util.retrieveThumbNailPath(chat.creator, 50);
-        		 var oldscrollHeight = $('#messages')[0].scrollHeight;
-        		 $('#messages')
-        		 	.append( 
-        		 				$('<li>').html(this.template({ 
-        		 					photoPath: util.retrieveThumbNailPath(chat.creator, 50), 
-        		 					chat: chat, 
-        		 					user: util.getLoggedInUser() 	
-        		 				}))
-        		 			);
-        		 var newscrollHeight = $('#messages')[0].scrollHeight;
-        		 if(newscrollHeight > oldscrollHeight){ //COMPARES
-        		        $("#messages").scrollTop($("#messages")[0].scrollHeight); //Scrolls
-        		  }
-        	 }
+        	 var tmpResults = JSON.parse(JSON.stringify(this.result));
+        	 while(tmpResults.length>0){
+        		 appendChatMsg(tmpResults.pop());
+        	 } 
          }
     });
     

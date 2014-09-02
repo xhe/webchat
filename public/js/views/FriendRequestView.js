@@ -12,15 +12,21 @@ define(function(require){
 		
 
 	// Extends Backbone.View
-    var FriendRequestView = Backbone.View.extend( {
+	var FriendRequestView = Backbone.View.extend( {
 
         // The View Constructor
         initialize: function() {
         	 this.template = _.template( request_friend_tpl );
         	 this.userCollection = new User.UserCollection();
+        	 window.invRoomId = null;
         },
         
         setContactId: function(id){
+        	this.userCollection.getRequestedUser(id);
+        },
+        
+        setContactIdAndRoomId: function(id, roomId){
+        	window.invRoomId  = roomId;
         	this.userCollection.getRequestedUser(id);
         },
         
@@ -45,7 +51,7 @@ define(function(require){
          },
     	 
          sendFriendRequest: function(){
-        	 this.model.invite( $("#friendRequestMsg").val(), function(result){
+        	 this.model.invite( $("#friendRequestMsg").val(), window.invRoomId , function(result){
         		if(result.status=="success"){
         			alert("User invitation has been sent.");
         			$.mobile.navigate("#");
