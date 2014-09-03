@@ -22,7 +22,7 @@ console.log('MEAN.JS application started on port ' + config.port);
 */
 var cluster = require('cluster');
 
-var workers = process.env.WORKERS || require('os').cpus().length;
+var workers = 1;// process.env.WORKERS || require('os').cpus().length;
 
 if (cluster.isMaster) {
 
@@ -40,11 +40,12 @@ if (cluster.isMaster) {
 
 } else {
 
- 
 	var init = require('./config/init')(),
 	config = require('./config/config'),
 	mongoose = require('mongoose');
+	
 
+	
 	//Bootstrap db connection
 	var db = mongoose.connect(config.db);
 	//Init the express application
@@ -55,16 +56,15 @@ if (cluster.isMaster) {
 	var server = app.listen(config.port);
 
 	var io = require('socket.io')(server);
+
 	var socketService = require('./app/services/sockets');
 	socketService()['init'](io);
-
-
+	
+	
+	
+	
 	//Logging initialization
 	console.log('MEAN.JS application started on port ' + config.port);
-
-	
-	
-
 }
 
 process.on('uncaughtException', function (err) {
