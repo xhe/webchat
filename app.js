@@ -19,9 +19,10 @@ if (cluster.isMaster) {
       workers[i] = cluster.fork();
       // Optional: Restart worker on exit
       workers[i].on('exit', function(worker, code, signal) {
-    	  logError("espawning worker "+ i );
-          console.log('respawning worker', i);
-          spawn(i);
+    	  logError("espawning worker "+ i , function(){
+    		  console.log('respawning worker', i);
+    		  spawn(i);
+    	  } );
       });
   };
   // Spawn workers.
@@ -76,13 +77,13 @@ if (cluster.isMaster) {
 }
 
 process.on('uncaughtException', function (err) {
-	console.error((new Date).toUTCString() + ' uncaughtException:', err.message)
-	console.error(err.stack)
-	logError("died");
-	process.exit(1)
+	logError( err.message+'\n'+ err.stack, function(){
+		process.exit(1);
+	});
 })
 
-var logError=function(string){
+
+var logError=function(string, cb){
 	 fs.open('error_log','a', function(err, fd){
 		 if(err){
 			 console.log(err);
@@ -91,6 +92,7 @@ var logError=function(string){
 					  );
 					  fs.write(fd, buffer, 0, buffer.length, null, function(err) {
 						 fs.close(fd); 
+						 cb();
 					  });
 		 }
 		  

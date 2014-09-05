@@ -10,3 +10,9 @@ db.people.getIndexes()
 
 
 db.invitations.update({}, {$set: {status: 0}}, {multi: true})
+
+service redis start
+chkconfig redis on
+chkconfig --list redis
+
+//http://briansnelson.com/How_to_install_Redis_on_a_Centos_6.4_Server
