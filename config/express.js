@@ -40,11 +40,13 @@ module.exports = function(db) {
 	app.set('view engine', 'server.view.html');
 	app.set('views', './app/views');
 
+	// Setting the app router and static folder
+	app.use(express.static(path.resolve('./public')));
+	
 	// Environment dependent middleware
 	if (process.env.NODE_ENV === 'development') {
 		// Enable logger (morgan)
 		//app.use(morgan('dev'));
-
 		// Disable views cache
 		app.set('view cache', false);
 	} else if (process.env.NODE_ENV === 'production') {
@@ -75,8 +77,6 @@ module.exports = function(db) {
 		store: app.sessionStore 
 	}));
 	
-	
-	
 	// use passport session
 	app.use(passport.initialize());
 	app.use(passport.session());
@@ -98,9 +98,7 @@ module.exports = function(db) {
         }
     }));
 	
-	// Setting the app router and static folder
-	app.use(express.static(path.resolve('./public')));
-
+	
 	// Globbing routing files
 	config.getGlobbedFiles('./app/routes/**/*.js').forEach(function(routePath) {
 		require(path.resolve(routePath))(app);
@@ -131,7 +129,6 @@ module.exports = function(db) {
 	app.locals.jsFiles = config.getJavaScriptAssets();
 	app.locals.cssFiles = config.getCSSAssets();
 
-	//return app;
 
 	return app;
 };
