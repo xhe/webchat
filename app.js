@@ -9,7 +9,11 @@ fs = require('fs')
 ;
 
 var port = config.port,
-	num_processes = 1;// process.env.WORKERS || require('os').cpus().length;
+	num_processes = 1;//process.env.WORKERS || require('os').cpus().length;
+
+var autoRestartedTimes = 0;
+var worker_start_ts = [];
+var worker_start_cnt = [];
 
 if (cluster.isMaster) {
 
@@ -17,16 +21,32 @@ if (cluster.isMaster) {
   //Helper function for spawning worker at index 'i'.
   var spawn = function(i) {
       workers[i] = cluster.fork();
+      worker_start_ts[i] = new Date().getTime();
+      worker_start_cnt[i]++;
       // Optional: Restart worker on exit
       workers[i].on('exit', function(worker, code, signal) {
     	  logError("espawning worker "+ i , function(){
     		  console.log('respawning worker', i);
-    		  spawn(i);
+    		  var nowTs = new Date().getTime();
+    		  if( (nowTs-worker_start_ts[i])<1000 ){
+    			  worker_start_ts[i] = nowTs;
+    			  worker_start_cnt[i]++;
+    		  }
+    		  
+    		  if( worker_start_cnt[i]<10){
+    			  spawn(i);
+    		  }else{
+    			  logError("Permanently Failed, too many restarting", function(){
+    				  console.log("permanently failed ");
+    			  });
+    		  }
+    		  
     	  } );
       });
   };
   // Spawn workers.
   for (var i = 0; i < num_processes; i++) {
+	  worker_start_cnt[i] = 0;
       spawn(i);
   }
 
@@ -41,23 +61,27 @@ if (cluster.isMaster) {
   };
 
   // Create the outside facing server listening on our port.
-  var server = net.createServer(function(connection) {
-  	  var worker = workers[worker_index(connection.remoteAddress, num_processes)];
-  	  worker.send('sticky-session:connection', connection);
-  }).listen(port);
+  if(num_processes>1)
+	  var server = net.createServer(function(connection) {
+	  	  var worker = workers[worker_index(connection.remoteAddress, num_processes)];
+	  	  worker.send('sticky-session:connection', connection);
+	  }).listen(port);
   
 } else {
 	
 	var mongoose = require('mongoose');
 	
 	//Bootstrap db connection
-	var db = mongoose.connect(config.db);
+	var db = mongoose.connect(config.db, {server:{auto_reconnect:true}});
 	//Init the express application
 	var app = require('./config/express')(db);
 	//Start the app by listening on <port>
-	var server = app.listen(0, 'localhost');
+	if(num_processes>1)
+		var localServer = app.listen(0, 'localhost');
+	else
+		var localServer = app.listen(port);
 	
-	var io = sio(server);
+	var io = sio(localServer);
 	if(num_processes>1)
 		io.adapter(sio_redis({ host: config.redis.host, port: config.redis.port }));
 	
@@ -65,14 +89,15 @@ if (cluster.isMaster) {
 	socketService()['init'](io);
 	
 	// Listen to messages sent from the master. Ignore everything else.
-    process.on('message', function(message, connection) {
-    	 if (message !== 'sticky-session:connection') {
-            return;
-        }
-
-        server.emit('connection', connection);
-    });
-	
+	if(num_processes>1){
+		process.on('message', function(message, connection) {
+	    	 if (message !== 'sticky-session:connection') {
+	            return;
+	        }
+	    	localServer.emit('connection', connection);
+		});
+	}
+  
     //Logging initialization
 	console.log('MEAN.JS application started on port ' + config.port);
 }
@@ -96,7 +121,6 @@ var logError=function(string, cb){
 						 cb();
 					  });
 		 }
-		  
 	  });
 }
 	 
