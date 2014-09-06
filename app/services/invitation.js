@@ -43,7 +43,7 @@ exports.invite = function(invitor, inviteeId, msg, roomId,  cb){
 		if(err){
 			cb({status: 'failed', error: err})
 		}else{
-			if(roomId!==null){
+			if(roomId!=='null'){
 				Invitation.find(
 						{
 							from: invitor._id,
