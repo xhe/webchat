@@ -9,7 +9,7 @@ fs = require('fs')
 ;
 
 var port = config.port,
-	num_processes = 1;//process.env.WORKERS || require('os').cpus().length;
+	num_processes = process.env.WORKERS || require('os').cpus().length;
 
 var autoRestartedTimes = 0;
 var worker_start_ts = [];
