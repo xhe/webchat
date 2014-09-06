@@ -9,7 +9,7 @@ fs = require('fs')
 ;
 
 var port = config.port,
-	num_processes =  process.env.WORKERS || require('os').cpus().length;
+	num_processes = 1;// process.env.WORKERS || require('os').cpus().length;
 
 if (cluster.isMaster) {
 
@@ -58,7 +58,8 @@ if (cluster.isMaster) {
 	var server = app.listen(0, 'localhost');
 	
 	var io = sio(server);
-	io.adapter(sio_redis({ host: config.redis.host, port: config.redis.port }));
+	if(num_processes>1)
+		io.adapter(sio_redis({ host: config.redis.host, port: config.redis.port }));
 	
 	var socketService = require('./app/services/sockets');
 	socketService()['init'](io);
