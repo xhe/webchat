@@ -1,6 +1,7 @@
+
 define(function (require) {
 	
-	var EventService = function( io  ){
+	var EventService = function( io ){
 		
 		this.EVENT_TYPE_INVITED = "invited";
 		this.EVENT_TYPE_REPLIED = "replied";
@@ -8,18 +9,24 @@ define(function (require) {
 		this.EVENT_NOTIFY_ON_LINE_MEMBER = "on_line_members";
 		this.EVENT_NOTIFY_MEMBER_ON_LINE = "member_on_line";
 		this.EVENT_NOTIFY_MEMBER_OFF_LINE = "member_off_line";
+		this.EVENT_DISCONNECT = "disconnect";
 		var socket = null;
-		
+		this.screenName = ""; 
 		this.connect = function(screenName){
-			socket = io.connect('/');
+			this.screenName = screenName;
+			socket = io.connect('/', {
+			    'reconnection delay': 100, // defaults to 500
+			    'reconnection limit': 100, // defaults to Infinity
+			    'max reconnection attempts': Infinity // defaults to 10
+			  });
 			bindSocketEvent();
 			socket.emit("login", screenName);
-		};
+		}; 
 		
-		this.logout = function(){
-			socket.emit("logout");
-		};
-		
+		this.logout = function(){  
+			socket.emit("logout"); 
+		}; 
+		  
 		this.isUserOnline = function(member){
 			var result = _.find(this.onlineContacts, function(m){
 				return m===member.screenName;
@@ -27,10 +34,15 @@ define(function (require) {
 			return result!=undefined;
 		};
 		
-		this.onlineContacts = [];
-		
+		this.onlineContacts = []; 
+		 
 		var bindSocketEvent = function(){
-			
+			socket.on(window.socketEventService.EVENT_DISCONNECT, function () {
+				if(confirm("Please reload the page to establish connection with server. We apologize for the inconvenience.")){
+					location.reload();
+				}
+			}); 
+			  
 			socket.on(window.socketEventService.EVENT_TYPE_INVITED, 
 	          			function(invitation){
 							window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_INVITED, invitation);

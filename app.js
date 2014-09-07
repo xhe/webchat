@@ -9,14 +9,14 @@ fs = require('fs')
 ;
 
 var port = config.port,
-	num_processes = process.env.WORKERS || require('os').cpus().length;
+	num_processes =   process.env.WORKERS || require('os').cpus().length;
 
 var autoRestartedTimes = 0;
 var worker_start_ts = [];
 var worker_start_cnt = [];
 
-if (cluster.isMaster) {
-
+if (cluster.isMaster) { 
+  
   var workers = [];
   //Helper function for spawning worker at index 'i'.
   var spawn = function(i) {

@@ -16,3 +16,9 @@ chkconfig redis on
 chkconfig --list redis
 
 //http://briansnelson.com/How_to_install_Redis_on_a_Centos_6.4_Server
+
+http://blog.nodejitsu.com/keep-a-nodejs-server-up-with-forever/
+forever start app
+
+//install apche2.4
+http://unix.stackexchange.com/questions/138899/centos-install-using-yum-apache-2-4
