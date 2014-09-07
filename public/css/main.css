@@ -83,14 +83,16 @@ float: none;
 	  }
 	  
 	  #messages { 
-	   	list-style-type: none; 
-	   	margin: 0; padding: 0; 
-	   	position: absolute;
-		top:110px;
-		bottom: 75px;
-		left: 0px;
-		right: 0px;
-		overflow: auto;
+	   	bottom: 50px;
+    left: 0;
+    list-style-type: none;
+    margin: 0;
+    overflow: auto;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 176px;
+	   
 	   }
        
        #messages li { padding: 5px 10px; }

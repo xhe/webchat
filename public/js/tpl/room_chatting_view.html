@@ -3,17 +3,15 @@
 		<div class="headerContent"></div>
 		
 		<div style="margin:0px; padding:0px" data-role="content" > 
+			
+				<div class='footerContent_top'>
+				</div>		
 				
 				
+				<a data-icon="plus" data-role="button" data-inline="true" href="#invite/<%= roomId%>">Members</a>
+				<a  data-icon="arrow-u" data-role="button" id="btnMorePrev" data-inline="true">Messages</a>
 				
-				<a data-icon="plus" data-role="button" data-inline="true" href="#invite/<%= roomId%>">Add Member</a>
-				<a  data-icon="arrow-u" data-role="button" id="btnMorePrev" data-inline="true">More Messages</a>
-				
-				
-				<ul id="messages">
-				</ul>
-				
-				<table style="width:100%" id='tblChat'>
+				<table style="width:100%">
 		     		<tr>
 		     			<td><input id="txtMsg" autocomplete="off" />
 		    			</td>
@@ -22,8 +20,13 @@
 		    			</td>
 		     		</tr>
 		     	</table>
-		
+				
+				<ul id="messages">
+				</ul>
+			
 			</div>
-	<div class="footerContent"></div>
+	<div class="footerContent">
+				
+	</div>
 		
 </section>
