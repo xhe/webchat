@@ -31,8 +31,8 @@ var PhotoSchema = new Schema({
 
 PhotoSchema.post('remove', function (doc) {
 	
-	var path_original = __dirname+'/../../public/uploads/original/';
-	var path_thumb =  __dirname+'/../../public/uploads/thumb/';
+	var path_original = __dirname+'/../../www/uploads/original/';
+	var path_thumb =  __dirname+'/../../www/uploads/thumb/';
 	fs.unlink(path_original+doc.filename);
 	_.forEach(doc.renders, function(render){
 		fs.unlink(path_thumb+render.filename);

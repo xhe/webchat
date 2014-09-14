@@ -41,7 +41,7 @@ module.exports = function(db) {
 	app.set('views', './app/views');
 
 	// Setting the app router and static folder
-	app.use(express.static(path.resolve('./public')));
+	app.use(express.static(path.resolve('./www')));
 	
 	// Environment dependent middleware
 	if (process.env.NODE_ENV === 'development') {
@@ -92,7 +92,7 @@ module.exports = function(db) {
 	app.disable('x-powered-by');
 	
 	app.use(multer({
-        dest: './public/uploads/',
+        dest: './www/uploads/',
         rename: function (fieldname, filename) {
             return filename.replace(/\W+/g, '-').toLowerCase();
         }
