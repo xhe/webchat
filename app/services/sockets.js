@@ -19,10 +19,9 @@ module.exports =  function(){
 	
 	var initSocket = function(io){
 		
-		io.on("connection", function(socket){
+		io.on("connection", function(socket){ 
 			console.log('connection');
 			socket.on(EVENT_LOGIN, function(name){
-				console.log('login');
 				sockets_username_socket[name] = socket.id;
 				sockets_socketid_username[socket.id] = name;
 				allSockets[socket.id] = socket;

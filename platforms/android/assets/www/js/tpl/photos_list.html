@@ -1,0 +1,24 @@
+<h3>Your current photos</h3>
+<hr/>
+
+<% _.each(results, function(item){%>
+	<% _.each(item.get('renders'), function(render){%>
+		<% if(render.dimension==50){%>
+			<div class="divProfileImageItem">
+				 <table class="tabProfileImageItem <%= item.get('use_as_head')?'profileImageItemSelected':''  %>" 
+				 data-photoid="<%= item.get('_id') %>">
+				 <tr><td>
+				 	<img src="/uploads/thumb/<%= render.filename%>"/>
+				 </td></tr>
+				 </table>
+						
+			</div>
+		<%}%>
+	<%})%>
+<%})%>
+
+<button class="ui-btn ui-icon-delete ui-btn-icon-left ui-shadow ui-corner-all" id='btnDeleteSelectedImages'>delete</button>
+
+<button class="ui-btn ui-icon-check ui-btn-icon-left ui-shadow ui-corner-all" id='btnViewHeaderImage' style='display:none'>View Detail</button>
+
+<button class="ui-btn ui-icon-check ui-btn-icon-left ui-shadow ui-corner-all" id='btnChangeHeaderImage' style='display:none'>Set As Header</button>
