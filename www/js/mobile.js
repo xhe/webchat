@@ -10,10 +10,7 @@ require.config( {
             "underscore": "libs/underscore",
             "backbone": "libs/backbone",
             "text":    "libs/text",
-            "jquery.cookie": "libs/jquery.cookie",
-            "socket.io": 'libs/socket.io-1.0.3',
-            "cordova":'../cordova',
-            "index": 'index'
+            "jquery.cookie": "libs/jquery.cookie"
       },
       // Sets the configuration for your third party scripts that are not AMD compatible
       shim: {
@@ -33,8 +30,8 @@ require.config( {
 } );
 
 // Includes File Dependencies
-require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "common/utils", "socket.io",  "services/socketEvents", "jquery.cookie", "cordova", "andorid.socket.io" ],
-		function( $, Backbone, Mobile, appConfig, utils, io_web, SocketEventService ) {
+require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "common/utils",  "services/socketEvents", "jquery.cookie" ],
+		function( $, Backbone, Mobile, appConfig, utils, SocketEventService ) {
 	
 	Backbone.emulateHTTP = true;
 /*	
@@ -76,7 +73,7 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 	}else{
 		require( [ "jquerymobile","jquery.cookie" ], function() {
 			// Instantiates a new Backbone.js Mobile Router
-			window.socketEventService = new SocketEventService( new io_web() );
+			window.socketEventService = new SocketEventService( io );
 			_.extend( window.socketEventService,  Backbone.Events  );	
 			utils.autoLogin(function(){
 				router = new Mobile();

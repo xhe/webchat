@@ -14,9 +14,7 @@ define(function (require) {
 		this.screenName = ""; 
 		this.connect = function(screenName){
 			this.screenName = screenName;
-			socket = io.connect(window.hostURL?window.hostURL:'/' );
-		console.log( window.hostURL?window.hostURL:'/'  )	
-		console.log(socket)
+			socket = io(window.hostURL?window.hostURL:'/' );
 			bindSocketEvent();
 			socket.emit("login", screenName);
 		}; 
