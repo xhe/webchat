@@ -11,7 +11,9 @@ require.config( {
             "backbone": "libs/backbone",
             "text":    "libs/text",
             "jquery.cookie": "libs/jquery.cookie",
-            "socket.io": 'libs/socket.io'
+            "socket.io": 'libs/socket.io',
+            "cordova":'../cordova',
+            "andorid.socket.io":'libs/android.socket.io'
       },
       // Sets the configuration for your third party scripts that are not AMD compatible
       shim: {
@@ -31,15 +33,18 @@ require.config( {
 } );
 
 // Includes File Dependencies
-require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "common/utils", "socket.io",  "services/socketEvents", "jquery.cookie" ],
-		function( $, Backbone, Mobile, appConfig, utils, io, SocketEventService ) {
+require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "common/utils", "socket.io",  "services/socketEvents", "jquery.cookie", "cordova", "andorid.socket.io" ],
+		function( $, Backbone, Mobile, appConfig, utils, io_web, SocketEventService ) {
 	
 	Backbone.emulateHTTP = true;
-	
-	
-	window.socketEventService = new SocketEventService(  new io() );
-	_.extend( window.socketEventService,  Backbone.Events  );		
-	
+/*	
+	if( window.platform ==='android'){
+		window.socketEventService = new SocketEventService(  io);
+	}else{
+		window.socketEventService = new SocketEventService( new io_web() );
+	}
+	_.extend( window.socketEventService,  Backbone.Events  );	
+*/	
 	$( document ).on( "mobileinit",
 		// Set up the "mobileinit" handler before requiring jQuery Mobile's module
 		function() {
@@ -57,13 +62,28 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 		}
 	)
 	
-	require( [ "jquerymobile","jquery.cookie" ], function() {
-		// Instantiates a new Backbone.js Mobile Router
-		utils.autoLogin(function(){
-			router = new Mobile();
-		});
-	});
 	
-} );
+	if( window.platform ){
+		document.addEventListener("deviceready",function(){ 
+			require( [ "jquerymobile","jquery.cookie" ], function() { 
+				window.socketEventService = new SocketEventService(  io);
+				_.extend( window.socketEventService,  Backbone.Events  );	
+				utils.autoLogin(function(){ console.log('getting here 123 ');
+					router = new Mobile();
+				});
+			});
+		},false);
+	}else{
+		require( [ "jquerymobile","jquery.cookie" ], function() {
+			// Instantiates a new Backbone.js Mobile Router
+			window.socketEventService = new SocketEventService( new io_web() );
+			_.extend( window.socketEventService,  Backbone.Events  );	
+			utils.autoLogin(function(){
+				router = new Mobile();
+			});
+		});
+	}
+
+});
 
 

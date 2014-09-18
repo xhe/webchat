@@ -9,9 +9,11 @@
     </author>
     <content src="index.html" />
     
+    <access origin="dealsmatcher.com" subdomains="true" />
+    
     <access origin="http://10.0.2.2:3000" subdomains="true" />
 	<access origin="http://localhost:3000" subdomains="true" />
 	<access origin="http://127.0.0.1:3000" subdomains="true" />
-	<access origin="http://dealsmatcher.com:3000" subdomains="true" />
+	
 	
 </widget>

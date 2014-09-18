@@ -14,11 +14,9 @@ define(function (require) {
 		this.screenName = ""; 
 		this.connect = function(screenName){
 			this.screenName = screenName;
-			socket = io.connect( (window.hostURL?window.hostURL:'')+'/', {
-			    'reconnection delay': 100, // defaults to 500
-			    'reconnection limit': 100, // defaults to Infinity
-			    'max reconnection attempts': Infinity // defaults to 10
-			  });
+			socket = io.connect(window.hostURL?window.hostURL:'/' );
+		console.log( window.hostURL?window.hostURL:'/'  )	
+		console.log(socket)
 			bindSocketEvent();
 			socket.emit("login", screenName);
 		}; 
@@ -37,6 +35,7 @@ define(function (require) {
 		this.onlineContacts = []; 
 		 
 		var bindSocketEvent = function(){
+				
 			socket.on(window.socketEventService.EVENT_DISCONNECT, function () {
 				if(confirm("Please reload the page to establish connection with server. We apologize for the inconvenience.")){
 					location.reload();

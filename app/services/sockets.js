@@ -21,7 +21,10 @@ module.exports =  function(){
 		
 		io.on("connection", function(socket){ 
 			console.log('connection');
-			socket.on(EVENT_LOGIN, function(name){
+			socket.emit('ping', { message: 'Hello from server frank he ' + Date.now() });
+			  socket.on(EVENT_LOGIN, function(name){
+				console.log(' event: ' + EVENT_LOGIN +" : "+name )
+				socket.emit('welcome', name);
 				sockets_username_socket[name] = socket.id;
 				sockets_socketid_username[socket.id] = name;
 				allSockets[socket.id] = socket;
@@ -29,6 +32,7 @@ module.exports =  function(){
 			});
 			
 			socket.on(EVENT_LOGOUT, function(){
+				console.log(' event: ' + EVENT_LOGOUT +" : "+ socket.id +":"+sockets_socketid_username[socket.id] )
 				sendUserOffLineMsg(socket.id);
 				
 				delete sockets_username_socket[sockets_socketid_username[socket.id]];

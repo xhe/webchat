@@ -35,6 +35,7 @@ D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\css \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\img \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\index.html \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js \
+D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\plugins \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\uploads \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\css\font-awesome-4.2.0 \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\css\images \
@@ -87,7 +88,6 @@ D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\css\images\icons-36
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\img\favorite-100.png \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\img\favorite.png \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\common \
-D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\index.js \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\libs \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\mobile.js \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\models \
@@ -97,6 +97,7 @@ D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\tpl \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\views \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\common\app-config.js \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\common\utils.js \
+D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\libs\android.socket.io.js \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\libs\backbone.js \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\libs\jquery.cookie.js \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\libs\jquery.endlessscroll.js \
@@ -155,6 +156,9 @@ D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\views\PhotosView
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\views\PhotoView.js \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\views\RegisterView.js \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\js\views\RoomChattingView.js \
+D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\plugins\com.ququplay.websocket.WebSocket \
+D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\plugins\com.ququplay.websocket.WebSocket\www \
+D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\plugins\com.ququplay.websocket.WebSocket\www\phonegap-websocket.js \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\uploads\dsc01943.JPG \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\uploads\original \
 D:\webSite\nodes\meanjs\webchat\platforms\android\assets\www\uploads\thumb \
