@@ -11,9 +11,9 @@ require.config( {
             "backbone": "libs/backbone",
             "text":    "libs/text",
             "jquery.cookie": "libs/jquery.cookie",
-            "socket.io": 'libs/socket.io',
+            "socket.io": 'libs/socket.io-1.0.3',
             "cordova":'../cordova',
-            "andorid.socket.io":'libs/android.socket.io'
+            "index": 'index'
       },
       // Sets the configuration for your third party scripts that are not AMD compatible
       shim: {
