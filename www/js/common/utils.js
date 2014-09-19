@@ -186,7 +186,7 @@ define(function(require){
      				for(var j=0;j<photos[i].renders.length;j++)
      					if(photos[i].renders[j].dimension==dimention){
      						fileName = photos[i].renders[j].filename;
-     						return '/uploads/thumb/' + fileName;
+     						return  (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
      					}
      		return "";		
 		}

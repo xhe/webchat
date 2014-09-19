@@ -4,7 +4,7 @@
 						<% if (item.use_as_head){ %>	
 							<% _.each(item.renders, function(render){%>
 								<% if(render.dimension>200 && render.dimension<300 ){%>
-									<img src="/uploads/thumb/<%= render.filename%>"/>
+									<img src="<%=serverUrl%>/uploads/thumb/<%= render.filename%>"/>
 								<%}%>
 							<%})%>
 						<%}%>

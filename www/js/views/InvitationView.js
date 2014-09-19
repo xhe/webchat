@@ -46,7 +46,7 @@ define(function(require){
         },
         
         render: function() { 
-            $(this.el).html(this.template({ user: util.getLoggedInUser() }));
+            $(this.el).html(this.template({ user: util.getLoggedInUser(), serverUrl: (window.hostURL?window.hostURL:"")  }));
             new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Invitation").render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             var detailView = new InvitationDetailDetailView({ model: this.invitationCollection});

@@ -34,14 +34,7 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 		function( $, Backbone, Mobile, appConfig, utils, SocketEventService ) {
 	
 	Backbone.emulateHTTP = true;
-/*	
-	if( window.platform ==='android'){
-		window.socketEventService = new SocketEventService(  io);
-	}else{
-		window.socketEventService = new SocketEventService( new io_web() );
-	}
-	_.extend( window.socketEventService,  Backbone.Events  );	
-*/	
+
 	$( document ).on( "mobileinit",
 		// Set up the "mobileinit" handler before requiring jQuery Mobile's module
 		function() {
@@ -61,16 +54,19 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 	
 	
 	if( window.platform ){
+		
 		document.addEventListener("deviceready",function(){ 
 			require( [ "jquerymobile","jquery.cookie" ], function() { 
 				window.socketEventService = new SocketEventService(  io);
 				_.extend( window.socketEventService,  Backbone.Events  );	
-				utils.autoLogin(function(){ console.log('getting here 123 ');
+				utils.autoLogin(function(){ 
 					router = new Mobile();
 				});
 			});
 		},false);
+	
 	}else{
+	
 		require( [ "jquerymobile","jquery.cookie" ], function() {
 			// Instantiates a new Backbone.js Mobile Router
 			window.socketEventService = new SocketEventService( io );
@@ -79,6 +75,7 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 				router = new Mobile();
 			});
 		});
+	
 	}
 
 });

@@ -51,7 +51,7 @@ define(function(require){
 		},
 		
 		render: function(){
-    		$(this.el).html(_.template( search_friend_result_tpl, { 'contacts': this.model.users }));
+    		$(this.el).html(_.template( search_friend_result_tpl, { 'contacts': this.model.users, 'serverUrl': (window.hostURL?window.hostURL:"")   }));
     		$( ".listview" ).listview().listview( "refresh" );
 		}
     	

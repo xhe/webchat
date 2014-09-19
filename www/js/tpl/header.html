@@ -2,7 +2,7 @@
 		<div data-role="header">
 			<div style="position: absolute;left=10px;padding-top: 5px; cursor: pointer;" class="back">
 						<% if (user.thumbFileName.indexOf('.')>0 ){  %>
-							<img src="/uploads/thumb/<%= user.thumbFileName%>"/>
+							<img src="<%=serverUrl%>/uploads/thumb/<%= user.thumbFileName%>"/>
 						<%}else{%>
 							Welcome, <%= user.screenName%>
 						<%}%>

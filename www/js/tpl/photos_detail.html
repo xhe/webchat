@@ -9,7 +9,7 @@
 				 data-photoid="<%= item.get('_id') %>">
 				 <tr>
 				 	<td style="width: 70px;">
-				 		<img src="/uploads/thumb/<%= render.filename%>"/>
+				 		<img src="<%=serverUrl%>/uploads/thumb/<%= render.filename%>"/>
 				 	</td>
 				 	<td>
 				 		<strong><%= item.get('title')%></strong>

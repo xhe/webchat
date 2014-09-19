@@ -8,7 +8,7 @@
 				 <table class="tabProfileImageItem <%= item.get('use_as_head')?'profileImageItemSelected':''  %>" 
 				 data-photoid="<%= item.get('_id') %>">
 				 <tr><td>
-				 	<img src="/uploads/thumb/<%= render.filename%>"/>
+				 	<img src="<%=serverUrl%>/uploads/thumb/<%= render.filename%>"/>
 				 </td></tr>
 				 </table>
 						

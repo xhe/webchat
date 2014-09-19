@@ -9,7 +9,7 @@
 			<div class='divPhotoItem'>
 				<% _.each(item.get('renders'), function(render){%>
 					<% if(render.dimension==250){%>
-					 	<img src="/uploads/thumb/<%= render.filename%>"/>
+					 	<img src="<%=serverUrl%>/uploads/thumb/<%= render.filename%>"/>
 					<%}%>
 				<%})%>			
 			</div>	

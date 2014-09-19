@@ -8,7 +8,7 @@
 								<% if(photo.use_as_head){%>
 									<%_.each(photo.renders, function(render){%>
 										<% if(render.dimension==100){%>
-												<img src="/uploads/thumb/<%= render.filename%>">
+												<img src="<%=serverUrl%>/uploads/thumb/<%= render.filename%>">
 										<%}%>
 									<%})%>
 								<%}%>

@@ -42,7 +42,7 @@ define(function(require){
 		},
 		
 		render: function(){
-    		$(this.el).html(_.template( invitation_tpl, { 'invitations': this.model.result }));
+    		$(this.el).html(_.template( invitation_tpl, { 'invitations': this.model.result, serverUrl: (window.hostURL?window.hostURL:"") }));
 		}
     	
     });

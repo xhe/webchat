@@ -37,7 +37,7 @@ define(function(require){
         	if (!this.photo){
         		$.mobile.navigate("#photos");
         	}else{
-        		$(this.el).html(this.template({ user: util.getLoggedInUser(), item: this.photo }));
+        		$(this.el).html(this.template({ user: util.getLoggedInUser(), item: this.photo, serverUrl: (window.hostURL?window.hostURL:"")  }));
            }
         	new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Find Friends").render();
             new FooterView({ el: $(".footerContent", this.el)}).render();

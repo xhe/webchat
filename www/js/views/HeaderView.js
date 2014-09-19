@@ -31,7 +31,7 @@ define(function(require){
          },
     	
     	render: function(){
-    		$(this.el).html(_.template( header_tpl, { user: util.getLoggedInUser(), title: this.title  }));
+    		$(this.el).html(_.template( header_tpl, { user: util.getLoggedInUser(), title: this.title, serverUrl: (window.hostURL?window.hostURL:"")  }));
 		}
     });
       

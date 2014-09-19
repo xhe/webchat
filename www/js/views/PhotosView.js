@@ -164,7 +164,7 @@ define(function(require){
 	
     	render: function(){
     		Photo.currentCollection = this.model.models;
-    		$(this.el).html(_.template( this.tpl, { 'results': this.model.models }));
+    		$(this.el).html(_.template( this.tpl, { 'results': this.model.models,  serverUrl: (window.hostURL?window.hostURL:"")  }));
 		}
     	
     });
