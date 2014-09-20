@@ -22,3 +22,19 @@ forever start app
 
 //install apche2.4
 http://unix.stackexchange.com/questions/138899/centos-install-using-yum-apache-2-4
+
+
+in /etc/init/ (upstart)
+startWebchat.sh
+cd /srv/nodejs/webchat && node app.js >>/srv/nodejs/webchat/starting.log 2>&1
+
+
+
+webchat.conf
+start on runlevel [23456]
+stop on runlevel [06]
+respawn
+respawn limit 10 5
+script
+      	exec /etc/init/startwebchat.sh
+end script

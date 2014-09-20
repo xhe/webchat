@@ -1,7 +1,8 @@
 node_modules/*
 
 npm-debug.log
-
 www/uploads/*
+www/uploads/original/*
+www/uploads/thumb/*
 error_log
 platforms/*
