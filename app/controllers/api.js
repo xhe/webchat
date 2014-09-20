@@ -1,4 +1,3 @@
-console.log(__dir)
 var country_service =  require('../services/country');
 var user_service =  require('../services/user');
 var core_service =   require('../services/core');
