@@ -1,0 +1,20 @@
+
+		<div data-role="header">
+			<div style="position: absolute;left=10px;padding-top: 5px; cursor: pointer;" class="back">
+						<% if (user.thumbFileName.indexOf('.')>0 ){  %>
+							<img src="<%=serverUrl%>/uploads/thumb/<%= user.thumbFileName%>"/>
+						<%}else{%>
+							Welcome, <%= user.screenName%>
+						<%}%>
+			</div>
+			
+			<div style="text-align: center;height: 35px;padding-top: 15px;" id='headerText'>
+				<%=title%>
+			</div>
+			
+			
+			<div style="position: absolute;right: 10px;top:0px">
+				<a href='#logout' data-role='button'>Logout</a>
+			</div>
+			
+		</div>

@@ -1,0 +1,25 @@
+<section id="splashPage">
+		
+		<div class="headerContent"></div>
+		
+		<div data-role="content">
+				
+			<h1>Upload Photo</h1>	
+						
+			<form id="file-form" method="POST">
+			  <input type="file" id="file-select" name="photos[]" accept="image/*;capture=camera"/>
+			  <button type="submit" id="upload-button">Upload</button>
+			</form>
+			
+			<div data-role="controlgroup" data-type="horizontal">
+				<a class='hrefShowType' data-type="grid" data-role="button" data-icon="grid">Grid</a>
+				<a class='hrefShowType' data-type="detail" data-role="button" data-icon="info">Detail</a>
+			</div>
+			
+			<div id='divPhotoList'></div>
+			
+		</div>
+		
+		<div class="footerContent"></div>
+		
+</section>
