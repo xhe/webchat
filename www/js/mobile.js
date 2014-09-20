@@ -62,6 +62,49 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 				utils.autoLogin(function(){ 
 					router = new Mobile();
 				});
+				
+				//This is an event that fires when a Cordova application is put into the background.
+				document.addEventListener("pause", onPause, false);
+				function onPause() {
+				    // Handle the pause event
+					window.socketEventService.logout();
+				}
+				
+				document.addEventListener("resume", onResume, false);
+				//This is an event that fires when a Cordova application is retrieved from the background.
+				function onResume() {
+					setTimeout(function() {
+						  // TODO: do your thing!
+							window.socketEventService = new SocketEventService(  io);
+							_.extend( window.socketEventService,  Backbone.Events  );	
+							utils.autoLogin(function(){ 
+								router = new Mobile();
+							});
+				        }, 0);
+				}
+				
+				document.addEventListener("offline", onOffline, false);
+				function onOffline() {
+				    // Handle the offline event
+					window.socketEventService.logout();
+				}
+
+				document.addEventListener("online", onOnline, false);
+				//During initial startup, the first online event (if applicable) will take at least a second to fire. - ios
+				function onOnline() {
+				    // Handle the online event
+					setTimeout(function() {
+				          // TODO: do your thing!
+							window.socketEventService = new SocketEventService(  io);
+							_.extend( window.socketEventService,  Backbone.Events  );	
+							utils.autoLogin(function(){ 
+								router = new Mobile();
+							});
+				        }, 2000);
+				}
+
+				
+				
 			});
 		},false);
 	

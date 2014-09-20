@@ -24,7 +24,8 @@ define(function(require){
 			window.user.thumbFileName=user.thumbFileName;
 			delete user.photos
 			$.cookie('token', JSON.stringify(user));
-			
+			//alert (JSON.stringify(user))		
+			//alert ('new token is ' + $.cookie('token'))			
 			//set socket here
 			window.socketEventService.connect(user.screenName)
 		},
@@ -36,7 +37,6 @@ define(function(require){
 		logout: function(){
 			
 			window.socketEventService.logout();
-			
 			window.user = new User.User();
 			$.removeCookie('token');
 			return false;
@@ -44,8 +44,12 @@ define(function(require){
 		
 		autoLogin: function(cb){
 			var _this=this;
-			if($.cookie('token')){
-				var user = $.parseJSON($.cookie('token') );
+			if($.cookie('token') || window.user){
+				var user = window.user;
+				if(!user){
+					user = $.parseJSON($.cookie('token') );
+				}
+				
 				$.post( appConfig.serverUrl + 'autologin', 
 						{ screenName: user.screenName, token: user.token },
 						function(data){
