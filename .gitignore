@@ -2,5 +2,6 @@ node_modules/*
 
 npm-debug.log
 
-public/uploads/*
+www/uploads/original/*
+www/uploads/thumb/*
 error_log
