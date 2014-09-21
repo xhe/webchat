@@ -55,7 +55,7 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 	
 	if( window.platform ){
 		
-		document.addEventListener("deviceready",function(){ 
+		document.addEventListener("deviceready",function(){ utils.beep(1); utils.beep(2000);
 			require( [ "jquerymobile","jquery.cookie" ], function() { 
 				window.socketEventService = new SocketEventService(  io);
 				_.extend( window.socketEventService,  Backbone.Events  );	
@@ -101,10 +101,7 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 								router = new Mobile();
 							});
 				        }, 2000);
-				}
-
-				
-				
+				}				
 			});
 		},false);
 	

@@ -193,6 +193,26 @@ define(function(require){
      						return  (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
      					}
      		return "";		
+		},
+		
+		alert: function(msg, title){
+			if(window.platform){
+				navigator.notification.alert(msg, function(){}, title?title:null, "Ok");
+			}else{
+				alert(msg);
+			}	
+		},
+		
+		beep: function(times){
+			if(window.platform){
+				navigator.notification.beep(times);
+			}
+		},
+		
+		vibrate: function(ms){
+			if(window.platform){
+				navigator.notification.vibrate(ms);
+			}
 		}
 		
 	};

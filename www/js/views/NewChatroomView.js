@@ -32,14 +32,14 @@ define(function(require){
 	        			{
 	        			  success: function(model, response){
 	        			    if(response.status=='success'){
-	        			    	alert("Chat room has been added successfully.");
+	        			    	util.alert("Chat room has been added successfully.");
 	        			    	window.history.back();
 	        			    }else{
-	        			    	alert(response.message);
+	        			    	util.alert(response.message);
 	        			    }
 	        			  },
 	        			  error: function(){
-	        			    alert("error happened");
+	        				  util.alert("error happened");
 	        			  }
 	        			}
         			);

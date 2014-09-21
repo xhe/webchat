@@ -1,6 +1,7 @@
 define(function (require) {
 	var Backbone 		= require('backbone');
 	var config = require('common/app-config');
+	var utils = require('common/utils');
 	
 	Photo = Backbone.Model.extend({
 		
@@ -14,7 +15,7 @@ define(function (require) {
 						description: description
 					},
 					function(result){
-						alert("Photo detail has been updated.");
+						utils.alert("Photo detail has been updated.");
 					}
 			);
 		}
@@ -32,7 +33,7 @@ define(function (require) {
 						photoId: photoId
 					},
 					function(result){
-						alert("Default Head image updated")
+						utils.alert("Default Head image updated")
 						_this.fetch({reset: true});
 					}
 			);
@@ -48,7 +49,7 @@ define(function (require) {
 					},
 			    type: 'DELETE',
 			    success: function(result) {
-			    	alert("Selected images have been removed successfully.")
+			    	utils.alert("Selected images have been removed successfully.")
 					_this.fetch({reset: true});
 			    }
 			});

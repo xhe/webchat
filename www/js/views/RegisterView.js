@@ -72,7 +72,7 @@ define(function(require){
 	            							$("#"+response.errors.path).parent().prev().html(response.errors.message);
 	            						}
 	            					}else{
-            							alert("You have succcessfully created an account with us, please proceed to your home page to start using our service.");
+	            						util.alert("You have succcessfully created an account with us, please proceed to your home page to start using our service.");
             							util.setLoggedInUser( response.user );
             		        			$.mobile.navigate("#");
             						}

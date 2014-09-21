@@ -63,7 +63,7 @@ define(function(require){
         		  $("#upload-button").html('Upload');
         		  _this.photoCollection.fetch({reset: true});
         	  } else {
-        	    alert('An error occurred!');
+        		  util.alert('An error occurred!');
         	  }
         	};
         	// Send the Data.

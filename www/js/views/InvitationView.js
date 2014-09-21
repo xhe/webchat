@@ -5,7 +5,8 @@ define(function(require){
 		invitation_detail_detail_tpl	= require('text!tpl/invitation_detail_detail.html'),
 		HeaderView = require('views/HeaderView'),
 		FooterView = require('views/FooterView'),
-		InvitationModel = require('models/invitationModel')
+		InvitationModel = require('models/invitationModel'),
+		util = require('common/utils'),
 		;
 		
 
@@ -25,7 +26,7 @@ define(function(require){
        	},
         
        	action_done: function(){
-       		alert('Action has been submitted successfully.');
+       		util.alert('Action has been submitted successfully.');
        		$.mobile.navigate("#");
        	},
        	

@@ -53,10 +53,10 @@ define(function(require){
          sendFriendRequest: function(){
         	 this.model.invite( $("#friendRequestMsg").val(), window.invRoomId , function(result){
         		if(result.status=="success"){
-        			alert("User invitation has been sent.");
+        			util.alert("User invitation has been sent.");
         			$.mobile.navigate("#");
         		}else{
-        			alert("Following error happened: \n" +result.error );
+        			util.alert("Following error happened: \n" +result.error );
         		}
         	 });
          },

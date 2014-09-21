@@ -28,7 +28,7 @@ define(function(require){
         	var phone =  util.extractDigits($("#search_phone_number").val());
         	var email = $("#search_email").val();
         	if( phone=="" && email=="" ){
-        		alert("Please enter searching criteria first.")
+        		util.alert("Please enter searching criteria first.")
         	}else{
         		this.userCollection.search_users(phone, email);
         	}
