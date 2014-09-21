@@ -12,7 +12,7 @@ exports.addUser = function(req, res){
 	user_service.createUser(req, res);
 };
 
-exports.login = function(req, res){
+exports.login = function(req, res){ 
 	user_service.login(req, res);
 };
 

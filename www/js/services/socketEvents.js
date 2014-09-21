@@ -12,7 +12,7 @@ define(function (require) {
 		this.EVENT_DISCONNECT = "disconnect-fffkkk";
 		var socket = null;
 		this.screenName = ""; 
-		this.connect = function(screenName){
+		this.connect = function(screenName){ console.log('in connection event')
 			this.screenName = screenName;
 			socket = io(window.hostURL?window.hostURL:'/' );
 			bindSocketEvent();

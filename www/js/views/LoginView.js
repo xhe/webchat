@@ -22,8 +22,9 @@ define(function(require){
         },
         
         login: function(){
+        	
         	var username = $("#userName").val();
-        	var password = $("#passWord").val();
+        	var password = $("#passWord").val(); 
         	$.post(appConfig.serverUrl + 'login', 
         		  {
         			'userName': username,
