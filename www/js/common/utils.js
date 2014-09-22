@@ -209,9 +209,9 @@ define(function(require){
 			}
 		},
 		
-		vibrate: function(ms){
+		vibrate: function(ms){ console.log('vibrate ')
 			if(window.platform){
-				navigator.notification.vibrate(ms);
+				navigator.notification.vibrate(ms?ms:500);
 			}
 		}
 		

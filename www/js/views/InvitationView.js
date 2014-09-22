@@ -6,7 +6,7 @@ define(function(require){
 		HeaderView = require('views/HeaderView'),
 		FooterView = require('views/FooterView'),
 		InvitationModel = require('models/invitationModel'),
-		util = require('common/utils'),
+		util = require('common/utils')
 		;
 		
 

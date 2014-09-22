@@ -11,9 +11,4 @@
     
      <access origin="*" />
 	
-    <!-- required by IOS --> 
-	<feature name="Notification">
-	    <param name="ios-package" value="CDVNotification" />
-	</feature>
-	
 </widget>

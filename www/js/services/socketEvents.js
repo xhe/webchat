@@ -3,6 +3,9 @@ define(function (require) {
 	
 	var EventService = function( io ){
 		
+		util = require('common/utils');
+		
+		
 		this.EVENT_TYPE_INVITED = "invited";
 		this.EVENT_TYPE_REPLIED = "replied";
 		this.EVENT_TYPE_CHATMESSAGE = "chat_message";
@@ -12,7 +15,7 @@ define(function (require) {
 		this.EVENT_DISCONNECT = "disconnect-fffkkk";
 		var socket = null;
 		this.screenName = ""; 
-		this.connect = function(screenName){ console.log('in connection event')
+		this.connect = function(screenName){
 			this.screenName = screenName;
 			socket = io(window.hostURL?window.hostURL:'/' );
 			bindSocketEvent();
@@ -32,8 +35,9 @@ define(function (require) {
 		
 		this.onlineContacts = []; 
 		 
+		
+		
 		var bindSocketEvent = function(){
-				
 			socket.on(window.socketEventService.EVENT_DISCONNECT, function () {
 				if(confirm("Please reload the page to establish connection with server. We apologize for the inconvenience.")){
 					location.reload();
@@ -43,18 +47,23 @@ define(function (require) {
 			socket.on(window.socketEventService.EVENT_TYPE_INVITED, 
 	          			function(invitation){
 							window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_INVITED, invitation);
+							util.vibrate();
 		   				}
 					);
 			
 			socket.on(window.socketEventService.EVENT_TYPE_REPLIED, 
           			function(invitation){
 							window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_REPLIED, invitation);
+							util.vibrate();
 	   				}
 				);
 			
 			socket.on(window.socketEventService.EVENT_TYPE_CHATMESSAGE, 
 					function(msg){
 							window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_CHATMESSAGE, msg);
+							if(JSON.parse(msg).creator.screenName!==util.getLoggedInUser().screenName){
+								util.vibrate();
+							}
 					}
 			);
 			
