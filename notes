@@ -38,3 +38,7 @@ respawn limit 10 5
 script
       	exec /etc/init/startwebchat.sh
 end script
+
+
+Goold GCM:
+https://console.developers.google.com/project/weighty-treat-711/apiui/credential
