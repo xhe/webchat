@@ -47,7 +47,7 @@ define(function(require){
         },
         
         render: function() { 
-            $(this.el).html(this.template({ user: util.getLoggedInUser(), serverUrl: (window.hostURL?window.hostURL:"")  }));
+            $(this.el).html(this.template({ user: util.getLoggedInUser(), 'serverUrl': (window.hostURL?window.hostURL:"")  }));
             new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Invitation").render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             var detailView = new InvitationDetailDetailView({ model: this.invitationCollection});
@@ -64,7 +64,7 @@ define(function(require){
          
          render: function(){
         	 this.template = _.template( invitation_detail_detail_tpl );
-        	 $("#divInvDetail").html( this.template({ invitation: this.result }) );
+        	 $("#divInvDetail").html( this.template({ invitation: this.result ,  'serverUrl': (window.hostURL?window.hostURL:"") }) );
          
         	 $("#friendRequestReplyMsg").textinput().textinput("refresh");
     		 $( "#btnFriendRequestAccept" ).button().button( "refresh" );
