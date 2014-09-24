@@ -21,10 +21,76 @@ define(function(require){
         },
         events:{
         	"submit #file-form": "upload",
-        	"click .hrefShowType": "changeShowType"
+        	"click .hrefShowType": "changeShowType",
+        	"click #btnPhotos": "getPhoto",
+        	"click #btnCamera": "capturePhoto"
         },
-       
         
+	     // A button will call this function
+	     // To capture photo
+	     capturePhoto: function() {
+	    	 _self = this;
+	         // Take picture using device camera and retrieve image as base64-encoded string
+	         navigator.camera.getPicture(
+	        		 _self.uploadPhoto,
+	        		 function(message){
+		    			 util.alert('Failed to get pictures');
+		    		 }, 
+		    		 { 
+			             quality: 50, destinationType: Camera.DestinationType.FILE_URI 
+			         });
+	     },
+	
+	     // A button will call this function
+	     // To select image from gallery
+	     getPhoto: function() {
+	    	 // Retrieve image file location from specified source
+	    	 _self = this;
+	         navigator.camera.getPicture(
+		        		 _self.uploadPhoto, 
+		        		 function(message){
+		        			 util.alert('Failed to get pictures');
+		        		 }, 
+		        		 { 
+		        			 quality: 50,
+				             destinationType: navigator.camera.DestinationType.FILE_URI,
+				             sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY
+		        		 }
+	        		 );
+	     },
+	     
+	     uploadPhoto: function(imageURI) { alert (imageURI)
+	         //If you wish to display image on your page in app
+	         // Get image handle
+	         var largeImage = document.getElementById('imgUserPicture');
+
+	         // Unhide image elements
+	         largeImage.style.display = 'block';
+
+	         // Show the captured photo
+	         // The inline CSS rules are used to resize the image
+	         largeImage.src = imageURI;
+	        
+	        /*
+	         var options = new FileUploadOptions();
+	         options.fileKey = "file";
+	         var userid = '123456';
+	         var imagefilename = userid + Number(new Date()) + ".jpg";
+	         options.fileName = imagefilename;
+	         options.mimeType = "image/jpg";
+
+	         var params = new Object();
+	         params.imageURI = imageURI;
+	         params.userid = sessionStorage.loginuserid;
+	         options.params = params;
+	         options.chunkedMode = false;
+	         var ft = new FileTransfer();
+	         var url = "Your_Web_Service_URL";
+	         ft.upload(imageURI, url, win, fail, options, true);
+	      */  
+	     },
+
+	     
         changeShowType: function(event){
         	if( event.target.getAttribute('data-type') == 'grid'){
         		this.photoListView.setTemplate(photos_list_tpl);
@@ -71,7 +137,7 @@ define(function(require){
         },
         
         render: function() {           
-            $(this.el).html(this.template({ user: util.getLoggedInUser() }));
+            $(this.el).html(this.template({ user: util.getLoggedInUser(), mobile: window.platform?true:false }));
             new HeaderView({ el: $(".headerContent", this.el)}).setTitle("My Photos").render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             this.photoListView = new PhotoListView({ el: $("#divPhotoList", this.el), model: this.photoCollection });

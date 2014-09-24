@@ -54,7 +54,6 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 	
 	
 	if( window.platform ){
-		
 		document.addEventListener("deviceready",function(){ 
 			require( [ "jquerymobile","jquery.cookie" ], function() { 
 				window.socketEventService = new SocketEventService(  io);
@@ -62,7 +61,6 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 				utils.autoLogin(function(){ 
 					router = new Mobile();
 				});
-				
 				//This is an event that fires when a Cordova application is put into the background.
 				document.addEventListener("pause", onPause, false);
 				function onPause() {

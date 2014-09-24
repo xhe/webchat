@@ -123,3 +123,21 @@ img.online{
 img.offline{
 	border:none;
 }
+
+#btnPhotos:before{
+	content: "\f1c5";
+	font-family: FontAwesome;
+    font-style: normal;
+    padding-right: 10px;
+    font-weight: normal;
+    text-decoration: inherit;
+}
+
+#btnCamera:before{
+	content: "\f030";
+	font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    padding-right: 10px;
+    text-decoration: inherit;
+}
