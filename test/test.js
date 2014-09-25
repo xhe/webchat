@@ -1,5 +1,5 @@
 var fs = require("fs");
-var finishedPoint = 35;
+var finishedPoint = 45;
 var finnab = function(i){
 	if(i==0){
 		return 0;
@@ -11,13 +11,15 @@ var finnab = function(i){
 };
 
 var d = new Date();
-var startTS = d.getMilliseconds(); 
+var startTS = d.getTime(); 
 var run = 0;
-for(var i=0; i<finishedPoint; i++){
+for(var i=0; i<finishedPoint; i++)
 	(
 		function(i){
-			var path = 'files/file_'+i+'.txt',
+			var path = 'files/file_'+i+'.txt';
+			console.log(i)
 			buffer = new Buffer("i="+i+", result="+finnab(i));
+			console.log('return ' +i);
 			fs.open(path, 'w', function(err, fd) {
 			    if (err) {
 			        throw 'error opening file: ' + err;
@@ -27,7 +29,7 @@ for(var i=0; i<finishedPoint; i++){
 			            fs.close(fd, function() {
 			            	run++;
 			            	if(run==finishedPoint){
-			            		console.log(' finsihed now: ' + ( new Date().getMilliseconds() - startTS ) )
+			            		console.log(' finsihed now: ' + ( new Date().getTime() - startTS ) )
 			            	}
 			            })
 			        });
@@ -35,9 +37,4 @@ for(var i=0; i<finishedPoint; i++){
 			});
 		}
 	)(i);
-	
-
-	
-}
-
 

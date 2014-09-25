@@ -15,4 +15,4 @@ for i in range(0, finishedPoint):
 
 endTS =time.time()*1000
 
-print "finished in %d mill-seconds: " % (endTS-startTS)
+print ("finished in %d mill-seconds: " % (endTS-startTS))

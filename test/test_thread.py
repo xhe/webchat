@@ -35,4 +35,4 @@ for t in threads:
 
 endTS =time.time()*1000
 
-print "finished in %d mill-seconds: " % (endTS-startTS)
+print ("finished in %d mill-seconds: " % (endTS-startTS))
