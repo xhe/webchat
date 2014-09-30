@@ -1,3 +1,4 @@
+
 // Sets the require.js configuration for your application.
 require.config( {
 	
@@ -54,7 +55,7 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 	
 	
 	if( window.platform ){
-		document.addEventListener("deviceready",function(){ 
+		document.addEventListener("deviceready",function(){
 			require( [ "jquerymobile","jquery.cookie" ], function() { 
 				window.socketEventService = new SocketEventService(  io);
 				_.extend( window.socketEventService,  Backbone.Events  );	
@@ -73,8 +74,8 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 				function onResume() {
 					setTimeout(function() {
 						  // TODO: do your thing!
-							window.socketEventService = new SocketEventService(  io);
-							_.extend( window.socketEventService,  Backbone.Events  );	
+							//window.socketEventService = new SocketEventService(  io);
+							//_.extend( window.socketEventService,  Backbone.Events  );	
 							utils.autoLogin(function(){ 
 								router = new Mobile();
 							});
@@ -93,8 +94,8 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 				    // Handle the online event
 					setTimeout(function() {
 				          // TODO: do your thing!
-							window.socketEventService = new SocketEventService(  io);
-							_.extend( window.socketEventService,  Backbone.Events  );	
+							//window.socketEventService = new SocketEventService(  io);
+							//_.extend( window.socketEventService,  Backbone.Events  );	
 							utils.autoLogin(function(){ 
 								router = new Mobile();
 							});

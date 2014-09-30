@@ -21,6 +21,7 @@ exports.autologin = function(req, res){
 };
 
 exports.upload_profile_file = function(req, res){
+	
 	core_service.processProfileImages(  __dirname+"/../../"+req.files.photo.path, req.user, function(data){
 		if(data){
 			res.jsonp(req.user.photos);

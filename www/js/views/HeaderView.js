@@ -20,7 +20,11 @@ define(function(require){
     	},
     	
     	events:{
-         	"click .back": "back"
+         	"click .home": "home"
+         },
+         
+         home: function(){
+        	 $.mobile.navigate("#"); 
          },
          
          back: function(){

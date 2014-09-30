@@ -6,13 +6,16 @@ define(function(require){
 	var util = {
 			
 		isUserLoggedIn: function(){
-				
 			if(window.user){
 				if( window.user && window.user.loggedIn){
 						return true;
 				}else{
 						return false;
 				}
+			}else if(sessionStorage.user){
+				window.user = JSON.parse(sessionStorage.user);
+				window.user.logginIn = true;
+				return true;
 			}else{
 				window.user = new User.User();
 				return false;
@@ -24,10 +27,13 @@ define(function(require){
 			window.user.thumbFileName=user.thumbFileName;
 			delete user.photos
 			$.cookie('token', JSON.stringify(user));
-			//alert (JSON.stringify(user))		
-			//alert ('new token is ' + $.cookie('token'))			
+			
+			//now let's set into  sessionStorage for mobile app user
+			if( window.platform ){
+				sessionStorage.user = JSON.stringify(user);
+			}
 			//set socket here
-			window.socketEventService.connect(user.screenName)
+			window.socketEventService.connect(user.screenName);
 		},
 		
 		getLoggedInUser: function(){
@@ -35,19 +41,25 @@ define(function(require){
 		},
 		
 		logout: function(){
-			
 			window.socketEventService.logout();
 			window.user = new User.User();
 			$.removeCookie('token');
+			if( window.platform ){
+				sessionStorage.removeItem('user');
+			}
 			return false;
 		},
 		
 		autoLogin: function(cb){
 			var _this=this;
-			if($.cookie('token') || window.user){
+			if($.cookie('token') || window.user || sessionStorage.user){
 				var user = window.user;
 				if(!user){
-					user = $.parseJSON($.cookie('token') );
+					if(sessionStorage.user){
+						user = $.parseJSON( sessionStorage.user);
+					}else{
+						user = $.parseJSON($.cookie('token') );
+					}
 				}
 				
 				$.post( appConfig.serverUrl + 'autologin', 

@@ -20,25 +20,34 @@ module.exports =  function(){
 	var initSocket = function(io){
 		
 		io.on("connection", function(socket){ 
-			console.log('connection');
-			socket.emit('ping', { message: 'Hello from server frank he ' + Date.now() });
-			  socket.on(EVENT_LOGIN, function(name){
-				console.log(' event: ' + EVENT_LOGIN +" : "+name )
-				socket.emit('welcome', name);
+				//console.log('connection');
+				socket.on(EVENT_LOGIN, function(name){
+				//console.log(' event: ' + EVENT_LOGIN +" : "+name )
+				
 				sockets_username_socket[name] = socket.id;
 				sockets_socketid_username[socket.id] = name;
 				allSockets[socket.id] = socket;
+				
+				//console.log('total online user now: ' + Object.keys(allSockets).length )
+				//console.log(sockets_socketid_username )
+				
 				sendUserOnLineMsg(name);
 			});
 			
 			socket.on(EVENT_LOGOUT, function(){
-				console.log(' event: ' + EVENT_LOGOUT +" : "+ socket.id +":"+sockets_socketid_username[socket.id] )
+				//console.log(' event: ' + EVENT_LOGOUT +" : "+ socket.id +":"+sockets_socketid_username[socket.id] )
 				sendUserOffLineMsg(socket.id);
 				
+				//console.log("before: ")
+				//console.log('total online user now: ' + Object.keys(allSockets).length )
+				//console.log(sockets_socketid_username )
+				//console.log('deleting ' + sockets_socketid_username[socket.id])
 				delete sockets_username_socket[sockets_socketid_username[socket.id]];
+				delete sockets_socketid_username[socket.id];
 				delete allSockets[socket.id];
-				
-			
+				//console.log("after:")
+				//console.log('total online user now: ' + Object.keys(allSockets).length )
+				//console.log(sockets_socketid_username )
 			});
 			
 			socket.on('chat message', function(msg){
@@ -48,6 +57,7 @@ module.exports =  function(){
 			socket.on(EVENT_DISCONNECT, function(){
 				sendUserOffLineMsg(socket.id);
 				delete sockets_username_socket[sockets_socketid_username[socket.id]];
+				delete sockets_socketid_username[socket.id];
 				delete allSockets[socket.id];
 			});
 		});
@@ -74,7 +84,7 @@ module.exports =  function(){
   var sentChatMessage = function(message, member){
 	  var socket = getSocketFromUserName(member.screenName);
 	  if(socket){
-		 // console.log("socket: sending msg " + EVENT_NOTIFY_CHAT_MESSAGE)
+		  //console.log("socket: sending msg " + EVENT_NOTIFY_CHAT_MESSAGE)
 		  socket.emit(EVENT_NOTIFY_CHAT_MESSAGE, JSON.stringify(message));
 	  }
   };
@@ -95,10 +105,7 @@ module.exports =  function(){
 		   socket = getSocketFromUserName(name);
 		   if(socket)
 			   socket.emit(EVENT_NOTIFY_ON_LINE_MEMBER, onlineContacts);
-	  });
-	  
-	  
-	  
+	  });	  
   };
   
   var sendUserOffLineMsg = function(socketId){ 

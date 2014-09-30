@@ -11,14 +11,13 @@
 			
 				<button id='btnPhotos' data-inline="true">Photos</button>
 				<button id="btnCamera" data-inline="true">Camera</button>
-				<img id='imgUserPicture'/>
 				<hr/>
 				
 			<%}else{%>
 			
 				<form id="file-form" method="POST">
 				  <input type="file" id="file-select" name="photos[]" accept="image/*;capture=camera"/>
-				  <button type="submit" id="upload-button">Upload</button>
+				  <button type="submit" id="upload-button" style="margin-top: 30px; margin-bottom: 30px;">Upload</button>
 				</form>
 					
 			<%}%>

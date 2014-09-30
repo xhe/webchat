@@ -22,7 +22,7 @@ define(function(require){
 
         // The Router constructor
         initialize: function(socket) {
-        	 Backbone.history.start();
+        	Backbone.history.start();
         },
         
         // Backbone.js Routes

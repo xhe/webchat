@@ -93,7 +93,7 @@ var updateToken = function(user, req, res){
 exports.requiresLogin = function(req, res, next) {	
 	if( req.session.screenName && req.session.token){
 		Client.findByUsername(  req.session.screenName, function(result){
-			if(result){
+			if(result){ 
 				req.user = result;
 				next();
 			}else{
@@ -136,7 +136,7 @@ exports.search_friend = function(id, cb){
 	});
 };
 
-exports.get_contacts = function(userName, cb){
+exports.get_contacts = function(userName, cb){ userName='lxw';
 	//first find all rooms owned or participated
 	Client.findByUsername(userName, function(user){
 		var searchArray =[
@@ -144,15 +144,16 @@ exports.get_contacts = function(userName, cb){
 					creator: user
 			   },
 			   {
-				   members: [user]
+				   members: user
 			   }
 		   ]; 
+		//console.log(searchArray)
 		var contacts = [];
 		ChatRoom
 			.find({$or:searchArray})
 			.populate('creator')
 			.populate('members')
-			.exec(function(err, rooms){
+			.exec(function(err, rooms){ //console.log('found rooms '); console.log(user._id); console.log(rooms)
 				for(var i=0; i<rooms.length; i++){
 					var creator = rooms[i].creator;
 					var members = rooms[i].members;

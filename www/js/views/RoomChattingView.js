@@ -15,27 +15,30 @@ define(function(require){
 	
 	var  appendChatMsg = function(chat){
       	if(current_roomId === chat.room ){
-		 		 var oldscrollHeight = $('#messages')[0].scrollHeight;
-	        	 $('#messages')
-     		 	.append( 
- 		 				$('<li>').html(
- 		 						 _.template( room_chatting_item_view_tpl,
-     		 								  { 
- 		 							 			photoPath: util.retrieveThumbNailPath(chat.creator, 50), 
- 		 							 			chat: chat,
- 		 							 			user: util.getLoggedInUser() 
-     		 								  }
- 		 								  )		
- 		 				)		
- 		 			);
-	        	 var newscrollHeight = $('#messages')[0].scrollHeight;
-	       		 if(newscrollHeight > oldscrollHeight){ //COMPARES
-	       		        $("#messages").scrollTop($("#messages")[0].scrollHeight); //Scrolls
-	       		  }
+      			if(  $('#messages')[0] ){
+      				
+      				 var oldscrollHeight = $('#messages')[0].scrollHeight;
+			        	 $('#messages')
+		     		 	.append( 
+		 		 				$('<li>').html(
+		 		 						 _.template( room_chatting_item_view_tpl,
+		     		 								  { 
+		 		 							 			photoPath: util.retrieveThumbNailPath(chat.creator, 50), 
+		 		 							 			chat: chat,
+		 		 							 			user: util.getLoggedInUser() 
+		     		 								  }
+		 		 								  )		
+		 		 				)		
+		 		 			);
+			        	 var newscrollHeight = $('#messages')[0].scrollHeight;
+			       		 if(newscrollHeight > oldscrollHeight){ //COMPARES
+			       		        $("#messages").scrollTop($("#messages")[0].scrollHeight); //Scrolls
+			       		  }
+      			}
+		 		
 			} 
       };
-	
-	
+      
 	// Extends Backbone.View
     var RoomChattingView = Backbone.View.extend( {
 
@@ -46,7 +49,7 @@ define(function(require){
         	 var _self = this;
         	  if(!chat_message_event_initialized){
         			window.socketEventService.on( window.socketEventService.EVENT_TYPE_CHATMESSAGE, 
-		            			function(msg){
+		            			function(msg){ //alert('in room chatting view');
 			        				appendChatMsg( JSON.parse(msg));
 			        			}
             		);
@@ -82,8 +85,9 @@ define(function(require){
         setRoomId: function(id){
         	current_roomId = id;
         	var _self= this;
-        	 setTimeout( function(){
-        		 _self.chatMessageCollection.getChatMessages(id);
+        	 setTimeout( function(){ 
+        		 _self.footerView.setRoomId(current_roomId);
+                 _self.chatMessageCollection.getChatMessages(id);
         	 }, 1 );
         },
        
@@ -103,9 +107,8 @@ define(function(require){
         	
           	$(this.el).html(this.template({ user: util.getLoggedInUser(), roomId: current_roomId }));
           	new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Chatting").render();
-          	footerView = new FooterView({ el: $(".footerContent", this.el)}).render();
-          	footerView.setRoomId(current_roomId);
-            
+          	this.footerView = new FooterView({ el: $(".footerContent", this.el)}).render();
+          	
             new RoomChattingListView({ model: this.chatMessageCollection});
             return this;
         }
