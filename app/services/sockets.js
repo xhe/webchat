@@ -20,34 +20,18 @@ module.exports =  function(){
 	var initSocket = function(io){
 		
 		io.on("connection", function(socket){ 
-				//console.log('connection');
 				socket.on(EVENT_LOGIN, function(name){
-				//console.log(' event: ' + EVENT_LOGIN +" : "+name )
-				
 				sockets_username_socket[name] = socket.id;
 				sockets_socketid_username[socket.id] = name;
 				allSockets[socket.id] = socket;
-				
-				//console.log('total online user now: ' + Object.keys(allSockets).length )
-				//console.log(sockets_socketid_username )
-				
 				sendUserOnLineMsg(name);
 			});
 			
 			socket.on(EVENT_LOGOUT, function(){
-				//console.log(' event: ' + EVENT_LOGOUT +" : "+ socket.id +":"+sockets_socketid_username[socket.id] )
 				sendUserOffLineMsg(socket.id);
-				
-				//console.log("before: ")
-				//console.log('total online user now: ' + Object.keys(allSockets).length )
-				//console.log(sockets_socketid_username )
-				//console.log('deleting ' + sockets_socketid_username[socket.id])
 				delete sockets_username_socket[sockets_socketid_username[socket.id]];
 				delete sockets_socketid_username[socket.id];
 				delete allSockets[socket.id];
-				//console.log("after:")
-				//console.log('total online user now: ' + Object.keys(allSockets).length )
-				//console.log(sockets_socketid_username )
 			});
 			
 			socket.on('chat message', function(msg){

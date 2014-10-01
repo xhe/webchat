@@ -136,7 +136,7 @@ exports.search_friend = function(id, cb){
 	});
 };
 
-exports.get_contacts = function(userName, cb){ userName='lxw';
+exports.get_contacts = function(userName, cb){ 
 	//first find all rooms owned or participated
 	Client.findByUsername(userName, function(user){
 		var searchArray =[
@@ -163,7 +163,7 @@ exports.get_contacts = function(userName, cb){ userName='lxw';
 				
 				var finalContacts = [];
 				var ids={};
-				_.forEach(contacts, function(contact){
+				_.forEach(contacts, function(contact){ 
 					if(contact.screenName!=userName ){
 						if( !(contact._id in ids) ){
 							ids[contact._id]=0;
