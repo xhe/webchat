@@ -141,3 +141,21 @@ img.offline{
     padding-right: 10px;
     text-decoration: inherit;
 }
+
+#btnAttPhotos:before{
+	content: "\f1c5";
+	font-family: FontAwesome;
+    font-style: normal;
+    padding-right: 10px;
+    font-weight: normal;
+    text-decoration: inherit;
+}
+
+#btnAttCamera:before{
+	content: "\f030";
+	font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    padding-right: 10px;
+    text-decoration: inherit;
+}

@@ -198,14 +198,37 @@ define(function(require){
 		retrieveThumbNailPath: function(user, dimention){
 			 var photos = user.photos;
 			 for(var i=0; i<photos.length; i++)
-     			if(photos[i].use_as_head)
-     				for(var j=0;j<photos[i].renders.length;j++)
-     					if(photos[i].renders[j].dimension==dimention){
-     						fileName = photos[i].renders[j].filename;
+    			if(photos[i].use_as_head)
+    				for(var j=0;j<photos[i].renders.length;j++)
+    					if(photos[i].renders[j].dimension==dimention){
+    						fileName = photos[i].renders[j].filename;
+    						return  (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
+    					}
+    		return "";		
+		},
+
+		
+		retrieveMsgThumbNailPath: function(renders, dimention){
+			for(var j=0;j<renders.length;j++)
+     					if(renders[j].dimension==dimention){
+     						fileName = renders[j].filename;
      						return  (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
      					}
      		return "";		
 		},
+		
+		retrieveChatMsgPath: function(user, dimention){
+			 var photos = user.photos;
+			 for(var i=0; i<photos.length; i++)
+    			if(photos[i].use_as_head)
+    				for(var j=0;j<photos[i].renders.length;j++)
+    					if(photos[i].renders[j].dimension==dimention){
+    						fileName = photos[i].renders[j].filename;
+    						return  (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
+    					}
+    		return "";		
+		},
+		
 		
 		alert: function(msg, title){
 			if(window.platform){

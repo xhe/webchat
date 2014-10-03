@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
 	ChatRoomVisitLog = mongoose.model('ChatRoomVisitLog'),
 	socket_serivce = require('./sockets')(),
 	chat_service = require('./chat'),
+	core_service = require('./core'),
 	_ = require('lodash')
 	;
 
@@ -124,7 +125,7 @@ exports.retrieveChatMessages = function(user, roomId, before_ts, cb){
 					q.sort('-created');
 					q.limit(20);
 					q.populate('creator');
-					
+					q.populate('photo');
 					if(before_ts){
 						q.where('created').lt(before_ts);
 					}
@@ -183,16 +184,66 @@ exports.addChatMessage = function(user, roomId, msg, cb){
 	});
 };
 
-var broadcastMessage = function(message){
+exports.addPhotoForChatMessage = function(filePath, user, roomId, cb){
+	var message = new ChatMessage({
+		creator: user,
+		room:	 new ObjectId(roomId),
+		created: Date.now()
+	});
+	message.save( function(err) {
+		if(err){
+			console.log(err);
+		}else{
+			ChatMessage
+			.findById(message._id)
+			.exec(function(err, message){
+				core_service.processChatImages(filePath, user, roomId,  function(photo){
+					message.photo = photo;
+					message.save( function(err) {
+						ChatMessage
+						.findById(message._id)
+						.populate('photo')
+						.populate('creator')
+						.exec(function(err, message){
+							message.creator = utils.simplifyUser(message.creator, true);
+							cb(message);
+							
+							broadcastMessage( message); 
+							ChatRoomVisitLog.findOneAndUpdate(
+								{
+									visitor: user,
+									room: new ObjectId(roomId)  
+								},
+								{
+									visited: Date.now()
+								},
+								function(err, log){
+									if(err){
+										console.log(err);
+									}else{
+										//cb(log);
+									}
+								}
+							);
+						});
+					});
+				});
+			});
+		}
+	});
+};
+
+var broadcastMessage = function(message){ 
 	//1. find room
 	ChatRoom
 		.findById( message.room )
 		.populate('members')
 		.populate('creator')
-		.exec(function(err, room){
-			_.forEach(room.members, function(member){
+		.exec(function(err, room){ 
+			_.forEach(room.members, function(member){ 
 				socket_serivce['sentChatMessage'](message,member);
 			});
-			socket_serivce['sentChatMessage'](message,room.creator);
+			socket_serivce['sentChatMessage'](message, room.creator);
 		});
+	
 }

@@ -24,6 +24,7 @@ define(function(require){
 		 		 						 _.template( room_chatting_item_view_tpl,
 		     		 								  { 
 		 		 							 			photoPath: util.retrieveThumbNailPath(chat.creator, 50), 
+		 		 							 			msgPhotoPath: chat.photo? util.retrieveMsgThumbNailPath(chat.photo.renders, 100) : "", 
 		 		 							 			chat: chat,
 		 		 							 			user: util.getLoggedInUser() 
 		     		 								  }
@@ -93,8 +94,64 @@ define(function(require){
        
         events: {
         	"click #btnSubmit": "sendMessage",
-        	 "click #btnMorePrev": "loadMorePrev"
+        	"click #btnMorePrev": "loadMorePrev",
+        	"click #btnAttach": "attachMedia",
+        	"click #btnAttach": "attachMedia",
+        	"click #btnChattingRoomBack_phone": "chatRoomBack", 
+        	"click #btnChattingRoomBack_web": "chatRoomBack", 
+        	"click #btnAttPhotos": "attPhotos",
+        	"click #btnAttCamera": "attCamera",
+        	"submit #file-form-chat": "upload"
+        },
+        
+        upload: function(event){
+        	event.preventDefault();
+        	$("#upload-button-chat").html("uploading");
         	
+        	
+        	var form = document.getElementById('file-form-chat');
+        	var fileSelect = document.getElementById('file-select-chat');
+        	var uploadButton = document.getElementById('upload-button-chat');
+        	var files = fileSelect.files;
+        	// Create a new FormData object.
+        	var formData = new FormData();
+        	
+        	for(var i=0; i<files.length; i++){
+        		var file = files[i];
+        		if(!file.type.match('image.*'))
+        			continue;        		
+        		formData.append('photo', file, file.name);
+        	}
+        	var xhr = new XMLHttpRequest();
+        	xhr.open('POST', '/api/upload_chat_file/'+current_roomId, true);
+        	// Set up a handler for when the request finishes.
+        	_this=this;
+        	xhr.onload = function () {
+        	  if (xhr.status === 200) {
+        	    // File(s) uploaded.
+        		  $("#upload-button-chat").html('Upload');
+        	  } else {
+        		  util.alert('An error occurred!');
+        	  }
+        	};
+        	// Send the Data.
+        	xhr.send(formData);
+        },
+        
+        attPhotos: function(){
+        	 window.open('photoUploader.html#type=camera&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
+        },
+        attCamera: function(){
+        	 window.open('photoUploader.html#type=picture&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
+        },
+        
+        attachMedia: function(){
+        	$("#ctrAttach").show();
+        	$("#ctrInputMsg").hide();
+        },
+        chatRoomBack:function(){
+        	$("#ctrAttach").hide();
+        	$("#ctrInputMsg").show();
         },
         
         sendMessage: function(){
@@ -105,7 +162,7 @@ define(function(require){
         
         render: function() {  
         	
-          	$(this.el).html(this.template({ user: util.getLoggedInUser(), roomId: current_roomId }));
+          	$(this.el).html(this.template({ user: util.getLoggedInUser(), roomId: current_roomId,  mobile: window.platform?true:false }));
           	new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Chatting").render();
           	this.footerView = new FooterView({ el: $(".footerContent", this.el)}).render();
           	

@@ -31,6 +31,18 @@ exports.upload_profile_file = function(req, res){
 	});
 };
 
+exports.upload_chat_file = function(req, res){
+	
+	chat_service.addPhotoForChatMessage( __dirname+"/../../"+req.files.photo.path, req.user,  req.params.roomId, function(message){
+		if(message){
+			res.jsonp(message);
+		}else{
+			res.end("failed");
+		}
+	});
+	
+};
+
 exports.myphotos = function(req, res){
 	res.jsonp(req.user.photos);
 };
