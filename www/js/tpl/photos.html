@@ -16,8 +16,9 @@
 			<%}else{%>
 			
 				<form id="file-form" method="POST">
-				  <input type="file" id="file-select" name="photos[]" accept="image/*;capture=camera"/>
-				  <button type="submit" id="upload-button" style="margin-top: 30px; margin-bottom: 30px;">Upload</button>
+				  <input type="file" id="file-select" name="photos[]" accept="image/*;capture=camera" style="font-size: 30px;"/>
+				  <img id='selectedImg' style="max-width: 200px;max-height: 200px;min-height: 20px;display:none"/>
+				  <button type="submit" id="upload-button" style="margin-bottom: 30px;">Upload</button>
 				</form>
 					
 			<%}%>

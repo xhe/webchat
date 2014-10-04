@@ -49,6 +49,9 @@
     			var file_uri = "";
     			var file_name = "";
     			var hostURL = "";
+    			var mediaFor = "profile";
+	    		var roomId = null;
+	    			
 	    		function fetchingPhotos(type){
 	    			 	 navigator.camera.getPicture(
 		    			 			 function(file_loc){
@@ -86,6 +89,10 @@
 	    				var hosts = urlHashs[1].split("="); 
 	    				hostURL = hosts[1];
 	    			}
+	    			if(urlHashs.length==3){
+	    				mediaFor = "chat";
+	    				roomId = urlHashs[2].split("=")[1];
+	    			}
 	    			fetchingPhotos(type);
 	    		});
 				
@@ -107,8 +114,8 @@
 			        var loaderIcon = document.getElementById('loader');
 			        loaderIcon.style.display='block';
 			   		
-			         
-			         ft.upload(file_uri, hostURL + "/api/upload_profile_file", 
+			        
+			         ft.upload(file_uri, hostURL + (mediaFor==="profile"? "/api/upload_profile_file": ('/api/upload_chat_file/'+roomId)) , 
 			         	function(){
 			         		loaderIcon.style.display='none';
 			         		navigator.notification.alert("Your photo has been uploaded successfully.", 

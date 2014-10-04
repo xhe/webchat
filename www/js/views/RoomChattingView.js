@@ -24,7 +24,9 @@ define(function(require){
 		 		 						 _.template( room_chatting_item_view_tpl,
 		     		 								  { 
 		 		 							 			photoPath: util.retrieveThumbNailPath(chat.creator, 50), 
+		 		 							 			photoLargePath: util.retrieveThumbNailPath(chat.creator, 10000), 
 		 		 							 			msgPhotoPath: chat.photo? util.retrieveMsgThumbNailPath(chat.photo.renders, 100) : "", 
+		 		 							 			msgPhotoLargePath: chat.photo? util.retrieveMsgThumbNailPath(chat.photo.renders, 10000) : "", 
 		 		 							 			chat: chat,
 		 		 							 			user: util.getLoggedInUser() 
 		     		 								  }
@@ -96,7 +98,6 @@ define(function(require){
         	"click #btnSubmit": "sendMessage",
         	"click #btnMorePrev": "loadMorePrev",
         	"click #btnAttach": "attachMedia",
-        	"click #btnAttach": "attachMedia",
         	"click #btnChattingRoomBack_phone": "chatRoomBack", 
         	"click #btnChattingRoomBack_web": "chatRoomBack", 
         	"click #btnAttPhotos": "attPhotos",
@@ -106,7 +107,6 @@ define(function(require){
         
         upload: function(event){
         	event.preventDefault();
-        	$("#upload-button-chat").html("uploading");
         	
         	
         	var form = document.getElementById('file-form-chat');
@@ -115,34 +115,45 @@ define(function(require){
         	var files = fileSelect.files;
         	// Create a new FormData object.
         	var formData = new FormData();
-        	
+        	var count = 0;
         	for(var i=0; i<files.length; i++){
         		var file = files[i];
         		if(!file.type.match('image.*'))
         			continue;        		
         		formData.append('photo', file, file.name);
+        		count++;
         	}
-        	var xhr = new XMLHttpRequest();
-        	xhr.open('POST', '/api/upload_chat_file/'+current_roomId, true);
-        	// Set up a handler for when the request finishes.
-        	_this=this;
-        	xhr.onload = function () {
-        	  if (xhr.status === 200) {
-        	    // File(s) uploaded.
-        		  $("#upload-button-chat").html('Upload');
-        	  } else {
-        		  util.alert('An error occurred!');
-        	  }
-        	};
-        	// Send the Data.
-        	xhr.send(formData);
+        	
+        	if(count==0){
+        		util.alert("Please select image first.");
+        	}else{
+        		$("#upload-button-chat").html("uploading");
+            	
+        		var xhr = new XMLHttpRequest();
+	        	xhr.open('POST', '/api/upload_chat_file/'+current_roomId, true);
+	        	// Set up a handler for when the request finishes.
+	        	_this=this;
+	        	xhr.onload = function () {
+	        	  if (xhr.status === 200) {
+	        	    // File(s) uploaded.
+	        		  $("#upload-button-chat").html('Upload');
+	        		  $("#file-select-chat").val("");
+	        	  } else {
+	        		  util.alert('An error occurred!');
+	        	  }
+	        	};
+	        	// Send the Data.
+	        	xhr.send(formData);
+        	}
+        	
+        	
         },
         
         attPhotos: function(){
-        	 window.open('photoUploader.html#type=camera&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
+        	 window.open('photoUploader.html#type=picture&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
         },
         attCamera: function(){
-        	 window.open('photoUploader.html#type=picture&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
+        	 window.open('photoUploader.html#type=camera&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
         },
         
         attachMedia: function(){
@@ -156,8 +167,12 @@ define(function(require){
         
         sendMessage: function(){
         	var msg = $('#txtMsg').val();
-        	$('#txtMsg').val("")
-        	this.chatMessageCollection.addChatMessage(current_roomId, msg, function(chat){});
+        	if(msg==""){
+        		 util.alert('Please enter message first!');
+        	}else{
+        		$('#txtMsg').val("")
+        		this.chatMessageCollection.addChatMessage(current_roomId, msg, function(chat){});
+        	}
         },
         
         render: function() {  

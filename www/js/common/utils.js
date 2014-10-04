@@ -204,7 +204,20 @@ define(function(require){
     						fileName = photos[i].renders[j].filename;
     						return  (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
     					}
-    		return "";		
+			 
+			//now, let's fetch largest one
+			var largeDim = 0;
+			var path=""; 
+			for(var i=photos.length-1;i>=0;i--){
+				if(photos[i].use_as_head)
+					for(var j=0;j<photos[j].renders.length;j++)
+						if(photos[i].renders[j].dimension>largeDim){
+							fileName = photos[i].renders[j].filename;
+							path = (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
+							largeDim = photos[i].renders[j].dimension;
+						}
+			}
+			return path;		
 		},
 
 		
@@ -214,7 +227,17 @@ define(function(require){
      						fileName = renders[j].filename;
      						return  (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
      					}
-     		return "";		
+			//now, let's fetch largest one
+			var largeDim = 0;
+			var path="";
+			for(var j=renders.length-1;j>=0;j--){
+				if(renders[j].dimension>largeDim){
+					fileName = renders[j].filename;
+					path = (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
+					largeDim = renders[j].dimension;
+				}
+			}
+			return path;		
 		},
 		
 		retrieveChatMsgPath: function(user, dimention){

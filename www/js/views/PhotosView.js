@@ -29,7 +29,8 @@ define(function(require){
         	"submit #file-form": "upload",
         	"click .hrefShowType": "changeShowType",
         	"click #btnPhotos": "uploadPhoto",
-        	"click #btnCamera": "capturePhoto"
+        	"click #btnCamera": "capturePhoto",
+        	"change #file-select": "fileSelected"
         },
         
 	     // A button will call this function
@@ -40,6 +41,22 @@ define(function(require){
 	      
 	     uploadPhoto: function() { 
 	    	 window.open('photoUploader.html#type=picture&host='+window.hostURL, '_self', 'location=no');
+	     },
+	     
+	     fileSelected: function(event){
+	    	  var file = event.target.files[0];
+	    	 	// Only process image files.
+	    	  if (!file.type.match('image.*')) {
+	    	        alert("Please select image only");
+	    	  }else{
+	    		    var reader = new FileReader();
+			    	      // Closure to capture the file information.
+			    	  reader.onload =  function(e) {
+			    		  $("#selectedImg").attr("src",  e.target.result);
+			    		  $("#selectedImg").show();
+			    	  };
+			    	  reader.readAsDataURL(file);  
+	    	  }
 	     },
 	     
         changeShowType: function(event){
@@ -54,7 +71,6 @@ define(function(require){
         
         upload: function(event){
         	event.preventDefault();
-        	$("#upload-button").html("uploading");
         	
         	
         	var form = document.getElementById('file-form');
@@ -64,27 +80,37 @@ define(function(require){
         	// Create a new FormData object.
         	var formData = new FormData();
         	
+        	var count=0;
         	for(var i=0; i<files.length; i++){
         		var file = files[i];
         		if(!file.type.match('image.*'))
         			continue;        		
         		formData.append('photo', file, file.name);
+        		count++;
         	}
-        	var xhr = new XMLHttpRequest();
-        	xhr.open('POST', '/api/upload_profile_file', true);
-        	// Set up a handler for when the request finishes.
-        	_this=this;
-        	xhr.onload = function () {
-        	  if (xhr.status === 200) {
-        	    // File(s) uploaded.
-        		  $("#upload-button").html('Upload');
-        		  _this.photoCollection.fetch({reset: true});
-        	  } else {
-        		  util.alert('An error occurred!');
-        	  }
-        	};
-        	// Send the Data.
-        	xhr.send(formData);
+        	if(count==0){
+        		util.alert("Please select image first and then upload");
+        	}else{
+        		$("#upload-button").html("uploading");
+            	
+        		var xhr = new XMLHttpRequest();
+	        	xhr.open('POST', '/api/upload_profile_file', true);
+	        	// Set up a handler for when the request finishes.
+	        	_this=this;
+	        	xhr.onload = function () {
+	        	  if (xhr.status === 200) {
+	        	    // File(s) uploaded.
+	        		  $("#upload-button").html('Upload');
+	        		  $("#selectedImg").hide();
+	        		  $("#file-select").val("");
+	        		  _this.photoCollection.fetch({reset: true});
+	        	  } else {
+	        		  util.alert('An error occurred!');
+	        	  }
+	        	};
+	        	// Send the Data.
+	        	xhr.send(formData);
+        	}
         },
         
         render: function() {           
