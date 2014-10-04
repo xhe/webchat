@@ -14,8 +14,8 @@ define(function(require){
     var PhotoView = Backbone.View.extend( {
 
         // The View Constructor
-        initialize: function() {
-        	 this.template = _.template( photo_tpl );
+        initialize: function(id) {
+        	this.template = _.template( photo_tpl );
         },
         
         events: {
@@ -31,9 +31,10 @@ define(function(require){
         
         setPhotoId: function(id){
         	this.photo = Photo.findPhotoModel( id, Photo.currentCollection);
+        	this.renderme();
         },
         
-        render: function() { 
+        renderme: function() { 
         	if (!this.photo){
         		$.mobile.navigate("#photos");
         	}else{

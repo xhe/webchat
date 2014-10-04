@@ -4,8 +4,8 @@
 	<table style="width: 100%;height: 100%">
 		<tr>
 			<td valign="middle" align="center">
-				<img src="<%=imgPath%>" width="100%"/>
-				<br/>
+				<img src="<%= decodeURIComponent( imgPath )%>" width="100%"/>
+				<br/> 
 				<input type="button" value="Back" data-inline='true' onclick="window.history.back()"/>
 			</td>
 		</tr>

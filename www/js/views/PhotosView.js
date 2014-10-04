@@ -145,12 +145,12 @@ define(function(require){
 		},
 		
 		showPhotoDetail: function(){
-			$.mobile.navigate("#photo/"+this.selectedPhotoIds[0]);
+			window.location = "#photo/"+this.selectedPhotoIds[0];
 		},
 		
 		deleteSelectedImages: function(){
 			if(confirm("Are you sure to delelet the photos?"))
-			this.model.removePhotos(this.selectedPhotoIds);
+				this.model.removePhotos(this.selectedPhotoIds);
 		},
 		
 		changeHeaderImage: function(){

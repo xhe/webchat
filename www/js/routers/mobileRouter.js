@@ -158,7 +158,6 @@ define(function(require){
         photo: function(id){
         	if (this.login())
         		return;
-        	
         	photoView = new PhotoView();
         	photoView.setPhotoId(id);
         	this.changePage(photoView);

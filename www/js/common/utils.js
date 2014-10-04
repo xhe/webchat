@@ -240,19 +240,6 @@ define(function(require){
 			return path;		
 		},
 		
-		retrieveChatMsgPath: function(user, dimention){
-			 var photos = user.photos;
-			 for(var i=0; i<photos.length; i++)
-    			if(photos[i].use_as_head)
-    				for(var j=0;j<photos[i].renders.length;j++)
-    					if(photos[i].renders[j].dimension==dimention){
-    						fileName = photos[i].renders[j].filename;
-    						return  (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
-    					}
-    		return "";		
-		},
-		
-		
 		alert: function(msg, title){
 			if(window.platform){
 				navigator.notification.alert(msg, function(){}, title?title:null, "Ok");
