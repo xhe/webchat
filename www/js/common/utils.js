@@ -210,7 +210,7 @@ define(function(require){
 			var path=""; 
 			for(var i=photos.length-1;i>=0;i--){
 				if(photos[i].use_as_head)
-					for(var j=0;j<photos[j].renders.length;j++)
+					for(var j=0;j<photos[i].renders.length;j++)
 						if(photos[i].renders[j].dimension>largeDim){
 							fileName = photos[i].renders[j].filename;
 							path = (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
