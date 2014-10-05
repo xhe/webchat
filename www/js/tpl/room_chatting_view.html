@@ -7,18 +7,45 @@
 				<div style='text-align: center; '>
 					<a data-icon="plus" data-role="button" data-inline="true" href="#invite/<%= roomId%>">Members</a>
 					<a  data-icon="arrow-u" data-role="button" id="btnMorePrev" data-inline="true">Messages</a>
+					
+				</div>
+				<div style='text-align: center; display:none' id='ctrAttach'>
+					<% if(mobile){%>
+						<button id='btnAttPhotos' data-inline="true" >Photos</button>
+						<button id="btnAttCamera" data-inline="true" >Camera</button>
+						<button id="btnChattingRoomBack_phone" data-inline="true" data-icon="arrow-l"  >Back</button>
+					<%}else{%>
+						<form id="file-form-chat" method="POST">
+							<table>
+								<tr>
+										<td>
+											<input type="file" id="file-select-chat" name="photos_chat[]" accept="image/*;capture=camera"/>
+							  			</td>
+										<td>
+											<button type="submit" id="upload-button-chat" data-inline="true">Upload</button>
+										</td>
+										<td>
+											<a  data-role="button"  id="btnChattingRoomBack_web" data-inline="true" data-icon="arrow-l"  >Back</a>
+										</td>
+								</tr>
+							</table>
+						</form>
+					<%}%>
 				</div>
 				
-				<table style="width:100%">
+				<table style="width:100%" id='ctrInputMsg'>
 		     		<tr>
 		     			<td><input id="txtMsg" autocomplete="off" />
 		    			</td>
 		    			<td style="width:50px">
 		    				<a data-role="button" data-icon="check" data-mini="true"  id='btnSubmit'>Send</a> 	
 		    			</td>
-		     		</tr>
+		    			<td style="width:50px">
+		    				<a data-role="button"  data-mini="true"  id='btnAttach'>Attach</a> 	
+		    			</td>
+		    		</tr>
 		     	</table>
-				
+		     	
 				<ul id="messages">
 				</ul>
 			

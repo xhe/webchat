@@ -6,6 +6,7 @@ define(function(require){
 		;
 		
 	var eventInitialized = false;
+	var currentRoomId = null;
 	
     var FooterView =  Backbone.View.extend( {
     	
@@ -27,23 +28,16 @@ define(function(require){
         		);
         		
         		window.socketEventService.on( window.socketEventService.EVENT_TYPE_CHATMESSAGE, 
-        				function(msg){
+        				function(msg){  	
         			 		var chat = JSON.parse(msg);
-        			 		if( chat.room !== _this.roomId){
-        			 			if(  chat.creator._id !== util.getLoggedInUser()._id ){
+        			 		if( chat.room !== currentRoomId){
+        			 			if( chat.creator._id !== util.getLoggedInUser()._id ){
         			 				_this.notify('hrefFooterChatroom');
         			 			}
         			 		}	
         				}
         		);
         		
-        		
-        		window.socketEventService.on( window.socketEventService.EVENT_TYPE_REPLIED, 
-        				function(invitation){
-        					_this.notify('hrefFooterInvitation');
-        				}
-        		);
-        	
         		 window.socketEventService.on(window.socketEventService.EVENT_NOTIFY_MEMBER_ON_LINE,
          				function(){
         			 		_this.notify('hrefFooterContact');
@@ -59,12 +53,12 @@ define(function(require){
         		
         		eventInitialized = true;
         	}
-        	this.roomId = null;
+        	currentRoomId = null;
         	return this;
         },
     	
-        setRoomId: function(id){
-        	this.roomId = id;
+        setRoomId: function(id){ 
+        	currentRoomId = id;
         },
         
         notify: function(type, remove){

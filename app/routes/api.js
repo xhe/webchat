@@ -33,6 +33,7 @@ module.exports = function(app){
 	app.route('/api/contacts').get(user_service.requiresLogin,  api.getContacts);
 	
 	app.route('/api/upload_profile_file').post(user_service.requiresLogin,  api.upload_profile_file);
+	app.route('/api/upload_chat_file/:roomId').post(user_service.requiresLogin,  api.upload_chat_file);
 	
 	
 }

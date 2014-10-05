@@ -43,4 +43,7 @@ end script
 Goold GCM:
 https://console.developers.google.com/project/weighty-treat-711/apiui/credential
 
-DO FileUpload in App
+DO FileUpload in App -
+https://cordova.apache.org/docs/en/3.0.0/cordova_file_file.md.html
+
+http://docs.phonegap.com/en/3.0.0/cordova_camera_camera.md.html

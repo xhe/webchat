@@ -16,6 +16,11 @@ var ChatMessageSchema = new Schema({
 	
 	message: String,
 	
+	photo: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'PhotoSchema' 
+	},
+	
 	created: {
 			type: Date,
 			default: Date.now

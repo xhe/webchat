@@ -15,6 +15,7 @@ define(function(require){
 		InvitationsView = require('views/InvitationsView'),
 		InvitationView =  require('views/InvitationView'),
 		ContactsView =  require('views/ContactsView'),
+		LargePhotoView =  require('views/LargePhotoView'),
 		io = require("socket.io")
 		;
     // Extends Backbone.Router
@@ -22,7 +23,7 @@ define(function(require){
 
         // The Router constructor
         initialize: function(socket) {
-        	 Backbone.history.start();
+        	Backbone.history.start();
         },
         
         // Backbone.js Routes
@@ -43,7 +44,14 @@ define(function(require){
             "contacts": "contacts",
             "invite/:roomId": "invite",
             "invite_detail/:id/:roomId": "invite_detail",
-            
+            "larget_photo/:imgPath":"larget_photo"
+        },
+        
+        larget_photo: function(imgPath){
+        	if (this.login())
+        		return;
+        	largePhotoView = new LargePhotoView(imgPath);
+        	this.changePage(largePhotoView);
         },
         
         invite_detail: function(id,roomId){
@@ -150,7 +158,6 @@ define(function(require){
         photo: function(id){
         	if (this.login())
         		return;
-        	
         	photoView = new PhotoView();
         	photoView.setPhotoId(id);
         	this.changePage(photoView);

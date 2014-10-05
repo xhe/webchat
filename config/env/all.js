@@ -15,7 +15,7 @@ module.exports = {
 	sessionSecret: 'MEAN',
 	sessionCollection: 'sessions',
 	default_token_length: 24*60*60,
-	profile_image_sizes: [50, 100, 150,250],
+	profile_image_sizes: [50, 100, 150,250,800],
 	assets: {
 		lib: {
 			css: [

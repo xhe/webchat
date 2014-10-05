@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <style>
+  	
+  	#divHeader{
+  		text-align: center;
+  		padding: 20px;
+  		background-color: #393939;
+  	}
+  	#divHeader input[type='button']{
+  		border: medium none;
+	    border-radius: 10px;
+	    font-size: 24px;
+	    padding: 10px;
+	    width: 100px;
+  	}
+  	
+  	.loading{
+  		width: 200px;
+	    height: 50px;
+	    padding-top: 15px;
+	    background-color: #393939;
+	    border-radius: 10px;
+		text-align: center;
+		font-size: 26px;
+		color: #fff;
+		
+	    position: absolute;
+	    top:0;
+	    bottom: 0;
+	    left: 0;
+	    right: 0;
+	
+	    margin: auto;
+	    display: none;
+  	}
+  </style>
+  
+</head>
+	
+	
+ <script type="text/javascript" src="cordova.js"></script>
+        	
+        	<script type="text/javascript">
+    			
+    			var file_uri = "";
+    			var file_name = "";
+    			var hostURL = "";
+    			var mediaFor = "profile";
+	    		var roomId = null;
+	    			
+	    		function fetchingPhotos(type){
+	    			 	 navigator.camera.getPicture(
+		    			 			 function(file_loc){
+		    			 			 	var image = document.getElementById('smallImage');
+	    								image.src = file_loc; 
+	    								file_uri = file_loc;
+					        		 	var names = file_loc.split("/");
+					        		 	var fn = names[names.length-1];
+					        		 	file_name = fn.split(".")[0]; 
+					        		 },
+					        		 function(message){
+					        			 alert('Failed to get pictures');
+					        		 }, 
+					        		 { 
+					        			 quality: 50,
+							             destinationType: navigator.camera.DestinationType.FILE_URI,
+							             sourceType: type=='camera'? navigator.camera.PictureSourceType.CAMERA:navigator.camera.PictureSourceType.PHOTOLIBRARY
+					        		 }
+				        		 );
+	    		}
+	    		
+	    		document.addEventListener("deviceready",function(){
+	    			
+	    			var waiter = document.getElementById('waiter');
+	    			waiter.style.display='none';
+	    			var header = document.getElementById('divHeader');
+	    			header.style.display='block';
+	    			
+	    			
+	    			var urlHashs = window.location.hash.split('&');
+	    			var type = "picture";
+	    			if(urlHashs){
+	    				var parts = urlHashs[0].split("=");
+	    				type = parts[1];
+	    				var hosts = urlHashs[1].split("="); 
+	    				hostURL = hosts[1];
+	    			}
+	    			if(urlHashs.length==3){
+	    				mediaFor = "chat";
+	    				roomId = urlHashs[2].split("=")[1];
+	    			}
+	    			fetchingPhotos(type);
+	    		});
+				
+				function upload(){
+		 			 
+					 var options = new FileUploadOptions();
+			         options.fileKey = "photo";
+			         var imagefilename =  file_name + ".JPG";
+			         options.fileName = imagefilename;
+			         options.mimeType = "image/jpg";
+			         options.httpMethod = 'POST';
+		
+			         var params = new Object();
+			         params.imageURI = file_uri;
+			         options.params = params;
+			         options.chunkedMode = false;
+			         var ft = new FileTransfer();
+			         
+			        var loaderIcon = document.getElementById('loader');
+			        loaderIcon.style.display='block';
+			   		
+			        
+			         ft.upload(file_uri, hostURL + (mediaFor==="profile"? "/api/upload_profile_file": ('/api/upload_chat_file/'+roomId)) , 
+			         	function(){
+			         		loaderIcon.style.display='none';
+			         		navigator.notification.alert("Your photo has been uploaded successfully.", 
+			         									function(){
+			         										 loaderIcon.style.display='none';
+			         										window.history.back();
+			         									}, null, "Ok");
+			         	}, 
+			         	function(){
+			         		loaderIcon.style.display='none';
+			         		navigator.notification.alert("Your photo can not be uploaded now, please try later.", 
+			         									function(){
+			         										 loaderIcon.style.display='none';
+			         										window.history.back();
+			         									}, null, "Ok");
+			         	}, 
+			         	options, true);
+	
+				}
+       	</script>
+       	
+ <body>
+ 	
+ 	
+	
+	<div id='divHeader' style="display:none">
+			<input type="button" value="Back"  onclick="window.history.back();" />
+			<input type="button" value="Upload"  onclick="upload();" />
+	</div>
+	
+	
+	
+	<div id="divImg">	
+		<img id="smallImage" style="max-width: 100%; max-height: 80%"/>
+ 	</div>
+	
+	<div class='loading' id='loader'>Uploading...</div>
+	<div class='loading' id='waiter' style="display:block">Loding...</div>
+</div>
+ 	
+ 	
+</body>
+</html>

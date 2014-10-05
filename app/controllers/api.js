@@ -21,6 +21,7 @@ exports.autologin = function(req, res){
 };
 
 exports.upload_profile_file = function(req, res){
+	
 	core_service.processProfileImages(  __dirname+"/../../"+req.files.photo.path, req.user, function(data){
 		if(data){
 			res.jsonp(req.user.photos);
@@ -28,6 +29,18 @@ exports.upload_profile_file = function(req, res){
 			res.end("failed");
 		}
 	});
+};
+
+exports.upload_chat_file = function(req, res){
+	
+	chat_service.addPhotoForChatMessage( __dirname+"/../../"+req.files.photo.path, req.user,  req.params.roomId, function(message){
+		if(message){
+			res.jsonp(message);
+		}else{
+			res.end("failed");
+		}
+	});
+	
 };
 
 exports.myphotos = function(req, res){

@@ -1,6 +1,6 @@
 
 		<div data-role="header">
-			<div style="position: absolute;left=10px;padding-top: 5px; cursor: pointer;" class="back">
+			<div style="position: absolute;left=10px;padding-top: 5px; cursor: pointer;" class="home">
 						<% if (user.thumbFileName.indexOf('.')>0 ){  %>
 							<img src="<%=serverUrl%>/uploads/thumb/<%= user.thumbFileName%>"/>
 						<%}else{%>
@@ -13,8 +13,8 @@
 			</div>
 			
 			
-			<div style="position: absolute;right: 10px;top:0px">
-				<a href='#logout' data-role='button'>Logout</a>
+			<div style="position: absolute;right: 15px;top:0px">
+				<a href='#logout' data-role='button' style="width: 55px">Logout</a>
 			</div>
 			
 		</div>

@@ -5,23 +5,39 @@
 			<td  width="100%" style="text-align:right">
 				<%=chat.creator.screenName %>
 				<br/>
-				<%= chat.message %>
+				<% if(msgPhotoPath!==""){%>
+					<a href="#larget_photo/<%= encodeURIComponent(msgPhotoLargePath) %>">
+						<img src="<%= msgPhotoPath %>" />
+					</a>
+				<%}else{%>
+					<%= chat.message %>
+				<%}%>
 				
 			</td>
 			<td width="60px">
-				<img src="<%= photoPath %>"/>
+				<a href="#larget_photo/<%= encodeURIComponent(photoLargePath) %>">
+					<img src="<%= photoPath %>"/>
+				</a>
 			</td>
 		<tr>
 	<%}else{%>
 		<tr>
 			<td width="60px">
-				<img src="<%= photoPath %>"/>
+				<a href="#larget_photo/<%= encodeURIComponent(photoLargePath) %>">
+					<img src="<%= photoPath %>"/>
+				</a>
 			</td>
 			
 			<td  width="100%" >
 				<%=chat.creator.screenName %>
 				<br/>
-				<%= chat.message %>
+				<% if(msgPhotoPath!==""){%>
+					<a href="#larget_photo/<%= encodeURIComponent(msgPhotoLargePath) %>">
+						<img src="<%= msgPhotoPath %>" />
+					</a>
+				<%}else{%>
+					<%= chat.message %>
+				<%}%>
 			</td>
 			
 		<tr>

@@ -6,13 +6,16 @@ define(function(require){
 	var util = {
 			
 		isUserLoggedIn: function(){
-				
 			if(window.user){
 				if( window.user && window.user.loggedIn){
 						return true;
 				}else{
 						return false;
 				}
+			}else if(sessionStorage.user){
+				window.user = JSON.parse(sessionStorage.user);
+				window.user.logginIn = true;
+				return true;
 			}else{
 				window.user = new User.User();
 				return false;
@@ -24,10 +27,13 @@ define(function(require){
 			window.user.thumbFileName=user.thumbFileName;
 			delete user.photos
 			$.cookie('token', JSON.stringify(user));
-			//alert (JSON.stringify(user))		
-			//alert ('new token is ' + $.cookie('token'))			
+			
+			//now let's set into  sessionStorage for mobile app user
+			if( window.platform ){
+				sessionStorage.user = JSON.stringify(user);
+			}
 			//set socket here
-			window.socketEventService.connect(user.screenName)
+			window.socketEventService.connect(user.screenName);
 		},
 		
 		getLoggedInUser: function(){
@@ -35,19 +41,25 @@ define(function(require){
 		},
 		
 		logout: function(){
-			
 			window.socketEventService.logout();
 			window.user = new User.User();
 			$.removeCookie('token');
+			if( window.platform ){
+				sessionStorage.removeItem('user');
+			}
 			return false;
 		},
 		
 		autoLogin: function(cb){
 			var _this=this;
-			if($.cookie('token') || window.user){
+			if($.cookie('token') || window.user || sessionStorage.user){
 				var user = window.user;
 				if(!user){
-					user = $.parseJSON($.cookie('token') );
+					if(sessionStorage.user){
+						user = $.parseJSON( sessionStorage.user);
+					}else{
+						user = $.parseJSON($.cookie('token') );
+					}
 				}
 				
 				$.post( appConfig.serverUrl + 'autologin', 
@@ -186,13 +198,46 @@ define(function(require){
 		retrieveThumbNailPath: function(user, dimention){
 			 var photos = user.photos;
 			 for(var i=0; i<photos.length; i++)
-     			if(photos[i].use_as_head)
-     				for(var j=0;j<photos[i].renders.length;j++)
-     					if(photos[i].renders[j].dimension==dimention){
-     						fileName = photos[i].renders[j].filename;
+    			if(photos[i].use_as_head)
+    				for(var j=0;j<photos[i].renders.length;j++)
+    					if(photos[i].renders[j].dimension==dimention){
+    						fileName = photos[i].renders[j].filename;
+    						return  (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
+    					}
+			 
+			//now, let's fetch largest one
+			var largeDim = 0;
+			var path=""; 
+			for(var i=photos.length-1;i>=0;i--){
+				if(photos[i].use_as_head)
+					for(var j=0;j<photos[i].renders.length;j++)
+						if(photos[i].renders[j].dimension>largeDim){
+							fileName = photos[i].renders[j].filename;
+							path = (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
+							largeDim = photos[i].renders[j].dimension;
+						}
+			}
+			return path;		
+		},
+
+		
+		retrieveMsgThumbNailPath: function(renders, dimention){
+			for(var j=0;j<renders.length;j++)
+     					if(renders[j].dimension==dimention){
+     						fileName = renders[j].filename;
      						return  (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
      					}
-     		return "";		
+			//now, let's fetch largest one
+			var largeDim = 0;
+			var path="";
+			for(var j=renders.length-1;j>=0;j--){
+				if(renders[j].dimension>largeDim){
+					fileName = renders[j].filename;
+					path = (window.hostURL?window.hostURL:"")+ '/uploads/thumb/' + fileName;
+					largeDim = renders[j].dimension;
+				}
+			}
+			return path;		
 		},
 		
 		alert: function(msg, title){
