@@ -75,16 +75,19 @@ define(function(require){
         		 if( invRoomId ){
         			 link="invite_detail/"+member._id+"/"+invRoomId;
         		 }
-        		 
+        		 var callLink = "#dialing/"+member._id; 
         		 $("#ulContactsList").append($("<li>").html(
-        				 		"<a href='#"+ link +"'>" +
-        				 		"<img style='"+styleStr+"' src='" +  util.retrieveThumbNailPath(member, 100) +"'/>" 
-        				 		+ member.firstName +" "+member.lastName
-        				 		+"</a>"
+        				 		"<table width='100%'><tr><td width='35%' align='center'>"+
+        				 		"<img style='"+styleStr+"' src='" +  util.retrieveThumbNailPath(member, 50) +"'/>" +
+        				 		"<br/>"+member.firstName+" "+ member.lastName +
+        				 		"</td><td width='30%'><a href='"+callLink+"' data-role='button' class='hrefCall' data-inline='true' ></a></td>"+
+        				 		"<td width='35%'><a data-role='button' class='hrefDetail' data-inline='true' >Detail</a></td></tr></table>"
         				 	)
         				 ); 
         	 });
-        	 $("#ulContactsList").listview().listview('refresh');
+        	 $("#ulContactsList").listview().listview().listview('refresh');
+        	 $(".hrefCall").button();
+        	 $(".hrefDetail").button();
  		}
          
     });

@@ -10,7 +10,8 @@ var mongoose = require('mongoose'),
 	socket_serivce = require('./sockets')(),
 	chat_service = require('./chat'),
 	core_service = require('./core'),
-	_ = require('lodash')
+	_ = require('lodash'),
+	async = require('async')
 	;
 
 exports.chatRoomNewChatMsg = function(user, room, cb ){
@@ -231,6 +232,17 @@ exports.addPhotoForChatMessage = function(filePath, user, roomId, cb){
 			});
 		}
 	});
+};
+
+exports.call = function(type, caller, callee_userName, cb){
+	socket_serivce['sendCallRequest'](type, caller, callee_userName, function(err, roomName){
+		if(err){
+			cb(err);
+		}else{
+			cb(null, roomName);
+		}
+	});
+	
 };
 
 var broadcastMessage = function(message){ 

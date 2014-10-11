@@ -196,6 +196,8 @@ define(function(require){
 		},
 		
 		retrieveThumbNailPath: function(user, dimention){
+			if(!user)
+				return "";
 			 var photos = user.photos;
 			 for(var i=0; i<photos.length; i++)
     			if(photos[i].use_as_head)
@@ -258,8 +260,13 @@ define(function(require){
 			if(window.platform){
 				navigator.notification.vibrate(ms?ms:500);
 			}
-		}
+		},
 		
+		getXirSysCredential: function(room, cb){
+			$.get(appConfig.serverUrl+ 'get_xirsys/'+room, function(data){
+				cb(data);
+			})
+		}
 	};
 
 	return util;

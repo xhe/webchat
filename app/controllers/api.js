@@ -3,6 +3,7 @@ var user_service =  require('../services/user');
 var core_service =   require('../services/core');
 var chat_service = require('../services/chat');
 var invitation_service = require('../services/invitation');
+var util = require('../services/utils');
 
 exports.countries = function(req, res){
 	country_service.getAll(req, res);
@@ -161,5 +162,21 @@ exports.addChatMessage = function(req, res){
 exports.getContacts = function(req, res){
 	user_service.get_contacts(req.user.screenName, function(data){
 		res.jsonp(data);
+	});
+}
+
+exports.getXirsysInfo = function(req, res){
+	util.getXirSysInfo(req.params.room, function(err, data){
+		res.jsonp(data);
+	});
+}
+
+exports.call = function(req, res){
+	chat_service.call( req.body.type, req.user, req.body.user_name, function(err, response){
+		if(err){
+			res.jsonp({status: 'failed', err: err});
+		}else{
+			res.jsonp({status: 'success', roomName: response});
+		}
 	});
 }

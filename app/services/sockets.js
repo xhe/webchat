@@ -11,6 +11,9 @@ var EVENT_NOTIFY_CHAT_MESSAGE="chat_message";
 var EVENT_NOTIFY_MEMBER_ON_LINE="member_on_line";
 var EVENT_NOTIFY_MEMBER_OFF_LINE="member_off_line";
 var EVENT_NOTIFY_ON_LINE_MEMBER="on_line_members";
+var EVENT_RTC_CALL_REQUEST="rtc_call_request";
+var EVENT_RTC_CALL_REQUEST_ACCEPT="rtc_call_request_accept";
+var EVENT_RTC_CALL_REQUEST_ACCEPT_CONFIRM="rtc_call_request_accept_confirm";
 
 var user_service =  require('../services/user'),
 	_ = require("lodash");
@@ -34,20 +37,21 @@ module.exports =  function(){
 				delete allSockets[socket.id];
 			});
 			
-			socket.on('chat message', function(msg){
-				    io.sockets.emit('chat message', msg);
-			 });
-			
 			socket.on(EVENT_DISCONNECT, function(){
 				sendUserOffLineMsg(socket.id);
 				delete sockets_username_socket[sockets_socketid_username[socket.id]];
 				delete sockets_socketid_username[socket.id];
 				delete allSockets[socket.id];
 			});
+			
+			socket.on(EVENT_RTC_CALL_REQUEST_ACCEPT, function(screenName, room){
+				acceptPhoneCall(screenName, room);
+			});
 		});
 	};
 	
 	
+  	
   var sendInvitation = function(invitation){
 	  var socket = getSocketFromUserName(invitation.to.screenName);
 	  if (socket){
@@ -108,11 +112,33 @@ module.exports =  function(){
 	   return allSockets[sockets_username_socket[userName]];
   };
   
+  var sendCallRequest = function(type, caller, callee_userName, cb){
+	  if(!caller){
+		  cb("No Caller");
+	  }else{
+		   socket = getSocketFromUserName(callee_userName);
+		  if(socket){
+			  socket.emit(EVENT_RTC_CALL_REQUEST, caller.screenName, caller.firstName+" "+caller.lastName, type+"_"+caller.screenName+"_"+callee_userName);
+			  cb(null, type+"_"+caller.screenName+"_"+callee_userName);
+		  }else{
+			  cb("Callee not available");
+		  }  
+	  }
+  };
+  
+  var acceptPhoneCall= function( screenName, room){
+	  socket = getSocketFromUserName(screenName);  
+	  if(socket){
+		  socket.emit(EVENT_RTC_CALL_REQUEST_ACCEPT_CONFIRM, room);
+	  }
+  };
+  
   return {
 	  init: initSocket,
 	  sendInvitation: sendInvitation,
 	  replyInvitation: replyInvitation,
-	  sentChatMessage: sentChatMessage
+	  sentChatMessage: sentChatMessage,
+	  sendCallRequest: sendCallRequest
   }
 	
 }

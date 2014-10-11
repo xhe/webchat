@@ -35,5 +35,6 @@ module.exports = function(app){
 	app.route('/api/upload_profile_file').post(user_service.requiresLogin,  api.upload_profile_file);
 	app.route('/api/upload_chat_file/:roomId').post(user_service.requiresLogin,  api.upload_chat_file);
 	
-	
+	app.route('/api/get_xirsys/:room').get(user_service.requiresLogin, api.getXirsysInfo);
+	app.route('/api/call').post(user_service.requiresLogin, api.call); 
 }

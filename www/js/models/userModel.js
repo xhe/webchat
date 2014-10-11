@@ -80,13 +80,25 @@ define(function (require) {
 					}
 			);
 		}
-		
+	};
+	
+	call = function(callee_screenName, type, cb){
+		$.post( config.serverUrl+'call', 
+				{
+					user_name: callee_screenName,
+					type: type
+				},
+				function(result){
+					cb(result);
+				}
+		);
 	};
 	
 	return {
 		User: User,
 		UserCollection: UserCollection,
-		getRequestedUser:getRequestedUser
+		getRequestedUser:getRequestedUser,
+		call: call
 	}
 	
 });

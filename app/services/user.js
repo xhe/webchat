@@ -29,7 +29,9 @@ exports.createUser = function(req, res){
 };
 
 exports.login = function(req, res){
-	Client.findByUsername(req.body.userName, function(user){		
+	Client.findByUsername(req.body.userName, function(err, user){	
+		if(err)
+			console.log(err);
 		if(user){	
 			if(user.authenticate(req.body.passWord)){
 				updateToken(user, req, res);
@@ -51,7 +53,9 @@ exports.autologin = function(req, res){
 	){
 		res.json({'status':'success'});
 	}else{
-		Client.findByUsername(screenName,function(client){
+		Client.findByUsername(screenName,function(err, client){
+			if(err)
+				console.log(err);
 			if(client){
 				if(client.token==token){
 					client = utils.simplifyUser(client, false);
@@ -92,7 +96,9 @@ var updateToken = function(user, req, res){
  */
 exports.requiresLogin = function(req, res, next) {	
 	if( req.session.screenName && req.session.token){
-		Client.findByUsername(  req.session.screenName, function(result){
+		Client.findByUsername(  req.session.screenName, function(err,result){
+			if(err)
+				console.log(err);
 			if(result){ 
 				req.user = result;
 				next();
@@ -138,7 +144,10 @@ exports.search_friend = function(id, cb){
 
 exports.get_contacts = function(userName, cb){ 
 	//first find all rooms owned or participated
-	Client.findByUsername(userName, function(user){
+	Client.findByUsername(userName, function(err, user){
+		if(err)
+			console.log(err);
+		
 		var searchArray =[
 			   {
 					creator: user

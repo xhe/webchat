@@ -53,7 +53,6 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 		}
 	)
 	
-	
 	if( window.platform ){
 		document.addEventListener("deviceready",function(){
 			require( [ "jquerymobile","jquery.cookie" ], function() { 
@@ -116,7 +115,7 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 		});
 	
 	}
-
+	
 });
 
 
