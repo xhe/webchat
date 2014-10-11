@@ -53,9 +53,8 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 		}
 	)
 	
-	
 	if( window.platform ){
-		document.addEventListener("deviceready",function(){
+		document.addEventListener("deviceready",function(){ alert ("ready")
 			require( [ "jquerymobile","jquery.cookie" ], function() { 
 				window.socketEventService = new SocketEventService(  io);
 				_.extend( window.socketEventService,  Backbone.Events  );	
