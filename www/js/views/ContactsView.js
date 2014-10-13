@@ -75,15 +75,27 @@ define(function(require){
         		 if( invRoomId ){
         			 link="invite_detail/"+member._id+"/"+invRoomId;
         		 }
-        		 var callLink = "#dialing/"+member._id; 
-        		 $("#ulContactsList").append($("<li>").html(
-        				 		"<table width='100%'><tr><td width='35%' align='center'>"+
-        				 		"<img style='"+styleStr+"' src='" +  util.retrieveThumbNailPath(member, 50) +"'/>" +
-        				 		"<br/>"+member.firstName+" "+ member.lastName +
-        				 		"</td><td width='30%'><a href='"+callLink+"' data-role='button' class='hrefCall' data-inline='true' ></a></td>"+
-        				 		"<td width='35%'><a data-role='button' class='hrefDetail' data-inline='true' >Detail</a></td></tr></table>"
-        				 	)
-        				 ); 
+        		 
+        		 //Don't show call button if not supported
+        		 if( !window.platform && ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ) ){ 
+        			 var callLink = "#dialing/"+member._id; 
+            		 $("#ulContactsList").append($("<li>").html(
+            				 		"<table width='100%'><tr><td width='35%' align='center'>"+
+            				 		"<img style='"+styleStr+"' src='" +  util.retrieveThumbNailPath(member, 50) +"'/>" +
+            				 		"<br/>"+member.firstName+" "+ member.lastName +
+            				 		"</td><td width='30%'><a href='"+callLink+"' data-role='button' class='hrefCall' data-inline='true' ></a></td>"+
+            				 		"<td width='35%'><a data-role='button' class='hrefDetail' data-inline='true' >Detail</a></td></tr></table>"
+            				 	)
+            				 );
+        		 }else{
+        			$("#ulContactsList").append($("<li>").html(
+     				 		"<table width='100%'><tr><td width='35%' align='center'>"+
+     				 		"<img style='"+styleStr+"' src='" +  util.retrieveThumbNailPath(member, 50) +"'/>" +
+     				 		"</td><td width='30%'><strong>"+ member.firstName+" "+ member.lastName +"</strong></td>"+
+     				 		"<td width='35%'><a data-role='button' class='hrefDetail' data-inline='true' >Detail</a></td></tr></table>"
+     				 	)
+     				 ); 
+        		 }
         	 });
         	 $("#ulContactsList").listview().listview().listview('refresh');
         	 $(".hrefCall").button();
