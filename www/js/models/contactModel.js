@@ -17,6 +17,7 @@ define(function (require) {
 		},
 		
 		callback: function(data){
+			window.myContacts = data;
 			_self.result = data;
 			_self.reset();
 		},
@@ -25,6 +26,6 @@ define(function (require) {
 	
 	return {
 		Contact: Contact,
-		ContactCollection: ContactCollection
+		ContactCollection: ContactCollection,
 		   }
 });

@@ -20,6 +20,10 @@ define(function (require) {
 		this.EVENT_NOTIFY_ON_LINE_MEMBER_FOOTER = "on_line_members_FOOTER";
 		this.EVENT_NOTIFY_MEMBER_ON_LINE_FOOTER = "member_on_line_FOOTER";
 		this.EVENT_NOTIFY_MEMBER_OFF_LINE_FOOTER = "member_off_line_FOOTER";
+		this.EVENT_NOTIFY_MEMBER_OFF_LINE_FOOTER = "member_off_line_FOOTER";
+		this.EVENT_RTC_CALL_REQUEST="rtc_call_request";
+		this.EVENT_RTC_CALL_REQUEST_ACCEPT="rtc_call_request_accept";
+		this.EVENT_RTC_CALL_REQUEST_ACCEPT_CONFIRM="rtc_call_request_accept_confirm";
 		
 		var socket = null;
 		this.screenName = ""; 
@@ -37,7 +41,11 @@ define(function (require) {
 			unbindSocketEvents();
 			socket = null;
 		}; 
-		  
+		
+		this.answer_phone_call = function(screenName, room){
+			socket.emit(this.EVENT_RTC_CALL_REQUEST_ACCEPT, screenName, room);
+		};
+		
 		this.isUserOnline = function(member){
 			var result = _.find(this.onlineContacts, function(m){
 				return m===member.screenName;
@@ -55,6 +63,9 @@ define(function (require) {
 			socket.removeAllListeners( window.socketEventService.EVENT_NOTIFY_ON_LINE_MEMBER );
 			socket.removeAllListeners( window.socketEventService.EVENT_NOTIFY_MEMBER_ON_LINE );
 			socket.removeAllListeners( window.socketEventService.EVENT_NOTIFY_MEMBER_OFF_LINE );
+			socket.removeAllListeners( window.socketEventService.EVENT_RTC_CALL_REQUEST );
+			socket.removeAllListeners( window.socketEventService.EVENT_RTC_CALL_REQUEST_ACCEPT );
+			socket.removeAllListeners( window.socketEventService.EVENT_RTC_CALL_REQUEST_ACCEPT_CONFIRM );
 		};
 		
 		var bindSocketEvent = function(){
@@ -109,6 +120,16 @@ define(function (require) {
 								}
 							}
 							window.socketEventService.trigger(window.socketEventService.EVENT_NOTIFY_MEMBER_OFF_LINE);
+					}
+			);
+			socket.on(window.socketEventService.EVENT_RTC_CALL_REQUEST, 
+					function(caller_screenName, caller_fullName, roomName){
+							window.socketEventService.trigger(window.socketEventService.EVENT_RTC_CALL_REQUEST, caller_screenName, caller_fullName, roomName);
+					}
+			);
+			socket.on(window.socketEventService.EVENT_RTC_CALL_REQUEST_ACCEPT_CONFIRM, 
+					function(roomName){
+							window.socketEventService.trigger(window.socketEventService.EVENT_RTC_CALL_REQUEST_ACCEPT_CONFIRM, roomName);
 					}
 			);
 		}

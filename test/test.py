@@ -1,6 +1,6 @@
 import time
 
-finishedPoint = 35
+finishedPoint = 40
 
 def finnab(n):
     if n<2:

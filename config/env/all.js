@@ -16,6 +16,11 @@ module.exports = {
 	sessionCollection: 'sessions',
 	default_token_length: 24*60*60,
 	profile_image_sizes: [50, 100, 150,250,800],
+	xirsys: {
+		ident:'hexufeng',
+		secret:'5d3ef7cd-11dd-448b-bf68-5d0d60513dd1',
+		domain:'www.dealsmatcher.com'
+	}, 
 	assets: {
 		lib: {
 			css: [

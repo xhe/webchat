@@ -159,3 +159,132 @@ img.offline{
     padding-right: 10px;
     text-decoration: inherit;
 }
+.hrefCall:before{
+	content: "\f095";
+	font-family: FontAwesome;
+    font-weight: bold;
+    text-decoration: inherit;
+    font-size:35px;
+}
+.hrefCall{
+	text-decoration: none;
+}
+.hrefCall:visited{
+	text-decoration: none;
+}
+.hrefDetail:before{
+	content: "\f022";
+	font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    padding-right: 10px;
+    text-decoration: inherit;
+}
+.divDialingName{
+	font-weight: bold;
+	font-size: 26px;
+	text-align: center;
+	margin: 20px;
+}
+
+.hrefAudio{
+    font-size:26px;
+}
+.hrefAudio:before{
+	content: "\f1c7";
+	font-family: FontAwesome;
+    padding-right: 20px;
+    text-decoration: inherit;
+    font-size:26px;
+}
+.hrefVideo{
+	font-size:26px;
+}
+.hrefVideo:before{
+	content: "\f1c8";
+	font-family: FontAwesome;
+    padding-right: 20px;
+    text-decoration: inherit;
+    font-size:26px;
+}
+#btnChattingRoomBack_web
+{
+	height: 43px;
+    padding: 0;
+    width: 40px;
+}
+#upload-button-chat{
+	height: 43px;
+    padding: 0;
+    width: 40px;
+}
+
+.recordAudio{
+	padding: 7px 10px 4px;
+}
+
+.recordAudio:before{
+	content: "\f1c7";
+	font-family: FontAwesome;
+    text-decoration: inherit;
+    font-size:26px;
+}
+#recordVideo{
+	padding: 7px 10px 4px;
+}
+#recordVideo:before{
+	content: "\f1c8";
+	font-family: FontAwesome;
+    text-decoration: inherit;
+    font-size:26px;
+}
+.stop{
+	padding: 7px 10px 4px;
+}
+
+.stop:before{
+	content:"\f04d";
+	font-family: FontAwesome;
+    text-decoration: inherit;
+    font-size:26px;
+    color: #ff0000;
+}
+
+.recordAudioMsg{
+	padding: 7px 10px 4px;
+	width: 40px;
+	height: 40px;
+	
+}
+.recordAudioMsg:before{
+	content: "\f1c7";
+	font-family: FontAwesome;
+    text-decoration: inherit;
+    font-size:40px;
+}
+.recordVideoMsg{
+	padding: 7px 10px 4px;
+	width: 40px;
+	height: 40px;
+}
+.recordVideoMsg:before{
+	content: "\f1c8";
+	font-family: FontAwesome;
+    text-decoration: inherit;
+    font-size:40px;
+}
+.attachImage{
+	padding: 7px 10px 4px;
+	width: 45px;
+	height: 45px;
+}
+.attachImage:before{
+	content: "\f1c5";
+	font-family: FontAwesome;
+    text-decoration: inherit;
+    font-size:30px;
+}
+.divHomeSubTitle{
+	font-size: 90%;
+	font-style: italic;
+}
