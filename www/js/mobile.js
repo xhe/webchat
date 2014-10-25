@@ -31,7 +31,7 @@ require.config( {
 } );
 
 // Includes File Dependencies
-require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "common/utils",  "services/socketEvents", "jquery.cookie" ],
+require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "common/utils",  "services/socketEvents", "jquery.cookie"],
 		function( $, Backbone, Mobile, appConfig, utils, SocketEventService ) {
 	
 	Backbone.emulateHTTP = true;

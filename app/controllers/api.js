@@ -44,6 +44,33 @@ exports.upload_chat_file = function(req, res){
 	
 };
 
+exports.upload_chat_audio_file = function(req, res){
+	chat_service.addAudioForChatMessage( __dirname+"/../../"+req.files.audio.path, req.user,  req.params.roomId, function(message){
+		if(message){
+			res.jsonp(message);
+		}else{
+			res.end("failed");
+		}
+	});
+	
+};
+exports.upload_chat_video_file = function(req, res, next){
+	var audioPath = req.files.audio? req.files.audio.path:"";
+	var videoPath = req.files.video? req.files.video.path:"";
+
+	chat_service.addVideoForChatMessage( audioPath,
+										 videoPath,
+										 req.user,  
+										 req.params.roomId, function(err, message){
+		if(err){
+			return next(err);
+		}else{
+			res.jsonp(message);
+		}
+	});
+	
+};
+
 exports.myphotos = function(req, res){
 	res.jsonp(req.user.photos);
 };

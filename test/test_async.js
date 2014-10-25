@@ -1,5 +1,5 @@
 var fs = require("fs");
-var finishedPoint = 45;
+var finishedPoint = 40;
 var finnab = function(i){
 	if(i==0){
 		return 0;

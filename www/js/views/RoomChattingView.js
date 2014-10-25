@@ -1,3 +1,5 @@
+//http://blog.groupbuddies.com/posts/39-tutorial-html-audio-capture-streaming-to-node-js-no-browser-extensions
+//https://github.com/muaz-khan/WebRTC-Experiment/tree/master/RecordRTC
 define(function(require){
 	
 	var Backbone 		= require('backbone'),
@@ -28,6 +30,8 @@ define(function(require){
 		 		 							 			msgPhotoPath: chat.photo? util.retrieveMsgThumbNailPath(chat.photo.renders, 100) : "", 
 		 		 							 			msgPhotoLargePath: chat.photo? util.retrieveMsgThumbNailPath(chat.photo.renders, 10000) : "", 
 		 		 							 			chat: chat,
+		 		 							 			audioPath: (chat.audio && chat.audio.filename)?chat.audio.filename:"",
+		 		 							 			videoPath: (chat.video && chat.video.filename)?chat.video.filename:"",
 		 		 							 			user: util.getLoggedInUser() 
 		     		 								  }
 		 		 								  )		
@@ -102,7 +106,74 @@ define(function(require){
         	"click #btnChattingRoomBack_web": "chatRoomBack", 
         	"click #btnAttPhotos": "attPhotos",
         	"click #btnAttCamera": "attCamera",
-        	"submit #file-form-chat": "upload"
+        	"submit #file-form-chat": "upload",
+        	"click #recordAudio":"recordAudio"
+        },
+        recordRTC: null,
+        recording: false,
+        posting: false,
+        recordAudio: function(){
+        	
+        	if(!this.recording && this.posting){
+        		console.log("to stop");
+        		return;
+        	}
+        	
+        	self = this;
+        	if(!this.recording){
+        		navigator.getUserMedia =  (navigator.getUserMedia ||
+                    navigator.webkitGetUserMedia ||
+                    navigator.mozGetUserMedia ||
+                    navigator.msGetUserMedia);
+        		if (navigator.getUserMedia) {
+    				
+    				navigator.getUserMedia (
+    						 {
+    					         video: false,
+    					         audio: true
+    					      },
+    					      function(mediaStream){
+    					    	  $("#recordAudio").removeClass('recordAudio');
+    					    	  $("#recordAudio").addClass('stop');
+    					    	  self.recording = true;
+    					    	  recordRTC = RecordRTC(mediaStream);
+    					    	  recordRTC.startRecording();
+    					      },
+    					      function(err) {
+    					         console.log("The following error occured: " + err);
+    					      }
+    						);
+    			} else {
+    				console.log("getUserMedia not supported");
+    			}
+        	}else{
+        		this.recording = false;
+        		this.posting = true;
+        		_self=this;
+        		recordRTC.stopRecording(function(audioURL) { 
+        			  util.showBusy();
+        			  var formData = new FormData();
+        			  var data =  recordRTC.getBlob();
+        			  var type = data['type'].split('/')[1];
+        			  var fileName = new Date().getTime()+"_"+ (Math.floor(Math.random() * 100) + 1) +"."+type;
+        			  formData.append('audio', data, fileName); 
+        			  $.ajax({
+        			    type: 'POST',
+        			    url: '/api/upload_chat_audio_file/'+current_roomId,
+        			    data: formData,
+        			    contentType: false,
+        			    cache: false,
+        			    processData: false,
+        			  }).done(function(){ 
+        				  $("#recordAudio").removeClass('stop');
+        				  $("#recordAudio").addClass('recordAudio');
+        				  _self.posting = false;
+        				  util.hideBudy();
+        			  });
+        			  
+        			});
+        	}
+        	
         },
         
         upload: function(event){
@@ -127,16 +198,14 @@ define(function(require){
         	if(count==0){
         		util.alert("Please select image first.");
         	}else{
-        		$("#upload-button-chat").html("uploading");
-            	
+        		util.showBusy();
         		var xhr = new XMLHttpRequest();
 	        	xhr.open('POST', '/api/upload_chat_file/'+current_roomId, true);
 	        	// Set up a handler for when the request finishes.
 	        	_this=this;
 	        	xhr.onload = function () {
 	        	  if (xhr.status === 200) {
-	        	    // File(s) uploaded.
-	        		  $("#upload-button-chat").html('Upload');
+	        		  util.hideBudy();
 	        		  $("#file-select-chat").val("");
 	        	  } else {
 	        		  util.alert('An error occurred!');
@@ -145,8 +214,6 @@ define(function(require){
 	        	// Send the Data.
 	        	xhr.send(formData);
         	}
-        	
-        	
         },
         
         attPhotos: function(){

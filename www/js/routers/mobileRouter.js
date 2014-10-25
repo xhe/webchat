@@ -18,6 +18,7 @@ define(function(require){
 		LargePhotoView =  require('views/LargePhotoView'),
 		DialingView = require('views/DialingView'),
 		VideoChatRoom = require('views/VideoChatRoomView'),
+		VideoRecorder = require('views/VideoRecorderView'),
 		io = require("socket.io")
 		;
     // Extends Backbone.Router
@@ -48,7 +49,15 @@ define(function(require){
             "invite_detail/:id/:roomId": "invite_detail",
             "larget_photo/:imgPath":"larget_photo",
             "dialing/:member_id":"dialing",
-            "videochat/:room": "videoChatRoom"
+            "videochat/:room": "videoChatRoom",
+            "videoRecord/:room":"videoRecord"
+        },
+        
+        videoRecord: function(room){
+        	if (this.login())
+        		return;
+        	videoRecorder = new VideoRecorder(room);
+        	this.changePage(videoRecorder);
         },
         
         videoChatRoom: function(room){

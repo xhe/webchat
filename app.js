@@ -8,8 +8,12 @@ config = require('./config/config'),
 fs = require('fs')
 ;
 
-var port = config.port,
-	num_processes =  1;// process.env.WORKERS || require('os').cpus().length;
+var port = config.port;
+var	num_processes =  1;
+
+if (process.env.NODE_ENV=='production'){
+	num_processes = process.env.WORKERS || require('os').cpus().length;
+}
 
 var autoRestartedTimes = 0;
 var worker_start_ts = [];

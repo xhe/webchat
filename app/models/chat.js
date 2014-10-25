@@ -2,6 +2,22 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema
 	;
 
+var AudioSchema = new Schema({
+	filename: String,
+	created: {
+			type: Date,
+			default: Date.now
+		}
+});
+
+var VideoSchema = new Schema({
+	filename: String,
+	created: {
+		type: Date,
+		default: Date.now
+	}
+});
+
 var ChatMessageSchema = new Schema({
 	
 	creator: {
@@ -19,6 +35,16 @@ var ChatMessageSchema = new Schema({
 	photo: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'PhotoSchema' 
+	},
+	
+	audio: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Audio' 
+	},
+	
+	video: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Video' 
 	},
 	
 	created: {
@@ -133,3 +159,5 @@ mongoose.model('ChatRoom', ChatRoomSchema);
 mongoose.model('Invitation', InvitationSchema);
 mongoose.model('ChatMessage', ChatMessageSchema);
 mongoose.model('ChatRoomVisitLog', ChatRoomVisitLogSchema);
+mongoose.model('Audio', AudioSchema);
+mongoose.model('Video', VideoSchema);

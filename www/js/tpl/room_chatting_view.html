@@ -13,7 +13,7 @@
 					<% if(mobile){%>
 						<button id='btnAttPhotos' data-inline="true" >Photos</button>
 						<button id="btnAttCamera" data-inline="true" >Camera</button>
-						<button id="btnChattingRoomBack_phone" data-inline="true" data-icon="arrow-l"  >Back</button>
+						<button id="btnChattingRoomBack_phone" data-inline="true" data-icon="arrow-l">Back</button>
 					<%}else{%>
 						<form id="file-form-chat" method="POST">
 							<table>
@@ -22,11 +22,18 @@
 											<input type="file" id="file-select-chat" name="photos_chat[]" accept="image/*;capture=camera"/>
 							  			</td>
 										<td>
-											<button type="submit" id="upload-button-chat" data-inline="true">Upload</button>
+											<button type="submit" id="upload-button-chat" data-inline="true" class="attachImage"></button> 
 										</td>
 										<td>
-											<a  data-role="button"  id="btnChattingRoomBack_web" data-inline="true" data-icon="arrow-l"  >Back</a>
+											<a  data-role="button"  id="recordAudio" class="recordAudio" data-inline="true"></a>
 										</td>
+										<td>
+											<a  data-role="button"  id="recordVideo" data-inline="true" href="#videoRecord/<%= roomId %>"></a>
+										</td>
+										<td>
+											<a  data-role="button"  id="btnChattingRoomBack_web" data-inline="true" data-icon="arrow-l"  ></a>
+										</td>
+										
 								</tr>
 							</table>
 						</form>

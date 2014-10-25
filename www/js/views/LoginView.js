@@ -45,8 +45,7 @@ define(function(require){
         
         render: function() {           
             $(this.el).html(this.template());
-            new FooterView({ el: $(".footerContent", this.el)}).render();
-            
+            //new FooterView({ el: $(".footerContent", this.el)}).render();
             return this;
         }
     } );

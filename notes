@@ -22,7 +22,9 @@ forever start app
 
 //install apche2.4
 http://unix.stackexchange.com/questions/138899/centos-install-using-yum-apache-2-4
-
+//upgrade apache2.2 to 2.4
+http://www.thegeekstuff.com/2012/05/install-apache-2-on-centos-6/
+http://community.sitepoint.com/t/apache-install-on-mac-osx-10-6-8/27161/4
 
 in /etc/init/ (upstart)
 startWebchat.sh

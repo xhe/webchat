@@ -10,8 +10,11 @@ var mongoose = require('mongoose'),
 	socket_serivce = require('./sockets')(),
 	chat_service = require('./chat'),
 	core_service = require('./core'),
+	Audio = mongoose.model('Audio'),
+	Video = mongoose.model('Video'),
 	_ = require('lodash'),
-	async = require('async')
+	async = require('async'),
+	fs = require('fs')
 	;
 
 exports.chatRoomNewChatMsg = function(user, room, cb ){
@@ -127,6 +130,8 @@ exports.retrieveChatMessages = function(user, roomId, before_ts, cb){
 					q.limit(20);
 					q.populate('creator');
 					q.populate('photo');
+					q.populate('audio');
+					q.populate('video');
 					if(before_ts){
 						q.where('created').lt(before_ts);
 					}
@@ -229,6 +234,164 @@ exports.addPhotoForChatMessage = function(filePath, user, roomId, cb){
 						});
 					});
 				});
+			});
+		}
+	});
+};
+
+exports.addVideoForChatMessage = function(audioPath, videoPath, user, roomId, cb){
+	
+	var merge = function(audioPath, videoPath, user, cb){
+		
+		pos = videoPath.indexOf('uploads');
+		fileName = videoPath.substr(pos+8);
+		filePath = videoPath.substr(0,pos+8 );	
+		var mergedFile =  filePath+'video/'+user._id+"_"+fileName
+		
+		if(audioPath.length>0 ){
+			var command = "ffmpeg -i " + audioPath + " -i " + videoPath + " -map 0:0 -map 1:0 " + mergedFile;
+			var  exec = require('child_process').exec;
+			exec(command, function(err, stdout, stderr){
+		        if(err){
+		        	cb(err);
+		        } else {
+		        	fs.unlink( videoPath );
+		        	fs.unlink( audioPath );
+		        	cb(null, mergedFile.replace("www",""));
+		        }
+			});
+		} else {
+			wr = fs.createWriteStream(mergedFile);
+			wr.on('close', function(ex){
+						fs.unlink(videoPath);
+			});
+			fs.createReadStream(videoPath).pipe(wr);
+			cb(null, mergedFile.replace("www",""));
+		}
+	};
+	
+	
+	var createNewChatMsg = function(roomId,user, filePath, cb){ 
+		var video = new Video({
+			filename: filePath
+		});
+		video.save(function(err, vid){
+			var message = new ChatMessage({
+				creator: user,
+				room:	new ObjectId(roomId),
+				video:	vid,
+				created: Date.now()
+			});
+			message.save(function(err, msg){
+				
+				ChatMessage
+				.findById(msg._id)
+				.populate('photo')
+				.populate('audio')
+				.populate('video')
+				.populate('creator')
+				.exec(function(err, message){
+					
+					message.creator = utils.simplifyUser(message.creator, true);
+					cb(null, message);
+					
+					broadcastMessage( message); 
+					ChatRoomVisitLog.findOneAndUpdate(
+						{
+							visitor: user,
+							room: new ObjectId(roomId)  
+						},
+						{
+							visited: Date.now()
+						},
+						function(err, log){
+							if(err){
+								console.log(err);
+							}else{
+								//cb(log);
+							}
+						}
+					);
+				});
+			});
+		});
+	};
+	
+	async.waterfall([
+	                  async.apply( merge, audioPath, videoPath, user),
+	                  async.apply( createNewChatMsg, roomId, user)
+	                 ], cb);
+};
+
+
+exports.addAudioForChatMessage = function(audioPath, user, roomId, cb){
+	var message = new ChatMessage({
+		creator: user,
+		room:	 new ObjectId(roomId),
+		created: Date.now()
+	});
+	message.save( function(err) {
+		if(err){
+			console.log(err);
+		}else{
+			ChatMessage
+			.findById(message._id)
+			.exec(function(err, message){
+				
+					
+					pos = audioPath.indexOf('uploads');
+					fileName = audioPath.substr(pos+8);
+					filePath = audioPath.substr(0,pos+8 );	
+		
+					wr = fs.createWriteStream( filePath+'audio/'+user._id+"_"+fileName);
+					wr.on('close', function(ex){
+								fs.unlink(audioPath);
+					});
+					fs.createReadStream(audioPath).pipe(wr);
+				
+				
+					var audio = new Audio({
+						filename: '/uploads/audio/'+user._id+"_"+fileName
+					});
+					
+					audio.save(function(err, doc){
+						message.audio = doc;
+						message.save( function(err, msg) {
+							ChatMessage
+							.findById(msg._id)
+							.populate('photo')
+							.populate('audio')
+							.populate('video')
+							.populate('creator')
+							.exec(function(err, message){
+								
+								message.creator = utils.simplifyUser(message.creator, true);
+								cb(message);
+								
+								broadcastMessage( message); 
+								ChatRoomVisitLog.findOneAndUpdate(
+									{
+										visitor: user,
+										room: new ObjectId(roomId)  
+									},
+									{
+										visited: Date.now()
+									},
+									function(err, log){
+										if(err){
+											console.log(err);
+										}else{
+											//cb(log);
+										}
+									}
+								);
+								
+							});
+						});
+					});
+					
+					
+					
 			});
 		}
 	});
