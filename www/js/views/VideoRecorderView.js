@@ -37,9 +37,24 @@ define(function(require){
         			  audio: true,
                       video: true
         	};
-        	navigator.getUserMedia(session, success_callback, function(error) {
-                alert( JSON.stringify(error) );
-            });
+        	if(window.platform==undefined){
+        		navigator.getUserMedia =  (navigator.getUserMedia ||
+                        navigator.webkitGetUserMedia ||
+                        navigator.mozGetUserMedia ||
+                        navigator.msGetUserMedia);
+        		if (navigator.getUserMedia){
+        			navigator.getUserMedia(session, success_callback, function(error) {
+    	                console.log( JSON.stringify(error) );
+    	            });
+        		}else{
+        			util.alert("This function is only available in chrome or firefox browser. Please open our website using one of these browsers.")
+            	}
+        	}else{
+        		util.alert("This function is only available in chrome or firefox browser. Please open our website using one of these browsers.")
+    		}
+        	
+        	
+        
         },
         
         events: {
