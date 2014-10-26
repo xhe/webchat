@@ -19,6 +19,14 @@ define(function(require){
         	 
         },
         
+        events: {
+        	"click #btnRefresh": "refresh"
+        },
+        
+        refresh: function(){
+        	location.reload(); 
+        },
+        
         render: function() {  
         	this.template = _.template( home_tpl );
        	 	$(this.el).html(this.template({  user: util.getLoggedInUser(), serverUrl: (window.hostURL?window.hostURL:"")  }));

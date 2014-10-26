@@ -288,3 +288,8 @@ img.offline{
 	font-size: 90%;
 	font-style: italic;
 }
+.btnImages:before{
+	content: "\f1c5";
+	font-family: FontAwesome;
+    text-decoration: inherit;
+}

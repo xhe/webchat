@@ -125,7 +125,7 @@ define(function(require){
                     navigator.webkitGetUserMedia ||
                     navigator.mozGetUserMedia ||
                     navigator.msGetUserMedia);
-        		if (navigator.getUserMedia && window.platform==undefined) {
+        		if (navigator.getUserMedia /* && window.platform==undefined*/) {
     				
     				navigator.getUserMedia (
     						 {
@@ -145,7 +145,7 @@ define(function(require){
     						);
     			} else {
     				console.log("getUserMedia not supported");
-    				util.alert("This function is only available in chrome or firefox browser. Please open our website using one of these browsers.")
+    				util.alert("This video/audio function is only available in chrome or firefox web browser. Please open our website using one of these browsers.")
     			}
         	}else{
         		this.recording = false;

@@ -38,7 +38,8 @@
 				</div>		
 				
 				<div class='divHomeSubTitle' style="font-weight:normal">
-					We suggest you use <a href="http://www.google.com/chrome/">Google Chrome</a>  or <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>  in order to fully use video or audio chat service.
+					We suggest you use <a href="http://www.google.com/chrome/">Google Chrome</a>  or <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a> web browser
+					in order to fully use video or audio chat service. Currently, video feature is only vailable in web.
 				</div>
 		</div>
 		
@@ -47,7 +48,18 @@
 		<div data-role="footer" data-position="fixed">		
 				<div data-role="navbar">
 					<ul>
-						<li><a href="mailto:support@chat4each.com">Contact Us</a></li>
+						<li><a href="mailto:support@chat4each.com" 
+							style=" background-color: #e9e9e9; color: #000;">Contact Us</a></li>
+							
+						<%if(mobile){%>
+							<li>
+							<a href="http://www.chat4each.com"> Go to www.chat4each.com</a>
+							</li>
+						<%}else{%>
+							<li>
+							<a href="http://www.chat4each.com/chat4each.apk">Download: Android App</a> 
+							</li>
+						<%}%>	
 					</ul>
 				</div>
 			</div>
