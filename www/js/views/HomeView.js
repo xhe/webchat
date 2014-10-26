@@ -21,8 +21,8 @@ define(function(require){
         
         render: function() {  
         	this.template = _.template( home_tpl );
-       	 	$(this.el).html(this.template({ user: util.getLoggedInUser() }));
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("My Home").disableBack().render();
+       	 	$(this.el).html(this.template({  user: util.getLoggedInUser(), serverUrl: (window.hostURL?window.hostURL:"")  }));
+           // new HeaderView({ el: $(".headerContent", this.el)}).setTitle("My Home").disableBack().render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             
             var invTotalView = new invitationTotalView({el:$("#divTotalInvitations", this.el),  model: this.invitationCollection });

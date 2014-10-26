@@ -154,10 +154,10 @@ UserSchema.methods.authenticate = function(password){
 
 UserSchema.statics.findByUsername = function(screenName, cb){
 	this.findOne({screenName: screenName}, function(err, user){
-		if(!err && user){
-			cb(user);
+		if(!err && user){ 
+			cb(null, user);
 		}else{
-			cb(null);
+			cb(err);
 		}
 	});
 };

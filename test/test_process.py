@@ -1,6 +1,6 @@
 import time
 
-finishedPoint = 35
+finishedPoint = 40
 
 from multiprocessing import Process
 from multiprocessing import Pool

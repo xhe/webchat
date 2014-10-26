@@ -1,6 +1,29 @@
 <section id="splashPage">
 		
-		<div class="headerContent"></div>
+		<div class="headerContent">
+			<div data-role="header">
+					<div style="position: absolute;left=10px;padding-top: 5px; cursor: pointer;" class="home">
+							<% if (user.thumbFileName.indexOf('.')>0 ){  %>
+								<img src="<%=serverUrl%>/uploads/thumb/<%= user.thumbFileName%>"/>
+							<%}else{%>
+								Welcome, <%= user.screenName%>
+							<%}%>
+					</div>
+					
+					
+							
+				<h1>
+					Home
+				</h1>			
+				
+				<div style="position: absolute;right: 15px;top:0px">
+				<a href='#logout' data-role='button' style="width: 55px">
+					Logout</a>
+				</div>
+					
+				
+			</div>
+		</div>
 		
 		<div data-role="content">
 				

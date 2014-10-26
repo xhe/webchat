@@ -3,15 +3,24 @@
 		
 		<tr>
 			<td  width="100%" style="text-align:right">
-				<%=chat.creator.screenName %>
-				<br/>
-				<% if(msgPhotoPath!==""){%>
-					<a href="#larget_photo/<%= encodeURIComponent(msgPhotoLargePath) %>">
-						<img src="<%= msgPhotoPath %>" />
-					</a>
-				<%}else{%>
-					<%= chat.message %>
-				<%}%>
+			
+				<div style="float: right; padding-top: 12px;">
+					<%=chat.creator.screenName %>
+				</div>
+				<div style="float: right;padding-right: 20px;">
+						<% if(videoPath!==""){%>
+							<a href="<%=videoPath%>" target="_blank"><div class='recordVideoMsg'></div></a>
+						<%}else if(audioPath!==""){%>
+							<a href="<%=audioPath%>" target="_blank"><div class='recordAudioMsg'></div></a>
+						<%}else if(msgPhotoPath!==""){%>
+							<a href="#larget_photo/<%= encodeURIComponent(msgPhotoLargePath) %>">
+								<img src="<%= msgPhotoPath %>" />
+							</a>
+						<%}else{%>
+							<%= chat.message %>
+						<%}%>
+				</div>
+					
 				
 			</td>
 			<td width="60px">
@@ -29,17 +38,24 @@
 			</td>
 			
 			<td  width="100%" >
-				<%=chat.creator.screenName %>
-				<br/>
-				<% if(msgPhotoPath!==""){%>
-					<a href="#larget_photo/<%= encodeURIComponent(msgPhotoLargePath) %>">
-						<img src="<%= msgPhotoPath %>" />
-					</a>
-				<%}else{%>
-					<%= chat.message %>
-				<%}%>
+
+				<div style="float: left; padding-top: 12px;">
+					<%=chat.creator.screenName %>
+				</div>
+				<div style="float: left;padding-left: 20px;">
+						<% if(videoPath!==""){%>
+							<a href="<%=videoPath%>" target="_blank"><div class='recordVideoMsg'></div></a>
+						<%}else if(audioPath!==""){%>
+							<a href="<%=audioPath%>" target="_blank"><div class='recordAudioMsg'></div></a>
+						<%}else if(msgPhotoPath!==""){%>
+							<a href="#larget_photo/<%= encodeURIComponent(msgPhotoLargePath) %>">
+								<img src="<%= msgPhotoPath %>" />
+							</a>
+						<%}else{%>
+							<%= chat.message %>
+						<%}%>
+				</div>
 			</td>
-			
 		<tr>
 	<%}%>
 	

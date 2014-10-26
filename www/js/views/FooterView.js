@@ -49,8 +49,16 @@ define(function(require){
          			 		_this.notify('hrefFooterContact', true);
       		 			}
          		 );
-        		
-        		
+         		 
+         		 window.socketEventService.on(window.socketEventService.EVENT_RTC_CALL_REQUEST,
+       				 	function(screenName, fullName, roomName){
+          			 		if(confirm("You have got phone call request from " + fullName +", do yo want to accept?")){
+          			 			window.socketEventService.answer_phone_call(screenName, roomName);
+          			 			$.mobile.navigate("#videochat/"+roomName);
+          			 		}
+       		 			}
+          		 );
+         		 
         		eventInitialized = true;
         	}
         	currentRoomId = null;
