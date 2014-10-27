@@ -48,16 +48,21 @@
 		<div data-role="footer" data-position="fixed">		
 				<div data-role="navbar">
 					<ul>
-						<li><a href="mailto:support@chat4each.com" 
+						<li>
+							<a href="mailto:support@chat4each.com" 
 							style=" background-color: #e9e9e9; color: #000;">Contact Us</a></li>
 							
 						<%if(mobile){%>
 							<li>
-							<a href="http://www.chat4each.com"> Go to www.chat4each.com</a>
+							<a href="#" onclick="window.open('http://www.chat4each.com', '_system');"
+							style=" background-color: #e9e9e9; color: #000;"
+							>Go to www.chat4each.com</a>
 							</li>
 						<%}else{%>
 							<li>
-							<a href="http://www.chat4each.com/chat4each.apk">Download: Android App</a> 
+							<a href="http://www.chat4each.com/chat4each.apk"
+							style=" background-color: #e9e9e9; color: #000;"
+							>Download: Android App</a> 
 							</li>
 						<%}%>	
 					</ul>
