@@ -121,7 +121,8 @@ exports.search = function(req, res){
 	if(type=="contacts"){
 		var criterias = {
 				phoneNumber: req.body.phoneNumber.toString().replace( /^\D+/g, ''),
-				email: req.body.email
+				email: req.body.email,
+				screenName: req.body.name
 		};
 		user_service.search_friends( criterias, req.user, function(data){
 			res.jsonp(data);

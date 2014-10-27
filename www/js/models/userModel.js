@@ -11,13 +11,14 @@ define(function (require) {
 		model: User,
 		url: config.serverUrl + 'users',
 		
-		search_users: function(phoneNumber, email){
+		search_users: function(phoneNumber, email, name){
 				
 			var _this = this;
 			$.post( config.serverUrl+'search/contacts', 
 					{
 						phoneNumber: phoneNumber,
-						email: email
+						email: email,
+						name: name
 					},
 					function(result){
 						_this.users = result;

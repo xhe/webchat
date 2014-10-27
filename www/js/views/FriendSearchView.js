@@ -27,10 +27,11 @@ define(function(require){
         search: function(){
         	var phone =  util.extractDigits($("#search_phone_number").val());
         	var email = $("#search_email").val();
-        	if( phone=="" && email=="" ){
+        	var name = $("#search_screenName").val();
+        	if( phone=="" && email=="" && name==""){
         		util.alert("Please enter searching criteria first.")
         	}else{
-        		this.userCollection.search_users(phone, email);
+        		this.userCollection.search_users(phone, email, name);
         	}
         },
         
