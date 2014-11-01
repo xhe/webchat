@@ -122,13 +122,6 @@ var UserSchema = new Schema({
 		default: ''
 	},
 	
-	gcm_registration_id: {
-		type: String,
-		default: '',
-		required: false
-		
-	},
-	
 	created: {
 		type: Date,
 		default: Date.now
@@ -224,22 +217,6 @@ UserSchema.methods.updateToken = function(cb, valid_period){
 			cb(_this);
 		}
 	});
-};
-
-UserSchema.methods.updateRegistrationId = function(registration_id, type, cb){
-	
-	if(type=='gcm'){
-		this.gcm_registration_id = registration_id;
-	}
-	var _this=this
-	this.save(function(err){
-		if(err){
-			cb(err);
-		}else{
-			cb(_this);
-		}
-	});
-
 };
 
 UserSchema.statics.findUniqueUsername = function(screenName, suffix,callback){

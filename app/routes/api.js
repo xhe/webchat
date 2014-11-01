@@ -40,6 +40,4 @@ module.exports = function(app){
 	
 	app.route('/api/get_xirsys/:room').get(user_service.requiresLogin, api.getXirsysInfo);
 	app.route('/api/call').post(user_service.requiresLogin, api.call); 
-	
-	app.route("/api/android_register").post(user_service.requiresLogin, api.android_register );
 }
