@@ -26,8 +26,6 @@ var cordova = require('cordova'),
 
 var MediaError = require('org.apache.cordova.media.MediaError');
 
-var recordedFile;
-
 module.exports = {
     mediaCaptureMrg:null,
 
@@ -42,22 +40,16 @@ module.exports = {
 
         var fn = src.split('.').pop(); // gets the file extension
         if (thisM.node === null) {
-            if (fn === 'mp3' || fn === 'wma' || fn === 'wav' ||
+            if (fn === 'mp3' || fn === 'wma' || fn === 'wma' ||
                 fn === 'cda' || fn === 'adx' || fn === 'wm' ||
-                fn === 'm3u' || fn === 'wmx' || fn === 'm4a') {
+                fn === 'm3u' || fn === 'wmx') {
                 thisM.node = new Audio(src);
                 thisM.node.load();
-
-                var getDuration = function () {
-                    var dur = thisM.node.duration;
-                    if (isNaN(dur)) {
-                        dur = -1;
-                    }
-                    Media.onStatus(id, Media.MEDIA_DURATION, dur);
-                };
-
-                thisM.node.onloadedmetadata = getDuration;
-                getDuration();
+                var dur = thisM.node.duration;
+                if (isNaN(dur)) {
+                    dur = -1;
+                }
+                Media.onStatus(id, Media.MEDIA_DURATION, dur);
             }
             else {
                 lose && lose({code:MediaError.MEDIA_ERR_ABORTED});
@@ -70,16 +62,9 @@ module.exports = {
         var id = args[0];
         //var src = args[1];
         //var options = args[2];
-
-        var thisM = Media.get(id);
-        // if Media was released, then node will be null and we need to create it again
-        if (!thisM.node) {
-            module.exports.create(win, lose, args);
-        }
-
         Media.onStatus(id, Media.MEDIA_STATE, Media.MEDIA_RUNNING);
 
-        thisM.node.play();
+        (Media.get(id)).node.play();
     },
 
     // Stops the playing audio
@@ -135,11 +120,6 @@ module.exports = {
     startRecordingAudio:function(win, lose, args) {
         var id = args[0];
         var src = args[1];
-
-        var normalizedSrc = src.replace(/\//g, '\\');
-        var destPath = normalizedSrc.substr(0, normalizedSrc.lastIndexOf('\\'));
-        var destFileName = normalizedSrc.replace(destPath + '\\', '');
-
         // Initialize device
         Media.prototype.mediaCaptureMgr = null;
         var thisM = (Media.get(id));
@@ -153,8 +133,8 @@ module.exports = {
             thisM.mediaCaptureMgr.addEventListener("failed", lose);
             
             // Start recording
-            Windows.Storage.ApplicationData.current.temporaryFolder.createFileAsync(destFileName, Windows.Storage.CreationCollisionOption.replaceExisting).done(function (newFile) {
-                recordedFile = newFile;
+            Windows.Storage.KnownFolders.musicLibrary.createFileAsync(src, Windows.Storage.CreationCollisionOption.replaceExisting).done(function (newFile) {
+                var storageFile = newFile;
                 var encodingProfile = null;
                 switch (newFile.fileType) {
                     case '.m4a':
@@ -170,7 +150,7 @@ module.exports = {
                         lose("Invalid file type for record");
                         break;
                 }
-                thisM.mediaCaptureMgr.startRecordToStorageFileAsync(encodingProfile, newFile).done(win, lose);
+                thisM.mediaCaptureMgr.startRecordToStorageFileAsync(encodingProfile, storageFile).done(win, lose);
             }, lose);
         }, lose);
     },
@@ -179,21 +159,7 @@ module.exports = {
     stopRecordingAudio:function(win, lose, args) {
         var id = args[0];
         var thisM = Media.get(id);
-
-        var normalizedSrc = thisM.src.replace(/\//g, '\\');
-        var destPath = normalizedSrc.substr(0, normalizedSrc.lastIndexOf('\\'));
-        var destFileName = normalizedSrc.replace(destPath + '\\', '');
-
-        thisM.mediaCaptureMgr.stopRecordAsync().done(function () {
-            if (destPath) {
-                Windows.Storage.StorageFolder.getFolderFromPathAsync(destPath).done(function(destFolder) {
-                    recordedFile.copyAsync(destFolder, destFileName, Windows.Storage.CreationCollisionOption.replaceExisting).done(win, lose);
-                }, lose);
-            } else {
-                // if path is not defined, we leave recorded file in temporary folder (similar to iOS)
-                win();
-            }
-        }, lose);
+        thisM.mediaCaptureMgr.stopRecordAsync().done(win, lose);
     },
 
     // Release the media object

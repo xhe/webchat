@@ -4,6 +4,8 @@ var core_service =   require('../services/core');
 var chat_service = require('../services/chat');
 var invitation_service = require('../services/invitation');
 var util = require('../services/utils');
+var push_notification_service = require('../services/push_notify');
+
 
 exports.countries = function(req, res){
 	country_service.getAll(req, res);
@@ -207,4 +209,58 @@ exports.call = function(req, res){
 			res.jsonp({status: 'success', roomName: response});
 		}
 	});
+}
+
+
+
+exports.android_register = function(req, res){ 
+	
+	var regId = req.body.regId;
+	console.log("regid is " + regId );
+	push_notification_service.updateRegistrationId(req.user, regId, req.body.type, function(data){
+		res.jsonp(data);
+	});
+	
+	
+	console.log('get request '); console.log(req.body);
+/*	
+	
+	var gcm = require('node-gcm');
+	var message = new gcm.Message();
+	// or with object values
+	var message = new gcm.Message({
+	    collapseKey: 'demo',
+	    delayWhileIdle: true,
+	    timeToLive: 3,
+	    data: {
+	    	message: "PhoneGap Build rocks!",
+	    	msgcnt: 1,
+	    	soundname: 'beep.wav' 
+	    }
+	});
+	// OPTIONAL
+	// add new key-value in data object
+	//message.addDataWithKeyValue('key3','message3');
+	//message.addDataWithKeyValue('key4','message4');
+
+	// or add a data object
+	//message.addDataWithObject({
+	//    key5: 'message5',
+	//    key6: 'message6'
+	//});
+	
+	var sender = new gcm.Sender('AIzaSyDq1w1P1GySFWGjXz5SFoz-I3t1iNbGi4s');
+	var registrationIds = [];
+	
+	registrationIds.push(regId);
+	/**
+	 * Params: message-literal, registrationIds-array, No. of retries, callback-function
+	 **/
+	setTimeout(function(){
+		sender.send(message, registrationIds, 4, function (err, result) {
+			res.jsonp(result);
+		});
+	}, 2000);
+*/	
+	//res.jsonp("got it ");
 }
