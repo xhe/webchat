@@ -221,9 +221,9 @@ exports.android_register = function(req, res){
 		res.jsonp(data);
 	});
 	
-	
+/*		
 	console.log('get request '); console.log(req.body);
-/*	
+
 	
 	var gcm = require('node-gcm');
 	var message = new gcm.Message();
@@ -253,14 +253,14 @@ exports.android_register = function(req, res){
 	var registrationIds = [];
 	
 	registrationIds.push(regId);
-	/**
+*/		/**
 	 * Params: message-literal, registrationIds-array, No. of retries, callback-function
 	 **/
-	setTimeout(function(){
-		sender.send(message, registrationIds, 4, function (err, result) {
-			res.jsonp(result);
-		});
-	}, 2000);
-*/	
+//	setTimeout(function(){
+//		sender.send(message, registrationIds, 4, function (err, result) {
+//			res.jsonp(result);
+//		});
+//	}, 2000);
+
 	//res.jsonp("got it ");
 }
