@@ -53,7 +53,7 @@ define(function(require){
 			//set socket here
 			window.socketEventService.connect(user.screenName);
 			
-			if (getRegId!=undefined && getRegId==true){
+			if (window.platform && getRegId!=undefined && getRegId==true){
 				this.retrieveRegId();
 			}
 		},
@@ -297,10 +297,11 @@ define(function(require){
 			}
 		},
 		
-		vibrate: function(ms){ console.log('vibrate ')
+		vibrate: function(ms){ 
 			if(window.platform){
 				navigator.notification.vibrate(ms?ms:500);
 			}
+			document.getElementById('audioBeep').play();
 		},
 		
 		getXirSysCredential: function(room, cb){
