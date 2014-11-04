@@ -18,6 +18,8 @@ var EVENT_RTC_CALL_REQUEST_ACCEPT_CONFIRM="rtc_call_request_accept_confirm";
 var user_service =  require('../services/user'),
 	_ = require("lodash");
 
+var pushNotify_service = require("../services/push_notify");
+
 module.exports =  function(){
 	
 	var initSocket = function(io){
@@ -58,7 +60,8 @@ module.exports =  function(){
 		  //console.log("socket: sending " + EVENT_NOTIFY_INVITATION +" to " + invitation.from.screenName)
 		   socket.emit(EVENT_NOTIFY_INVITATION, JSON.stringify(invitation));
 	  }
-		 
+	  //PushNotify
+	  pushNotify_service.sendInvitation(invitation);	 
   };	
   
   var replyInvitation = function(invitation){
@@ -67,6 +70,15 @@ module.exports =  function(){
 		 // console.log("socket: sending " + EVENT_NOTIFY_INVITATION_REPLY +" to " + invitation.from.screenName)
 		  socket.emit(EVENT_NOTIFY_INVITATION_REPLY, JSON.stringify(invitation));
 	  } 
+  };
+  var broadcastChatMessage = function(message, room){
+	  _.forEach(room.members, function(member){ 
+		  sentChatMessage(message,member);
+		});
+	  sentChatMessage(message, room.creator);
+	  
+	  //PushNotify
+	  pushNotify_service.broadcastChatMessage(message, room);	 
   };
   
   var sentChatMessage = function(message, member){
@@ -138,7 +150,8 @@ module.exports =  function(){
 	  sendInvitation: sendInvitation,
 	  replyInvitation: replyInvitation,
 	  sentChatMessage: sentChatMessage,
-	  sendCallRequest: sendCallRequest
+	  sendCallRequest: sendCallRequest,
+	  broadcastChatMessage: broadcastChatMessage
   }
 	
 }

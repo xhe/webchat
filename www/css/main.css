@@ -141,24 +141,38 @@ img.offline{
     padding-right: 10px;
     text-decoration: inherit;
 }
+#btnAttPhotos{
+	padding: 7px 10px 4px;
+}
 
 #btnAttPhotos:before{
 	content: "\f1c5";
 	font-family: FontAwesome;
     font-style: normal;
-    padding-right: 10px;
-    font-weight: normal;
-    text-decoration: inherit;
+    font-size:26px;
+}
+
+#btnAttCamera{
+	padding: 7px 10px 4px;
 }
 
 #btnAttCamera:before{
 	content: "\f030";
 	font-family: FontAwesome;
     font-style: normal;
-    font-weight: normal;
-    padding-right: 10px;
-    text-decoration: inherit;
+    font-size:26px;
 }
+
+#btnChattingRoomBack_phone{
+	padding: 7px 10px 4px;
+}
+#btnChattingRoomBack_phone:before{
+	content: "\f060";
+	font-family: FontAwesome;
+    font-style: normal;
+    font-size:26px;
+}
+
 .hrefCall:before{
 	content: "\f095";
 	font-family: FontAwesome;

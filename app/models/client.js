@@ -228,7 +228,7 @@ UserSchema.methods.updateToken = function(cb, valid_period){
 
 UserSchema.methods.updateRegistrationId = function(registration_id, type, cb){
 	
-	if(type=='gcm'){
+	if(type=='android'){
 		this.gcm_registration_id = registration_id;
 	}
 	var _this=this

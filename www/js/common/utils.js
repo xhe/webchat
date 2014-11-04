@@ -1,8 +1,26 @@
+function onNotification(e) {
+	switch( e.event )
+    {
+    	case 'registered':
+			if ( e.regid.length > 0 )
+			{
+				var url = window.hostURL+'/api/android_register'
+					$.post( url, { regId: e.regid, type: window.platform })
+					  .done(function( data ) {
+					    console.log( "Data Loaded: " + data );
+					  });
+			}
+        break;
+        
+    }
+}
+
+
 define(function(require){
 	
 	var appConfig = require('common/app-config');
 	var User = require('models/userModel');
-
+	
 	var util = {
 			
 		isUserLoggedIn: function(){
@@ -21,7 +39,7 @@ define(function(require){
 				return false;
 			}	
 		},	
-		setLoggedInUser: function(user){
+		setLoggedInUser: function(user, getRegId){
 			window.user = user;
 			window.user.loggedIn = true;
 			window.user.thumbFileName=user.thumbFileName;
@@ -34,6 +52,29 @@ define(function(require){
 			}
 			//set socket here
 			window.socketEventService.connect(user.screenName);
+			
+			if (getRegId!=undefined && getRegId==true){
+				this.retrieveRegId();
+			}
+		},
+		
+		retrieveRegId: function(){
+			
+			var pushNotification = window.plugins.pushNotification;
+			pushNotification.register(
+									successHandler,
+									errorHandler, 
+									{
+										"senderID": appConfig.gcm_sender_id,
+										"ecb": "onNotification"
+									}
+							);		
+			function successHandler (result) {
+               console.log("success: " + result);
+            }
+            function errorHandler (error) {
+            	console.log('error:'+ error );
+            }
 		},
 		
 		getLoggedInUser: function(){

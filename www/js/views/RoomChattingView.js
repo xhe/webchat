@@ -218,7 +218,7 @@ define(function(require){
         },
         
         attPhotos: function(){
-        	 window.open('photoUploader.html#type=picture&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
+        	window.open('photoUploader.html#type=picture&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
         },
         attCamera: function(){
         	 window.open('photoUploader.html#type=camera&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');

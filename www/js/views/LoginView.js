@@ -33,7 +33,7 @@ define(function(require){
         		  function(data){
         			 $("#loginError").hide(); 
         			 if(data.status=='success'){
-        				 util.setLoggedInUser( data.user );
+        				 util.setLoggedInUser( data.user, true );
         				 router.navigate('#'+Math.random());
         		         router.navigate('#', {trigger:true});
         			 }else{

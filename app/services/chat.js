@@ -389,9 +389,6 @@ exports.addAudioForChatMessage = function(audioPath, user, roomId, cb){
 							});
 						});
 					});
-					
-					
-					
 			});
 		}
 	});
@@ -414,11 +411,7 @@ var broadcastMessage = function(message){
 		.findById( message.room )
 		.populate('members')
 		.populate('creator')
-		.exec(function(err, room){ 
-			_.forEach(room.members, function(member){ 
-				socket_serivce['sentChatMessage'](message,member);
-			});
-			socket_serivce['sentChatMessage'](message, room.creator);
+		.exec(function(err, room){
+			socket_serivce['broadcastChatMessage'](message, room);
 		});
-	
 }
