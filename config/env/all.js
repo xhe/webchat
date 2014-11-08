@@ -24,7 +24,14 @@ module.exports = {
 	
 	push_notification: {
 		supported_platform_android: true,
+		supported_platform_ios: true,
 		gcm_api_key: 'AIzaSyDq1w1P1GySFWGjXz5SFoz-I3t1iNbGi4s'
+	},
+	
+	push_notification_ios_files:{
+		keyFile: __dirname+'/config/ios/dev/Chat4EachKey.pem',
+		certFile: __dirname+'/config/ios/dev/Chat4EachCert.pem',
+		debug: true
 	},
 	
 	assets: {
