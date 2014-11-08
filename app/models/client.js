@@ -128,7 +128,11 @@ var UserSchema = new Schema({
 		required: false
 		
 	},
-	
+	ios_registration_id:{
+		type: String,
+		default: '',
+		required: false
+	},
 	created: {
 		type: Date,
 		default: Date.now
@@ -230,6 +234,9 @@ UserSchema.methods.updateRegistrationId = function(registration_id, type, cb){
 	
 	if(type=='android'){
 		this.gcm_registration_id = registration_id;
+	}
+	if(type=='ios'){
+		this.ios_registration_id = registration_id;
 	}
 	var _this=this
 	this.save(function(err){

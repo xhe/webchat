@@ -42,4 +42,5 @@ module.exports = function(app){
 	app.route('/api/call').post(user_service.requiresLogin, api.call); 
 	
 	app.route("/api/android_register").post(user_service.requiresLogin, api.android_register );
+	app.route("/api/ios_register").post(user_service.requiresLogin, api.ios_register );
 }

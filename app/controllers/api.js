@@ -217,3 +217,9 @@ exports.android_register = function(req, res){
 		res.jsonp(data);
 	});
 }
+
+exports.ios_register = function(req, res){ 
+	push_notification_service.updateRegistrationId(req.user, req.body.regId, req.body.type, function(data){
+		res.jsonp(data);
+	});
+}

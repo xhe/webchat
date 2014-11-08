@@ -49,7 +49,8 @@
         "ejs": "1.0.0",
         "async": "0.9.0",
         "request": "~2.45.0",
-        "node-gcm": "0.9.12"
+        "node-gcm": "0.9.12",
+        "apns": "0.1.0"
 	},
 	"devDependencies": {
 		"supertest": "~0.12.1",

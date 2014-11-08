@@ -15,6 +15,23 @@ function onNotification(e) {
     }
 }
 
+function onNotificationAPN (event) {
+    if ( event.alert )
+    {
+        navigator.notification.alert(event.alert);
+    }
+
+    if ( event.sound )
+    {
+        var snd = new Media(event.sound);
+        snd.play();
+    }
+
+    if ( event.badge )
+    {
+        pushNotification.setApplicationIconBadgeNumber(successHandler, errorHandler, event.badge);
+    }
+}
 
 define(function(require){
 	
@@ -61,14 +78,38 @@ define(function(require){
 		retrieveRegId: function(){
 			
 			var pushNotification = window.plugins.pushNotification;
-			pushNotification.register(
-									successHandler,
-									errorHandler, 
-									{
-										"senderID": appConfig.gcm_sender_id,
-										"ecb": "onNotification"
-									}
-							);		
+			if(window.platform === 'android'){
+				pushNotification.register(
+										successHandler,
+										errorHandler, 
+										{
+											"senderID": appConfig.gcm_sender_id,
+											"ecb": "onNotification"
+										}
+								);	
+			}else if(window.platform === 'ios'){
+				pushNotification.register(
+					    tokenHandler,
+					    errorHandler,
+					    {
+					        "badge":"true",
+					        "sound":"true",
+					        "alert":"true",
+					        "ecb":"onNotificationAPN"
+					    });
+			}
+			
+			function tokenHandler (result) {
+			    // Your iOS push server needs to know the token before it can push to this device
+			    // here is where you might want to send it the token for later use.
+			    var url = window.hostURL+'/api/ios_register'
+				$.post( url, { regId: result, type: 'ios' })
+				  .done(function( data ) {
+				    console.log( "Data Loaded: " + data );
+				  });
+			    
+			    
+			}
 			function successHandler (result) {
                console.log("success: " + result);
             }
