@@ -1,7 +1,7 @@
 var config = require('../../config/config'),
 	_=require("lodash"),
 	gcm = require('node-gcm'),
-	apns = require("apns");
+	apn = require("apn");
 
 exports.updateRegistrationId = function(user, reg_id, type, cb){
 	user.updateRegistrationId( reg_id, type, cb );
@@ -43,6 +43,7 @@ exports.broadcastChatMessage = function(message, room){
 	
 };
 
+var apnConnection = null;
 
 var sendNotificationMsg = function(receipients, msg, cb){
 	
@@ -57,7 +58,7 @@ var sendNotificationMsg = function(receipients, msg, cb){
 				gcm_registrationIds.push( receipient.gcm_registration_id );
 			}
 			if(receipient.ios_registration_id){
-				ios_registrationIds.push( receipient.gcm_registration_id );
+				ios_registrationIds.push( receipient.ios_registration_id );
 			}
 	});
 	
@@ -66,17 +67,52 @@ var sendNotificationMsg = function(receipients, msg, cb){
 			&& config.push_notification.supported_platform_ios){
 		
 		options = {
-				   keyFile : config.push_notification_ios_files.keyFile,
-				   certFile :  config.push_notification_ios_files.certFile,
-				   debug : config.push_notification_ios_files.debug
+				gateway:config.push_notification_ios_files.gateway,
+				cert: config.push_notification_ios_files.certFile,
+				key: config.push_notification_ios_files.keyFile,
+				passphrase: config.push_notification_ios_files.passphrase
 				};
-		var connection = new apns.Connection(options);
-		var notification = new apns.Notification();
-		_.each(ios_registrationIds, function(ios_registrationId){
-			notification.device = new apns.Device(ios_registrationId);
-			notification.alert = msg;
-			connection.sendNotification(notification);
+		if(!apnConnection)
+			apnConnection =  new apn.Connection(options); 
+		
+		var notification = new apn.Notification();
+		
+		apnConnection.on('connected', function() {
+		    console.log("Connected");
 		});
+
+		apnConnection.on('transmitted', function(notification, device) {
+		    console.log("Notification transmitted to:" + device.token.toString('hex'));
+		});
+
+		apnConnection.on('transmissionError', function(errCode, notification, device) {
+		    console.error("Notification caused error: " + errCode + " for device ", device, notification);
+		    if (errCode == 8) {
+		        console.log("A error code of 8 indicates that the device token is invalid. This could be for a number of reasons - are you using the correct environment? i.e. Production vs. Sandbox");
+		    }
+		});
+
+		apnConnection.on('timeout', function () {
+		    console.log("Connection Timeout");
+		    apnConnection = null;
+		});
+
+		apnConnection.on('disconnected', function() {
+		    console.log("Disconnected from APNS");
+		    apnConnection = null;
+		});
+
+		apnConnection.on('socketError', function(e){
+				console.log(e);
+				apnConnection = null;
+			}
+		);
+		
+		notification.alert = msg;
+		notification.badge = 1;
+		notification.sound = "ping.aiff";
+		apnConnection.pushNotification(notification, ios_registrationIds);
+		
 	}
 	
 	if(gcm_registrationIds.length>0 
@@ -88,7 +124,7 @@ var sendNotificationMsg = function(receipients, msg, cb){
 				    data: {
 				    	message: msg 
 				    }
-			});
+			}); 
 			var sender = new gcm.Sender(config.push_notification.gcm_api_key);
 			try{
 				sender.send(message, gcm_registrationIds, 4, function (err, result) {

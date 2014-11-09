@@ -29,8 +29,10 @@ module.exports = {
 	},
 	
 	push_notification_ios_files:{
-		keyFile: __dirname+'/config/ios/dev/Chat4EachKey.pem',
-		certFile: __dirname+'/config/ios/dev/Chat4EachCert.pem',
+		keyFile: __dirname+'/../ios/dev/chat4each_dev_key.pem',
+		certFile: __dirname+'/../ios/dev/chat4each_dev_Cert.pem',
+		passphrase: 'chat4each',
+		gateway: 'gateway.sandbox.push.apple.com',
 		debug: true
 	},
 	

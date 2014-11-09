@@ -103,7 +103,7 @@ define(function(require){
 			    // Your iOS push server needs to know the token before it can push to this device
 			    // here is where you might want to send it the token for later use.
 			    var url = window.hostURL+'/api/ios_register'
-				$.post( url, { regId: result, type: 'ios' })
+			    $.post( url, { regId: result, type: 'ios' })
 				  .done(function( data ) {
 				    console.log( "Data Loaded: " + data );
 				  });
