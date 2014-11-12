@@ -30,9 +30,10 @@ define(function(require){
 		 		 							 			msgPhotoPath: chat.photo? util.retrieveMsgThumbNailPath(chat.photo.renders, 100) : "", 
 		 		 							 			msgPhotoLargePath: chat.photo? util.retrieveMsgThumbNailPath(chat.photo.renders, 10000) : "", 
 		 		 							 			chat: chat,
-		 		 							 			audioPath: (chat.audio && chat.audio.filename)?chat.audio.filename:"",
-		 		 							 			videoPath: (chat.video && chat.video.filename)?chat.video.filename:"",
-		 		 							 			user: util.getLoggedInUser() 
+		 		 							 			audioPath: (chat.audio && chat.audio.filename)?util.convertToHostPath( chat.audio.filename ):"",
+		 		 							 			videoPath: (chat.video && chat.video.filename)?util.convertToHostPath( chat.video.filename ):"",
+		 		 							 			user: util.getLoggedInUser(),
+		 		 							 			mobile: window.platform?true:false
 		     		 								  }
 		 		 								  )		
 		 		 				)		
@@ -107,8 +108,44 @@ define(function(require){
         	"click #btnAttPhotos": "attPhotos",
         	"click #btnAttCamera": "attCamera",
         	"submit #file-form-chat": "upload",
-        	"click #recordAudio":"recordAudio"
+        	"click #recordAudio":"recordAudio",
+        	"click .hrefVideoChatRoom": "playVideoChatRoom",
+        	"click .hrefAudioChatRoom": "playAudioChatRoom"
         },
+        
+        playVideoChatRoom: function(event){
+        	event.preventDefault();
+        	var videoUrl = event.currentTarget.getAttribute("data-link");
+        	 // Play a video with callbacks
+        	var options = {
+        	    successCallback: function() {
+        	      console.log("Video was closed without error.");
+        	    },
+        	    errorCallback: function(errMsg) {
+        	      console.log("Error! " + errMsg);
+        	    }
+        	  };
+        	  window.plugins.streamingMedia.playVideo(videoUrl, options);
+        },
+        
+        playAudioChatRoom: function(event){
+        	event.preventDefault();
+        	var audioUrl = event.currentTarget.getAttribute("data-link");
+        	// Play an audio file with options (all options optional)
+        	  var options = {
+        	    bgColor: "#FFFFFF",
+        	    //bgImage: "<SWEET_BACKGROUND_IMAGE>",
+        	    bgImageScale: "fit",
+        	    successCallback: function() {
+        	      console.log("Player closed without error.");
+        	    },
+        	    errorCallback: function(errMsg) {
+        	      console.log("Error! " + errMsg);
+        	    }
+        	  };
+        	  window.plugins.streamingMedia.playAudio(audioUrl, options);
+        },
+        
         recordRTC: null,
         recording: false,
         posting: false,

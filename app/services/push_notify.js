@@ -31,7 +31,16 @@ exports.broadcastChatMessage = function(message, room){
 	if(message.creator._id!=room.creator._id)
 		receipients.push(room.creator);
 	
-	var msg =  message.creator.firstName+" "+ message.creator.lastName+": "+message.message;
+	var msg = message.message;
+	if(message.photo){
+		msg = "uploaded an image";
+	}else if(message.audio){
+		msg = "voice recording";
+	}else if(message.video){
+		msg = "video recording";
+	}
+	
+	var msg =  message.creator.firstName+" "+ message.creator.lastName+": "+ msg;
 	sendNotificationMsg(receipients, msg, function(err, result){
 		if(err){
 			console.log("Error: ");

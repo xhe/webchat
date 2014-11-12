@@ -277,6 +277,10 @@ define(function(require){
 			}
 		},
 		
+		convertToHostPath: function(path){
+			return (window.hostURL?window.hostURL:"") +path;
+		},
+		
 		retrieveThumbNailPath: function(user, dimention){
 			if(!user)
 				return "";

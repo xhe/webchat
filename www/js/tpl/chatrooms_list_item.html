@@ -9,9 +9,17 @@
 				</div>
 				<div style="float: right;padding-right: 20px;">
 						<% if(videoPath!==""){%>
-							<a href="<%=videoPath%>" target="_blank"><div class='recordVideoMsg'></div></a>
+							<% if(mobile){ %>
+								<a  class="hrefVideoChatRoom" data-link="<%=videoPath%>"><div class='recordVideoMsg' ></div></a>
+							<%} else {%>
+								<a href="<%=videoPath%>" target="_blank"><div class='recordVideoMsg'></div></a>
+							<%} %>
 						<%}else if(audioPath!==""){%>
-							<a href="<%=audioPath%>" target="_blank"><div class='recordAudioMsg'></div></a>
+							<% if(mobile){ %>
+								<a  class="hrefAudioChatRoom" data-link="<%=audioPath%>"><div class='recordAudioMsg' ></div></a>
+							<%} else {%>
+								<a href="<%=audioPath%>" target="_blank"><div class='recordAudioMsg'></div></a>
+							<%}%>
 						<%}else if(msgPhotoPath!==""){%>
 							<a href="#larget_photo/<%= encodeURIComponent(msgPhotoLargePath) %>">
 								<img src="<%= msgPhotoPath %>" />
@@ -19,9 +27,7 @@
 						<%}else{%>
 							<%= chat.message %>
 						<%}%>
-				</div>
-					
-				
+				</div>				
 			</td>
 			<td width="60px">
 				<a href="#larget_photo/<%= encodeURIComponent(photoLargePath) %>">
@@ -44,9 +50,17 @@
 				</div>
 				<div style="float: left;padding-left: 20px;">
 						<% if(videoPath!==""){%>
-							<a href="<%=videoPath%>" target="_blank"><div class='recordVideoMsg'></div></a>
+							<% if(mobile){ %>
+								<a  class="hrefVideoChatRoom" data-link="<%=videoPath%>"><div class='recordVideoMsg'></div></a>
+							<%} else {%>
+								<a href="<%=videoPath%>" target="_blank"><div class='recordVideoMsg'></div></a>
+							<%} %>
 						<%}else if(audioPath!==""){%>
-							<a href="<%=audioPath%>" target="_blank"><div class='recordAudioMsg'></div></a>
+							<% if(mobile){ %>
+								<a  class="hrefAudioChatRoom" data-link="<%=audioPath%>"><div class='recordAudioMsg'></div></a>
+							<%} else {%>
+								<a href="<%=audioPath%>" target="_blank"><div class='recordAudioMsg'></div></a>
+							<%}%>
 						<%}else if(msgPhotoPath!==""){%>
 							<a href="#larget_photo/<%= encodeURIComponent(msgPhotoLargePath) %>">
 								<img src="<%= msgPhotoPath %>" />

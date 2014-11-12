@@ -42,6 +42,12 @@
                             "xml": "true",
                             "count": 2
                         }
+                    ],
+                    "MediaPlayer.framework": [
+                        {
+                            "xml": "false",
+                            "count": 1
+                        }
                     ]
                 }
             },
@@ -83,6 +89,10 @@
                         {
                             "xml": "<feature name=\"PushPlugin\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"StreamingMedia\"><param name=\"ios-package\" value=\"StreamingMedia\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -101,28 +111,31 @@
     },
     "installed_plugins": {
         "org.apache.cordova.camera": {
-            "PACKAGE_NAME": "io.cordova.hellocordova"
+            "PACKAGE_NAME": "com.chat4each"
         },
         "org.apache.cordova.dialogs": {
-            "PACKAGE_NAME": "io.cordova.hellocordova"
+            "PACKAGE_NAME": "com.chat4each"
         },
         "org.apache.cordova.file": {
-            "PACKAGE_NAME": "io.cordova.hellocordova"
+            "PACKAGE_NAME": "com.chat4each"
         },
         "org.apache.cordova.file-transfer": {
-            "PACKAGE_NAME": "io.cordova.hellocordova"
+            "PACKAGE_NAME": "com.chat4each"
         },
         "org.apache.cordova.media": {
-            "PACKAGE_NAME": "io.cordova.hellocordova"
+            "PACKAGE_NAME": "com.chat4each"
         },
         "org.apache.cordova.media-capture": {
-            "PACKAGE_NAME": "io.cordova.hellocordova"
+            "PACKAGE_NAME": "com.chat4each"
         },
         "org.apache.cordova.vibration": {
-            "PACKAGE_NAME": "io.cordova.hellocordova"
+            "PACKAGE_NAME": "com.chat4each"
         },
         "com.phonegap.plugins.PushPlugin": {
-            "PACKAGE_NAME": "io.cordova.hellocordova"
+            "PACKAGE_NAME": "com.chat4each"
+        },
+        "com.hutchind.cordova.plugins.streamingmedia": {
+            "PACKAGE_NAME": "com.chat4each"
         }
     },
     "dependent_plugins": {}
