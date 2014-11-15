@@ -218,8 +218,38 @@ exports.android_register = function(req, res){
 	});
 }
 
-exports.ios_register = function(req, res){ 
+exports.ios_register = functiWarning: Group MySQL Database does not exist.
+on(req, res){ 
 	push_notification_service.updateRegistrationId(req.user, req.body.regId, req.body.type, function(data){
 		res.jsonp(data);
 	});
+}
+
+exports.sendemail = function(req, res){
+	var nodemailer = require('nodemailer');
+	var transporter = nodemailer.createTransport();
+	transporter.sendMail({
+	    from: 'admin@chat4each.com',
+	    to: 'hexufeng@gmail.com',
+	    subject: 'hello',
+	    text: 'hello world!'
+	});
+	
+	
+	var transporter = nodemailer.createTransport({
+	    service: 'gmail',
+	    auth: {
+	        user: 'hexufeng@gmail.com',
+	        pass: 'spirent1791'
+	    }
+	});
+	transporter.sendMail({
+	    from: 'hexufeng@gmail.com',
+	    to: 'frank.he@spirent.com',
+	    subject: 'hello',
+	    text: 'hello world!'
+	});
+	
+	
+	res.end('sent already');
 }

@@ -87,3 +87,10 @@ ema.sql.
    $ man turnserver
    $ man turnadmin
    $ man turnutils
+
+
+install postfix:
+remove old one
+http://stackoverflow.com/questions/17531173/installing-mysql-libs-on-server-with-mysql-server5-5
+
+http://www.krizna.com/centos/setup-mail-server-in-centos-6/
