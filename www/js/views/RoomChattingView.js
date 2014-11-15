@@ -110,7 +110,9 @@ define(function(require){
         	"submit #file-form-chat": "upload",
         	"click #recordAudio":"recordAudio",
         	"click .hrefVideoChatRoom": "playVideoChatRoom",
-        	"click .hrefAudioChatRoom": "playAudioChatRoom"
+        	"click .hrefAudioChatRoom": "playAudioChatRoom",
+        	"click #recordAudioMobile": "recordAudioMobile",
+        	"click #recordVideoMobile": "recordVideoMobile"
         },
         
         playVideoChatRoom: function(event){
@@ -131,19 +133,24 @@ define(function(require){
         playAudioChatRoom: function(event){
         	event.preventDefault();
         	var audioUrl = event.currentTarget.getAttribute("data-link");
+        	//var media = new Media(audioUrl, function(){});
+        	//media.play();
         	// Play an audio file with options (all options optional)
         	  var options = {
         	    bgColor: "#FFFFFF",
         	    //bgImage: "<SWEET_BACKGROUND_IMAGE>",
         	    bgImageScale: "fit",
         	    successCallback: function() {
-        	      console.log("Player closed without error.");
+        	    	if(window.platform=='android'){
+        	    		window.history.back();
+        	    	}
         	    },
         	    errorCallback: function(errMsg) {
-        	      console.log("Error! " + errMsg);
+        	    	window.history.back();
         	    }
         	  };
         	  window.plugins.streamingMedia.playAudio(audioUrl, options);
+        	  
         },
         
         recordRTC: null,
@@ -254,6 +261,13 @@ define(function(require){
         	}
         },
         
+        recordAudioMobile: function(){
+         	window.open('mediaUploader.html#type=audio&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
+        },
+        
+        recordVideoMobile: function(){
+         	window.open('mediaUploader.html#type=video&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
+        },
         attPhotos: function(){
         	window.open('photoUploader.html#type=picture&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
         },

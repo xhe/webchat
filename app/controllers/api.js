@@ -46,7 +46,7 @@ exports.upload_chat_file = function(req, res){
 	
 };
 
-exports.upload_chat_audio_file = function(req, res){
+exports.upload_chat_audio_file = function(req, res){ console.log( req.files );
 	chat_service.addAudioForChatMessage( __dirname+"/../../"+req.files.audio.path, req.user,  req.params.roomId, function(message){
 		if(message){
 			res.jsonp(message);

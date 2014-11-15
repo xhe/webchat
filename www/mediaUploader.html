@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <style>
+  	.loading{
+  		width: 200px;
+	    height: 50px;
+	    padding-top: 15px;
+	    background-color: #393939;
+	    border-radius: 10px;
+		text-align: center;
+		font-size: 26px;
+		color: #fff;
+		
+	    position: absolute;
+	    top:0;
+	    bottom: 0;
+	    left: 0;
+	    right: 0;
+	
+	    margin: auto;
+	    display: none;
+  	}
+  </style>
+  
+</head>
+	
+	
+ <script type="text/javascript" src="cordova.js"></script>
+        	
+        	<script type="text/javascript">
+    			
+        	
+	    		function fetchingMedia(type){
+	    				switch(type){
+		    				case "audio":
+		    					navigator.device.capture.captureAudio(captureSuccess, captureError);
+		    					break;
+		    				case "video":
+		    					navigator.device.capture.captureVideo(captureSuccess, captureError);
+		    					break;
+	    				}
+	    				
+	    		}
+	    		
+
+				function captureSuccess(mediaFiles) {
+					 uploadFile(mediaFiles[0].fullPath, mediaFiles[0].name);
+	            }
+	            function captureError(error) {
+	                var msg = 'An error occurred during capture: ' + error.code;
+	                navigator.notification.alert(msg, null, 'Uh oh!');
+	                window.history.back();
+	            }
+	    		
+	    		var mediaType = "";
+	    		var roomId = "";
+	    		
+	    		document.addEventListener("deviceready",function(){
+	    			
+	    			var urlHashs = window.location.hash.split('&');
+	    			mediaType = "audio";
+	    			if(urlHashs){
+	    				var parts = urlHashs[0].split("=");
+	    				mediaType = parts[1];
+	    				var hosts = urlHashs[1].split("="); 
+	    				hostURL = hosts[1];
+	    			}
+	    			if(urlHashs.length==3){
+	    				roomId = urlHashs[2].split("=")[1];
+	    			}
+	    			
+	    			fetchingMedia(mediaType);
+	    		});
+				
+				function uploadFile(fullPath, fileName){
+				 
+					 var options = new FileUploadOptions();
+			         options.fileKey = mediaType;
+			         options.fileName = fileName;
+			         options.httpMethod = 'POST';
+		
+			         var params = new Object();
+			         params.imageURI = fullPath;
+			         options.params = params;
+			         options.chunkedMode = false;
+			         var ft = new FileTransfer();
+			         
+			        var loaderIcon = document.getElementById('loader');
+			        loaderIcon.style.display='block';
+			        
+			         ft.upload(fullPath, hostURL + (mediaType==="audio"? '/api/upload_chat_audio_file/' : '/api/upload_chat_video_file/' )+ roomId , 
+			         	function(){
+			         		loaderIcon.style.display='none';
+			         		navigator.notification.alert("Your media has been uploaded successfully.", 
+			         									function(){
+			         										 loaderIcon.style.display='none';
+			         										window.history.back();
+			         									}, null, "Ok");
+			         	}, 
+			         	function(){
+			         		loaderIcon.style.display='none';
+			         		navigator.notification.alert("Your media can not be uploaded now, please try later.", 
+			         									function(){
+			         										 loaderIcon.style.display='none';
+			         										window.history.back();
+			         									}, null, "Ok");
+			         	}, 
+			         	options, true);
+	
+				}
+       	</script>
+       	
+ <body>
+ 	<div class='loading' id='loader' style="display:none">Uploading...</div>
+</body>
+</html>

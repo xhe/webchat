@@ -261,12 +261,29 @@ exports.addVideoForChatMessage = function(audioPath, videoPath, user, roomId, cb
 		        }
 			});
 		} else {
-			wr = fs.createWriteStream(mergedFile);
-			wr.on('close', function(ex){
-						fs.unlink(videoPath);
-			});
-			fs.createReadStream(videoPath).pipe(wr);
-			cb(null, mergedFile.replace("www",""));
+			console.log("==>" + mergedFile.substr(mergedFile.length-4) )
+			if(  mergedFile.substr(mergedFile.length-4).toLowerCase() =='.mov' ){
+				mergedFile = mergedFile.substr(0, mergedFile.length-4)+"_"+ new Date().getTime() +".mp4";
+				//ffmpeg -i movie.mov -vcodec copy -acodec copy out.mp4
+				var command = "ffmpeg -i " + videoPath + " -vcodec copy -acodec copy " + mergedFile.substr(0, mergedFile.length-4)+".mp4";
+				var  exec = require('child_process').exec;
+				console.log( command )
+				exec(command, function(err, stdout, stderr){
+			        if(err){
+			        	cb(err);
+			        } else {
+			        	//fs.unlink( videoPath );
+			        	cb(null, mergedFile.replace("www",""));
+			        }
+				});
+			}else{
+				wr = fs.createWriteStream(mergedFile);
+				wr.on('close', function(ex){
+							fs.unlink(videoPath);
+				});
+				fs.createReadStream(videoPath).pipe(wr);
+				cb(null, mergedFile.replace("www",""));
+			}
 		}
 	};
 	
