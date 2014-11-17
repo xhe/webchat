@@ -218,8 +218,7 @@ exports.android_register = function(req, res){
 	});
 }
 
-exports.ios_register = functiWarning: Group MySQL Database does not exist.
-on(req, res){ 
+exports.ios_register = function(req, res){ 
 	push_notification_service.updateRegistrationId(req.user, req.body.regId, req.body.type, function(data){
 		res.jsonp(data);
 	});
@@ -227,29 +226,65 @@ on(req, res){
 
 exports.sendemail = function(req, res){
 	var nodemailer = require('nodemailer');
+	var smtpTransport = require('nodemailer-smtp-transport');
+	var directTransport = require('nodemailer-direct-transport');
+	var transporter = nodemailer.createTransport(directTransport());
+	transporter.sendMail({
+	    from: 'admin@chat4each.com',
+	    to: 'hexufeng@gmail.com',
+	    subject: 'hello',
+	    text: 'hello world!'
+	},
+	function(err, info){
+		if(err){
+			console.log(err);
+		}else{
+			console.log('sent ' + info.response)
+		}
+	}
+	);
+	
+	/*
 	var transporter = nodemailer.createTransport();
 	transporter.sendMail({
 	    from: 'admin@chat4each.com',
 	    to: 'hexufeng@gmail.com',
 	    subject: 'hello',
 	    text: 'hello world!'
-	});
+	},
+	function(err, info){
+		if(err){
+			console.log(err);
+		}else{
+			console.log('sent ' + info.response)
+		}
+	}
+	);
 	
-	
-	var transporter = nodemailer.createTransport({
-	    service: 'gmail',
+	var transport = nodemailer.createTransport(smtpTransport({
+	    host: 'mail.jobascareer.com',
+	    port: 25,
 	    auth: {
-	        user: 'hexufeng@gmail.com',
-	        pass: 'spirent1791'
+	        user: 'chat4each',
+	        pass: '179100'
 	    }
-	});
-	transporter.sendMail({
+	}));
+	
+	transport.sendMail({
 	    from: 'hexufeng@gmail.com',
-	    to: 'frank.he@spirent.com',
+	    to: 'support@chat4each.com',
 	    subject: 'hello',
 	    text: 'hello world!'
-	});
+	},
+	function(err, info){
+		if(err){
+			console.log(err);
+		}else{
+			console.log('sent ' + info.response)
+		}
+	}
+	);
+	*/
 	
 	
-	res.end('sent already');
 }

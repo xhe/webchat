@@ -22,6 +22,7 @@ module.exports = {
 		domain:'www.dealsmatcher.com'
 	}, 
 	
+	
 	push_notification: {
 		supported_platform_android: true,
 		supported_platform_ios: true,

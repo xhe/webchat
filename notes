@@ -94,3 +94,28 @@ remove old one
 http://stackoverflow.com/questions/17531173/installing-mysql-libs-on-server-with-mysql-server5-5
 
 http://www.krizna.com/centos/setup-mail-server-in-centos-6/
+
+
+Note again:
+1. Install centos 5 only in order to config postfix and dovent
+2. yum install squirrelmail and config it
+3. follow jobascaree step to install apache/php53/mysql and change port to 81
+4. upgrade python to 2.7: http://lists.centos.org/pipermail/centos/2012-May/125869.html
+5. make 2.7 default: http://stackoverflow.com/questions/19256127/two-versions-of-python-on-linux-how-to-make-2-7-the-default
+6. then grab node.gz
+wget http://nodejs.org/dist/node-latest.tar.gz
+tar zxvf node-latest.tar.gz
+cd node-v[tab]
+python configure
+make PYTHON=python2.7
+make install
+(now python is already python2.7 using ln)
+7. 
+yum install curl-devel
+install git: http://www.liquidweb.com/kb/install-git-on-centos-5/
+8.redis:
+https://www.linode.com/docs/databases/redis/redis-on-centos-5
+
+init.d:
+http://www.cyberciti.biz/tips/linux-write-sys-v-init-script-to-start-stop-service.html
+http://support.suso.com/supki/CentOS_Init_startup_scripts
