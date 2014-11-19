@@ -90,9 +90,8 @@ module.exports = function(db) {
 	app.use(helmet.contentTypeOptions());
 	app.use(helmet.ienoopen());
 	app.disable('x-powered-by');
-	
 	app.use(multer({
-        dest: './www/uploads/',
+        dest: __dirname+'/../www/uploads/',
         rename: function (fieldname, filename) {
             return filename.replace(/\W+/g, '-').toLowerCase();
         }

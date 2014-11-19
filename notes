@@ -119,3 +119,18 @@ https://www.linode.com/docs/databases/redis/redis-on-centos-5
 init.d:
 http://www.cyberciti.biz/tips/linux-write-sys-v-init-script-to-start-stop-service.html
 http://support.suso.com/supki/CentOS_Init_startup_scripts
+
+9.mongo
+http://docs.mongodb.org/manual/tutorial/install-mongodb-on-red-hat-centos-or-fedora-linux/
+
+10. install ffmpeg
+https://www.bentasker.co.uk/documentation/linux/177-installing-ffmpeg-on-centos
+
+11. install forever
+http://www.krizna.com/centos/installing-node-js-centos-6-sample-app/
+
+12. Update init.d/, continue using mongod so as to make sure it is after mongo started
+adding this to init.d/mongod
+	export NODE_ENV="production"
+  	export PORT="80"
+  	cd /srv/nodejs/webchat && /usr/local/bin/node  app 1>"/srv/nodejs/webchat/log/app.log" 2>&$

@@ -25,7 +25,7 @@ exports.autologin = function(req, res){
 
 exports.upload_profile_file = function(req, res){
 	
-	core_service.processProfileImages(  __dirname+"/../../"+req.files.photo.path, req.user, function(data){
+	core_service.processProfileImages( req.files.photo.path, req.user, function(data){
 		if(data){
 			res.jsonp(req.user.photos);
 		}else{
@@ -36,7 +36,7 @@ exports.upload_profile_file = function(req, res){
 
 exports.upload_chat_file = function(req, res){
 	
-	chat_service.addPhotoForChatMessage( __dirname+"/../../"+req.files.photo.path, req.user,  req.params.roomId, function(message){
+	chat_service.addPhotoForChatMessage( req.files.photo.path, req.user,  req.params.roomId, function(message){
 		if(message){
 			res.jsonp(message);
 		}else{
@@ -47,7 +47,7 @@ exports.upload_chat_file = function(req, res){
 };
 
 exports.upload_chat_audio_file = function(req, res){ console.log( req.files );
-	chat_service.addAudioForChatMessage( __dirname+"/../../"+req.files.audio.path, req.user,  req.params.roomId, function(message){
+	chat_service.addAudioForChatMessage( req.files.audio.path, req.user,  req.params.roomId, function(message){
 		if(message){
 			res.jsonp(message);
 		}else{
