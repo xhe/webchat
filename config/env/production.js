@@ -5,4 +5,7 @@ module.exports = {
 	app: {
 		title: 'MEAN.JS - Production Environment'
 	},
+	smtp:{
+		service: 'localhost'
+	}
 };

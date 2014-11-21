@@ -50,5 +50,15 @@ module.exports = {
 		],
 		tests: [
 		]
+	},
+	
+	smtp:{
+		service: 'Gmail',
+		auth:{
+			username: 'chat4each@gmail.com',
+			password: 'hxf179100'
+		}
 	}
+	
+	
 };

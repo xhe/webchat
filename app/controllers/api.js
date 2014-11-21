@@ -225,7 +225,11 @@ exports.ios_register = function(req, res){
 }
 
 exports.sendemail = function(req, res){
-	var nodemailer = require('nodemailer');
+	
+	var email_service =  require('../services/email'); 
+	email_service.sendTestEmail();
+	
+	/*var nodemailer = require('nodemailer');
 	var smtpTransport = require('nodemailer-smtp-transport');
 	var directTransport = require('nodemailer-direct-transport');
 	var transporter = nodemailer.createTransport(directTransport());
@@ -244,7 +248,7 @@ exports.sendemail = function(req, res){
 	}
 	);
 	
-	/*
+	
 	var transporter = nodemailer.createTransport();
 	transporter.sendMail({
 	    from: 'admin@chat4each.com',
