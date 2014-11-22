@@ -5,13 +5,6 @@ var swig  = require('swig');
 
 var sendEmail = function(receipientEmail, receipientName, title, bodyHtml, bodyText){
 	
-	console.log(receipientEmail )
-	console.log( receipientName )
-	console.log( title )
-	console.log( bodyHtml)
-	
-	
-	
 	var transporter;
 	
 	if(config.smtp.service=='localhost'){
@@ -61,8 +54,8 @@ exports.sendActivationEmail = function(client){
 	sendEmail( 	client.email,
 				client.firstName+ " "+client.lastName,
 				"Account Activtion",
-				tpl('activation','html')( { client: client, url: config.host_url+'activation/'+client.email+'/'+client.password } ),
-				tpl('activation','text')( { client: client, url: config.host_url+'activation/'+client.email+'/'+client.password } )
+				tpl('activation','html')( { client: client, url: config.host_url+'activation/'+client.email+'/'+client.token } ),
+				tpl('activation','text')( { client: client, url: config.host_url+'activation/'+client.email+'/'+client.token } )
 	);
 
 }

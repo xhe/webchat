@@ -1,0 +1,19 @@
+{% extends 'emails/layout.html.server.view.html'%}
+{% block content %}
+	<p>
+		
+		{% if err %}
+			Your account can not be activatd due to following reason:
+			<br/><br/>
+			<div style="color: red">
+				{{ err }}
+			</div>
+		{% else %}
+			Your account has been activated successfully, please continue to use our free chatting service.
+			<br/><br/>
+			<a href="/#">Go to homepage</a>
+		{% endif %}
+	
+		<br/>
+	</p>
+{% endblock %}

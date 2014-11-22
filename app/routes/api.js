@@ -45,4 +45,5 @@ module.exports = function(app){
 	app.route("/api/ios_register").post(user_service.requiresLogin, api.ios_register );
 
 	app.route('/sendemail').get(api.sendemail);
+	app.route('/activation/:email/:token').get(api.activation);
 }

@@ -25,8 +25,6 @@ exports.createUser = function(req, res){
 			}
 		}else{
 			updateToken(client, req, res);
-			//let's send activation email here
-			email_service.sendActivationEmail(client);
 		}
 	});
 };
@@ -77,6 +75,21 @@ exports.autologin = function(req, res){
 	}
 };
 
+exports.activate = function(email, token, cb){
+	Client.findByEmail(email, function(err, user){
+		if(err){
+			cb('Wrong activation link');
+		}else{
+			if(user.token!==token){
+				cb('Wrong activation link');
+			}else{
+				user.activated = Date.now();
+				user.save();
+				cb(null);
+			}
+		}
+	});
+};
 
 var updateToken = function(user, req, res){
 	user.updateToken(function(client){ 
@@ -89,7 +102,20 @@ var updateToken = function(user, req, res){
 			client.token_expire_date = undefined;
 			req.session.screenName = client.screenName;
 			req.session.token = client.token;
-			res.jsonp({'status':'success', 'user':client });
+			
+			//let's send activation email here
+			//send activation email here
+			if(!client.activated){
+				res.jsonp({
+					'status':'success', 
+					'user':client, 
+					'msg':'Your account has not been activated yet, an email will be sent to your email box, please follow the link to activate your account.' });
+				email_service.sendActivationEmail(client);
+			}else{
+				res.jsonp({'status':'success', 'user':client });
+			}
+				
+			
 		}
 	});	
 };

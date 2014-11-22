@@ -72,8 +72,12 @@ define(function(require){
 	            							$("#"+response.errors.path).parent().prev().html(response.errors.message);
 	            						}
 	            					}else{
-	            						util.alert("You have succcessfully created an account with us, please proceed to your home page to start using our service.\An activation email has already been sent to your email box, please click the link to activate your account.");
-            							util.setLoggedInUser( response.user );
+	            						if(response.msg){
+	            							util.alert(response.msg);
+	            						}else{
+	            							util.alert("You have succcessfully created an account with us, please proceed to your home page to start using our service.\An activation email has already been sent to your email box, please click the link to activate your account.");
+            							}
+	            						util.setLoggedInUser( response.user );
             		        			$.mobile.navigate("#");
             						}
 	            				},

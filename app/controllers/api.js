@@ -5,7 +5,7 @@ var chat_service = require('../services/chat');
 var invitation_service = require('../services/invitation');
 var util = require('../services/utils');
 var push_notification_service = require('../services/push_notify');
-
+var swig = require('swig');
 
 exports.countries = function(req, res){
 	country_service.getAll(req, res);
@@ -224,71 +224,13 @@ exports.ios_register = function(req, res){
 	});
 }
 
+exports.activation = function(req, res){
+	user_service.activate( req.params.email, req.params.token, function(err){
+		res.render('activation', {err: err});
+	});
+}
+
 exports.sendemail = function(req, res){
-	
 	var email_service =  require('../services/email'); 
 	email_service.sendTestEmail();
-	
-	/*var nodemailer = require('nodemailer');
-	var smtpTransport = require('nodemailer-smtp-transport');
-	var directTransport = require('nodemailer-direct-transport');
-	var transporter = nodemailer.createTransport(directTransport());
-	transporter.sendMail({
-	    from: 'admin@chat4each.com',
-	    to: 'hexufeng@gmail.com',
-	    subject: 'hello',
-	    text: 'hello world!'
-	},
-	function(err, info){
-		if(err){
-			console.log(err);
-		}else{
-			console.log('sent ' + info.response)
-		}
-	}
-	);
-	
-	
-	var transporter = nodemailer.createTransport();
-	transporter.sendMail({
-	    from: 'admin@chat4each.com',
-	    to: 'hexufeng@gmail.com',
-	    subject: 'hello',
-	    text: 'hello world!'
-	},
-	function(err, info){
-		if(err){
-			console.log(err);
-		}else{
-			console.log('sent ' + info.response)
-		}
-	}
-	);
-	
-	var transport = nodemailer.createTransport(smtpTransport({
-	    host: 'mail.jobascareer.com',
-	    port: 25,
-	    auth: {
-	        user: 'chat4each',
-	        pass: '179100'
-	    }
-	}));
-	
-	transport.sendMail({
-	    from: 'hexufeng@gmail.com',
-	    to: 'support@chat4each.com',
-	    subject: 'hello',
-	    text: 'hello world!'
-	},
-	function(err, info){
-		if(err){
-			console.log(err);
-		}else{
-			console.log('sent ' + info.response)
-		}
-	}
-	);
-	*/
-	
-	
 }

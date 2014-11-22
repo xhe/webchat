@@ -175,6 +175,15 @@ UserSchema.statics.findByUsername = function(screenName, cb){
 	});
 };
 
+UserSchema.statics.findByEmail = function(email, cb){
+	this.findOne({email: email}, function(err, user){
+		if(!err && user){ 
+			cb(null, user);
+		}else{
+			cb(err);
+		}
+	});
+};
 
 UserSchema.statics.search = function(criterias, cb){
 	var searchArray = [];
