@@ -4,6 +4,14 @@ var smtpTransport = require('nodemailer-smtp-transport');
 var swig  = require('swig');
 
 var sendEmail = function(receipientEmail, receipientName, title, bodyHtml, bodyText){
+	
+	console.log(receipientEmail )
+	console.log( receipientName )
+	console.log( title )
+	console.log( bodyHtml)
+	
+	
+	
 	var transporter;
 	
 	if(config.smtp.service=='localhost'){
@@ -39,8 +47,22 @@ var sendEmail = function(receipientEmail, receipientName, title, bodyHtml, bodyT
 	});
 };
 
-exports.sendTestEmail = function(){ 
-	console.log('called' + __dirname)
-	var tpl = swig.compileFile( __dirname + '/../views/emails/test.server.view.html');
-	console.log( tpl({ name: 'frank ' }))
+var tpl = function(name, type){
+	if(!type)
+		type='html';
+	return swig.compileFile( __dirname + '/../views/emails/'+name+'.'+type+'.server.view.html');
 };
+
+exports.sendTestEmail = function(){ 
+	sendEmail('hexufeng@gmail.com', "Xufeng He", "test email", tpl('test','html')({ name: 'frank ' }), tpl('test','text')({ name: 'frank He' }) );
+};
+
+exports.sendActivationEmail = function(client){
+	sendEmail( 	client.email,
+				client.firstName+ " "+client.lastName,
+				"Account Activtion",
+				tpl('activation','html')( { client: client, url: config.host_url+'activation/'+client.email+'/'+client.password } ),
+				tpl('activation','text')( { client: client, url: config.host_url+'activation/'+client.email+'/'+client.password } )
+	);
+
+}

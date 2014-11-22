@@ -4,7 +4,8 @@ var mongoose = require('mongoose'),
 	utils = require('./utils'),
 	ObjectId = require('mongoose').Types.ObjectId,
 	ChatRoom =mongoose.model('ChatRoom'),
-	_ = require("lodash")
+	_ = require("lodash"),
+	email_service = require('./email')
 	;
 
 exports.createUser = function(req, res){
@@ -24,6 +25,8 @@ exports.createUser = function(req, res){
 			}
 		}else{
 			updateToken(client, req, res);
+			//let's send activation email here
+			email_service.sendActivationEmail(client);
 		}
 	});
 };

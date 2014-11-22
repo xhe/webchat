@@ -1,0 +1,17 @@
+{% extends 'layout.html.server.view.html'%}
+
+{% block content %}
+	
+	<p>
+	Dear {{client.firstName}} {{client.lastName}},
+	</p>
+	<p>
+	Thank you for using our online chatting service. Please click following link to activate your service:
+	</p>
+	<p>
+	<a href="{{url}}">Activate your service here.</a>
+	</p>
+	
+	
+{% endblock %}
+

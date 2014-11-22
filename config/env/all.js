@@ -58,7 +58,9 @@ module.exports = {
 			username: 'chat4each@gmail.com',
 			password: 'hxf179100'
 		}
-	}
+	},
+	
+	host_url: 'http://localhost:3000/'
 	
 	
 };

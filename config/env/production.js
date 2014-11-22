@@ -7,5 +7,6 @@ module.exports = {
 	},
 	smtp:{
 		service: 'localhost'
-	}
+	},
+	host_url: 'http://www.chat4each.com/'
 };
