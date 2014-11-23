@@ -37,12 +37,15 @@ define(function (require) {
 		}; 
 		
 		this.logout = function(){  
-			socket.emit("logout"); 
-			unbindSocketEvents();
-			socket = null;
+			if(socket){
+				socket.emit("logout"); 
+				unbindSocketEvents();
+				socket = null;
+			}
 		}; 
 		
 		this.answer_phone_call = function(screenName, room){
+			if(socket)
 			socket.emit(this.EVENT_RTC_CALL_REQUEST_ACCEPT, screenName, room);
 		};
 		
@@ -56,19 +59,26 @@ define(function (require) {
 		this.onlineContacts = []; 
 		
 		var unbindSocketEvents = function(){
-			socket.removeAllListeners( window.socketEventService.EVENT_DISCONNECT );
-			socket.removeAllListeners( window.socketEventService.EVENT_TYPE_INVITED );
-			socket.removeAllListeners( window.socketEventService.EVENT_TYPE_REPLIED );
-			socket.removeAllListeners( window.socketEventService.EVENT_TYPE_CHATMESSAGE );
-			socket.removeAllListeners( window.socketEventService.EVENT_NOTIFY_ON_LINE_MEMBER );
-			socket.removeAllListeners( window.socketEventService.EVENT_NOTIFY_MEMBER_ON_LINE );
-			socket.removeAllListeners( window.socketEventService.EVENT_NOTIFY_MEMBER_OFF_LINE );
-			socket.removeAllListeners( window.socketEventService.EVENT_RTC_CALL_REQUEST );
-			socket.removeAllListeners( window.socketEventService.EVENT_RTC_CALL_REQUEST_ACCEPT );
-			socket.removeAllListeners( window.socketEventService.EVENT_RTC_CALL_REQUEST_ACCEPT_CONFIRM );
+			if(socket){
+				socket.removeAllListeners( window.socketEventService.EVENT_DISCONNECT );
+				socket.removeAllListeners( window.socketEventService.EVENT_TYPE_INVITED );
+				socket.removeAllListeners( window.socketEventService.EVENT_TYPE_REPLIED );
+				socket.removeAllListeners( window.socketEventService.EVENT_TYPE_CHATMESSAGE );
+				socket.removeAllListeners( window.socketEventService.EVENT_NOTIFY_ON_LINE_MEMBER );
+				socket.removeAllListeners( window.socketEventService.EVENT_NOTIFY_MEMBER_ON_LINE );
+				socket.removeAllListeners( window.socketEventService.EVENT_NOTIFY_MEMBER_OFF_LINE );
+				socket.removeAllListeners( window.socketEventService.EVENT_RTC_CALL_REQUEST );
+				socket.removeAllListeners( window.socketEventService.EVENT_RTC_CALL_REQUEST_ACCEPT );
+				socket.removeAllListeners( window.socketEventService.EVENT_RTC_CALL_REQUEST_ACCEPT_CONFIRM );
+			}
+			
 		};
 		
 		var bindSocketEvent = function(){
+			
+			if(!socket)
+				return;
+			
 			socket.on(window.socketEventService.EVENT_DISCONNECT, function () {
 				if(confirm("Please reload the page to establish connection with server. We apologize for the inconvenience.")){
 					location.reload();
