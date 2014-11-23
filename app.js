@@ -11,9 +11,11 @@ fs = require('fs')
 var port = config.port;
 var	num_processes =  1;
 
-if (process.env.NODE_ENV=='production'){
+if (process.env.NODEENV=='production'){
 	num_processes = process.env.WORKERS || require('os').cpus().length;
 }
+
+num_processes =  1;
 
 var autoRestartedTimes = 0;
 var worker_start_ts = [];

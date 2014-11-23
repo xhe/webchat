@@ -135,4 +135,5 @@ adding this to init.d/mongod
   	export PORT="80"
   	cd /srv/nodejs/webchat && /usr/local/bin/node  app 1>"/srv/nodejs/webchat/log/app.log" 2>&$
 
-  	13. yum install ImageMagick
+  	13. yum install ImageMagick 
+  	db.removeDatabase()
