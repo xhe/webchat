@@ -41,7 +41,7 @@ module.exports = function(db) {
 	app.set('views', './app/views');
 
 	// Setting the app router and static folder
-	app.use(express.static(path.resolve('./www')));
+	app.use(express.static(path.resolve('./www'), { maxAge: 86400000 }));
 	
 	// Environment dependent middleware
 	if (process.env.NODE_ENV === 'development') {
