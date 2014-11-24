@@ -57,5 +57,13 @@ exports.sendActivationEmail = function(client){
 				tpl('activation','html')( { client: client, url: config.host_url+'activation/'+client.email+'/'+client.token } ),
 				tpl('activation','text')( { client: client, url: config.host_url+'activation/'+client.email+'/'+client.token } )
 	);
+}
 
+exports.sendPasswordResetEmail = function(client){
+	sendEmail( 	client.email,
+				client.firstName+ " "+client.lastName,
+				"Reset Password",
+				tpl('resetPassword','html')( { client: client, url: config.host_url+'reset_password/'+client.email+'/'+client.token } ),
+				tpl('resetPassword','text')( { client: client, url: config.host_url+'reset_password/'+client.email+'/'+client.token } )
+	);
 }

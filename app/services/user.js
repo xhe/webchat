@@ -5,7 +5,8 @@ var mongoose = require('mongoose'),
 	ObjectId = require('mongoose').Types.ObjectId,
 	ChatRoom =mongoose.model('ChatRoom'),
 	_ = require("lodash"),
-	email_service = require('./email')
+	email_service = require('./email'),
+	user_service = require('./user')
 	;
 
 exports.createUser = function(req, res){
@@ -76,17 +77,13 @@ exports.autologin = function(req, res){
 };
 
 exports.activate = function(email, token, cb){
-	Client.findByEmail(email, function(err, user){
+	user_service.checkEmailTokenValidity(email, token, function(err, user){
 		if(err){
-			cb('Wrong activation link');
+			cb(err);
 		}else{
-			if(user.token!==token){
-				cb('Wrong activation link');
-			}else{
-				user.activated = Date.now();
-				user.save();
-				cb(null);
-			}
+			user.activated = Date.now();
+			user.save();
+			cb(null);
 		}
 	});
 };
@@ -215,3 +212,55 @@ exports.get_contacts = function(userName, cb){
 		}
 	);
 };
+
+exports.sendResetPwdEmail = function(email, cb){
+	if(!utils.isEmail)
+		cb("Invalid email format.")
+	else
+		Client.findByEmail(email, function(err, client){
+			if(err){
+				cb('Wrong email, none existence.');
+			}else{
+				if(client){
+					cb(null);
+					email_service.sendPasswordResetEmail(client);
+				}else{
+					cb('Wrong email, none existence.');
+				}
+			}
+		});
+};
+
+
+exports.checkEmailTokenValidity = function(email, token, cb){
+	Client.findByEmail(email, function(err, user){ 
+		if(err){
+			cb('Wrong email, none existence');
+		}else{
+			if(user){
+				if(user.token!==token){
+					cb('Wrong token, not matching');
+				}else{
+					cb(null, user);
+				}
+			}else{
+				cb('Wrong email, none existence');
+			}
+		}
+	});
+}
+
+exports.updatepassword = function(client, newpassword, cb){
+	client.password_salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
+	client.password=client.hashPassword(newpassword);
+	client.save( function(err){
+		if(err){
+			cb(err);
+		}else{
+			client.updateToken(function(client){ 
+				cb(null, client);
+			});	
+		}
+	});
+};
+

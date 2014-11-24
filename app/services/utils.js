@@ -39,3 +39,10 @@ exports.getXirSysInfo = function(room,cb) {
 	});
 
 };
+
+exports.isEmail = function(s){
+	if(!s) return false;
+	
+	var isEmail_re       = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
+	return String(s).search (isEmail_re) != -1;
+};	

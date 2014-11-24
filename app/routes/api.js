@@ -44,6 +44,6 @@ module.exports = function(app){
 	app.route("/api/android_register").post(user_service.requiresLogin, api.android_register );
 	app.route("/api/ios_register").post(user_service.requiresLogin, api.ios_register );
 
-	app.route('/sendemail').get(api.sendemail);
-	app.route('/activation/:email/:token').get(api.activation);
+	app.route('/api/resetPasswrod').post(api.resetPasswrod);
+
 }

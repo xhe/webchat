@@ -224,13 +224,13 @@ exports.ios_register = function(req, res){
 	});
 }
 
-exports.activation = function(req, res){
-	user_service.activate( req.params.email, req.params.token, function(err){
-		res.render('activation', {err: err});
-	});
-}
 
-exports.sendemail = function(req, res){
-	var email_service =  require('../services/email'); 
-	email_service.sendTestEmail();
+exports.resetPasswrod = function(req, res){
+	user_service.sendResetPwdEmail(req.body.email, function(err){
+		if(err){
+			res.jsonp({status: 'failed', err: err});
+		}else{
+			res.jsonp({status: 'success'});
+		}
+	});
 }
