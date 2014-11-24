@@ -1,10 +1,15 @@
 <section id="splashPage">
 		
 		<header data-role="header">
-			<h1>Register
+			<h1>
+				<% if (user ){%>
+					Profile Update
+				<%}else{%>
+					Register
+				<%}%>
 			</h1>
 		</header>
-		
+
 		<div data-role="content">
 				
 				<div class="error" id="divErrorGeneral"/>
@@ -19,33 +24,33 @@
 				<div data-role="fieldcontain">
 					<label id='lblCountryCode' style="text-align:center">+1</label>
 					<div class="error"/>
-					<input type="text" id="phoneNumber" value="" placeholder="phone number" />
+					<input type="text" id="phoneNumber" value="<%= user?user.phoneNumber:'' %>" placeholder="phone number" />
 					
 				</div>
 				
 				<div data-role="fieldcontain">
 					<div class="error"/>
-					<input type="text" id="firstName" value="" placeholder="First Name"/>
+					<input type="text" id="firstName" value="<%= user?user.firstName:'' %>" placeholder="First Name"/>
 				</div>
 				
 				<div data-role="fieldcontain" class="ui-hide-label">
 					<label for="lastName">Last Name:</label>
 					<div class="error"/>
-					<input type="text" id="lastName" value="" placeholder="Last Name"/>
+					<input type="text" id="lastName" value="<%= user?user.lastName:'' %>" placeholder="Last Name"/>
 					
 				</div>
 				
 				<div data-role="fieldcontain" class="ui-hide-label">
 					<label for="screenName">Screen Name:</label>
 					<div class="error"/>
-					<input type="text" id="screenName" value="" placeholder="Screen Name"/>
+					<input type="text" id="screenName" value="<%= user?user.screenName:'' %>" placeholder="Screen Name"/>
 					<div id="divSuggestedName"/>
 				</div>
 				
 				<div data-role="fieldcontain" class="ui-hide-label">
 					<label for="email">Email:</label>
 					<div class="error"/>
-					<input type="text" id="email" value="" placeholder="Email"/>
+					<input type="text" id="email" value="<%= user?user.email:'' %>" placeholder="Email"/>
 				</div>
 				
 				<div data-role="fieldcontain" class="ui-hide-label">

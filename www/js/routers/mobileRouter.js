@@ -36,6 +36,7 @@ define(function(require){
             "": "home",
             "logout":"logout",
             "register":"register",
+            "profiles":"register",
             "photos":"photos",
             "photo/:id":"photo",
             "chatrooms" :"chatrooms",

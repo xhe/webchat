@@ -12,10 +12,14 @@ define(function(require){
 
 	// Extends Backbone.View
     var RegisterView = Backbone.View.extend( {
-
+    	
+    	user: null,
+    	
         // The View Constructor
         initialize: function() {
         	 this.template = _.template( register_tpl );
+        	 if(util.isUserLoggedIn())
+        		 this.user = util.getLoggedInUser();
         },
         
         events:{
@@ -93,7 +97,7 @@ define(function(require){
         },
         
         render: function() {           
-            $(this.el).html(this.template({ countries: this.countries }));
+            $(this.el).html(this.template({ user: this.user }));
             new FooterView({ el: $(".footerContent", this.el)}).render();
             new CountryListView({model: new CountryCollection.CountryCollection()});
             return this;
@@ -103,15 +107,21 @@ define(function(require){
    
     var CountryListView =   Backbone.View.extend({
   	  
+       user: null,
+    	
  	   initialize:function () {
    	        this.model.bind("reset", this.render, this);
 	   	    this.model.fetch();
+	   	    if(util.isUserLoggedIn())
+	   	    	this.user = util.getLoggedInUser();
    	   },
    	   
    	  render:function () {
      	  $("#selCountryCode").empty(); 
-    	  _.each( this.model.models[0].attributes, function(val, key){
-     		  $("#selCountryCode").append("<option value='"+val+"'><a>"+ key+"</a></option>");
+     	  _.each( this.model.models[0].attributes, function(val, key){
+     		  console.log( key )
+     		 // var selected = this.user?( val==this.user.countryCode?'selected':'') :"";
+     		  $("#selCountryCode").append("<option value='"+val+"' ><a>"+ key+"</a></option>");
      	  });
      	  
     	  $("#selCountryCode").selectedIndex = 0;
