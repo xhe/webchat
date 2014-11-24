@@ -15,7 +15,7 @@ if (process.env.NODE_ENV=='production'){
 	num_processes = process.env.WORKERS || require('os').cpus().length;
 }
 
-num_processes =  1;
+//num_processes =  1;
 
 var autoRestartedTimes = 0;
 var worker_start_ts = [];
