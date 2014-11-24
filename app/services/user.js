@@ -10,24 +10,57 @@ var mongoose = require('mongoose'),
 	;
 
 exports.createUser = function(req, res){
-	var client = new Client(req.body);
 	
-	client.password_salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
-	client.password=client.hashPassword(client.password);
-	
-	client.save( function(err){
-		if(err){
-			if(err.code==11000 && String(err).indexOf('screenName') > 0){
-				Client.findUniqueUsername(client.screenName, null, function(data){
-					res.jsonp({'status':'failed', 'errors': err, 'suggestedName': data});
-				});
-			}else{
+	if('userId' in req.body){ // this is update
+		Client.findById(req.body.userId, function(err, client){
+			if(err){
 				res.jsonp({'status':'failed', 'errors': err});
+			}else{
+				client.countryCode = req.body.countryCode;
+				client.phoneNumber = req.body.phoneNumber;
+				client.firstName = req.body.firstName;
+				client.lastName = req.body.lastName;
+				client.email = req.body.email;
+				client.screenName = req.body.screenName;
+				if('password' in req.body && req.body.password.length>0){ 
+					client.password = req.body.password;
+					updatePwdToken(client, true, true);
+				}else{ 
+					updatePwdToken(client, false, true);
+				}
 			}
-		}else{
-			updateToken(client, req, res);
+		});
+	}else{
+		var client = new Client(req.body);
+		updatePwdToken(client, true, false);
+	}
+	
+	var updatePwdToken = function(client, updatePwd, updateUser){
+		
+		if(updatePwd){
+			client.password_salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
+			client.password=client.hashPassword(client.password);
 		}
-	});
+		
+		
+		client.save( function(err){
+			if(err){
+				if(err.code==11000 && String(err).indexOf('screenName') > 0){
+					Client.findUniqueUsername(client.screenName, null, function(data){
+						res.jsonp({'status':'failed', 'errors': err, 'suggestedName': data});
+					});
+				}else{
+					res.jsonp({'status':'failed', 'errors': err});
+				}
+			}else{
+				updateToken(client, req, res, updateUser);
+			}
+		});
+	}
+	
+	
+	
+	
 };
 
 exports.login = function(req, res){
@@ -88,7 +121,7 @@ exports.activate = function(email, token, cb){
 	});
 };
 
-var updateToken = function(user, req, res){
+var updateToken = function(user, req, res, userUpdate){
 	user.updateToken(function(client){ 
 		if(client.code){
 			res.jsonp({'status':'failed', 'errors': client});
@@ -100,19 +133,21 @@ var updateToken = function(user, req, res){
 			req.session.screenName = client.screenName;
 			req.session.token = client.token;
 			
-			//let's send activation email here
-			//send activation email here
-			if(!client.activated){
-				res.jsonp({
-					'status':'success', 
-					'user':client, 
-					'msg':'Your account has not been activated yet, an email will be sent to your email box, please follow the link to activate your account.' });
-				email_service.sendActivationEmail(client);
+			if(userUpdate){
+				res.jsonp({'status':'success', 'user':client, 'msg':'Your profile has been updated successfully.' });	
 			}else{
-				res.jsonp({'status':'success', 'user':client });
+					//let's send activation email here
+					//send activation email here
+					if(!client.activated){
+						res.jsonp({
+							'status':'success', 
+							'user':client, 
+							'msg':'Your account has not been activated yet, an email will be sent to your email box, please follow the link to activate your account.' });
+						email_service.sendActivationEmail(client);
+					}else{
+						res.jsonp({'status':'success', 'user':client });
+					}
 			}
-				
-			
 		}
 	});	
 };

@@ -39,15 +39,29 @@ define(function(require){
 			if($("#password").val()!== $("#passwordAgain").val()){
         		$("#passwordAgain").parent().prev().html("Password does not match other.");
         	}else{
-            	var user = new User.User({
-            				countryCode: util.extractDigits($("#selCountryCode").val()),
-    		        		phoneNumber: util.extractDigits($("#phoneNumber").val()),
-    		        		firstName:  $("#firstName").val(),
-    		        		lastName: $("#lastName").val(),
-    		        		screenName: $("#screenName").val(),
-    		        		email: $("#email").val(),
-    		        		password:  $("#password").val()
-            	});
+            	
+            	if(this.user){
+            		var user = new User.User({
+        				countryCode: util.extractDigits($("#selCountryCode").val()),
+		        		phoneNumber: util.extractDigits($("#phoneNumber").val()),
+		        		firstName:  $("#firstName").val(),
+		        		lastName: $("#lastName").val(),
+		        		screenName: $("#screenName").val(),
+		        		email: $("#email").val(),
+		        		password:  $("#password").val(),
+		        		userId: this.user._id
+            		});
+            	}else{
+            		var user = new User.User({
+        				countryCode: util.extractDigits($("#selCountryCode").val()),
+		        		phoneNumber: util.extractDigits($("#phoneNumber").val()),
+		        		firstName:  $("#firstName").val(),
+		        		lastName: $("#lastName").val(),
+		        		screenName: $("#screenName").val(),
+		        		email: $("#email").val(),
+		        		password:  $("#password").val()
+            		});
+            	}
             	
             	if( $("#phoneNumber").val().replace(/\D+/g,'').length==0 ||  isNaN(  $("#phoneNumber").val().replace(/\D+/g,'') )){
             		$("#phoneNumber").parent().prev().html("plese enter valid phone number");
@@ -119,9 +133,8 @@ define(function(require){
    	  render:function () {
      	  $("#selCountryCode").empty(); 
      	  _.each( this.model.models[0].attributes, function(val, key){
-     		  console.log( key )
-     		 // var selected = this.user?( val==this.user.countryCode?'selected':'') :"";
-     		  $("#selCountryCode").append("<option value='"+val+"' ><a>"+ key+"</a></option>");
+     		  var selected = this.user?( val==this.user.countryCode?'selected':'') :"";
+     		  $("#selCountryCode").append("<option value='"+val+"' "+selected+" ><a>"+ key+"</a></option>");
      	  });
      	  
     	  $("#selCountryCode").selectedIndex = 0;
