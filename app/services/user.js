@@ -11,30 +11,6 @@ var mongoose = require('mongoose'),
 
 exports.createUser = function(req, res){
 	
-	if('userId' in req.body){ // this is update
-		Client.findById(req.body.userId, function(err, client){
-			if(err){
-				res.jsonp({'status':'failed', 'errors': err});
-			}else{
-				client.countryCode = req.body.countryCode;
-				client.phoneNumber = req.body.phoneNumber;
-				client.firstName = req.body.firstName;
-				client.lastName = req.body.lastName;
-				client.email = req.body.email;
-				client.screenName = req.body.screenName;
-				if('password' in req.body && req.body.password.length>0){ 
-					client.password = req.body.password;
-					updatePwdToken(client, true, true);
-				}else{ 
-					updatePwdToken(client, false, true);
-				}
-			}
-		});
-	}else{
-		var client = new Client(req.body);
-		updatePwdToken(client, true, false);
-	}
-	
 	var updatePwdToken = function(client, updatePwd, updateUser){
 		
 		if(updatePwd){
@@ -56,10 +32,31 @@ exports.createUser = function(req, res){
 				updateToken(client, req, res, updateUser);
 			}
 		});
+	};
+
+	if('userId' in req.body){ // this is update
+		Client.findById(req.body.userId, function(err, client){
+			if(err){
+				res.jsonp({'status':'failed', 'errors': err});
+			}else{
+				client.countryCode = req.body.countryCode;
+				client.phoneNumber = req.body.phoneNumber;
+				client.firstName = req.body.firstName;
+				client.lastName = req.body.lastName;
+				client.email = req.body.email;
+				client.screenName = req.body.screenName;
+				if('password' in req.body && req.body.password.length>0){ 
+					client.password = req.body.password;
+					updatePwdToken(client, true, true);
+				}else{ 
+					updatePwdToken(client, false, true);
+				}
+			}
+		});
+	}else{
+		var client = new Client(req.body); 
+		updatePwdToken(client, true, false);
 	}
-	
-	
-	
 	
 };
 

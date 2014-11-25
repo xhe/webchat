@@ -3,18 +3,12 @@
 						<a data-role='button' data-icon="home" href="#">Home</a>
 			<h1>
 				<%=title%>
-			</h1>			
-			
+			</h1>	
+					
+			<% if(user._id){%>
 				<a href='#logout' data-role='button' style="width: 55px">
-				Logout</a>
-			
+				Logout
+				</a>
+			<%}%>
 		</div>
-		
-		<!-- 
-		<% if (user.thumbFileName.indexOf('.')>0 ){  %>
-							<img src="<%=serverUrl%>/uploads/thumb/<%= user.thumbFileName%>"/>
-						<%}else{%>
-							Welcome, <%= user.screenName%>
-						<%}%>
-		 -->
 		

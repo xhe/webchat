@@ -5,7 +5,8 @@ define(function(require){
 		appConfig = require('common/app-config'),
 		util = require('common/utils'),
 		User = require('models/userModel'),
-		FooterView = require('views/FooterView')
+		FooterView = require('views/FooterView'),
+		HeaderView = require('views/HeaderView')
 		;
 		
 
@@ -45,6 +46,8 @@ define(function(require){
         render: function() {           
             $(this.el).html(this.template());
             new FooterView({ el: $(".footerContent", this.el)}).render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( 'Password Reminder' ).render();
+            
             return this;
         }
     } );
