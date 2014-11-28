@@ -321,3 +321,12 @@ img.offline{
 	margin-top: -23px;
 	padding-top: 0px;
 }
+#loginHeadImg{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+#loginHeadImg img{
+	width: 45px;
+	height: 45px;
+}
