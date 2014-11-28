@@ -67,3 +67,15 @@ exports.sendPasswordResetEmail = function(client){
 				tpl('resetPassword','text')( { client: client, url: config.host_url+'reset_password/'+client.email+'/'+client.token } )
 	);
 }
+
+exports.sendReferalEmail = function(refer, sender){
+	
+	var url = config.host_url+'#accept_refer/'+ refer._id ;
+	sendEmail( 	refer.to,
+				refer.name,
+				"Chating invitation from " + sender.firstName+ " "+ sender.lastName,
+				tpl('invitation','html')( { refer: refer, sender: sender,  url: url } ),
+				tpl('invitation','text')( { refer: refer, sender: sender,  url: url } )
+	);
+	
+}

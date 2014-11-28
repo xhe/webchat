@@ -1,0 +1,39 @@
+{% extends 'layout.html.server.view.html'%}
+
+{% block content %}
+	
+	<p>
+	{% if refer.name.length>0 %}
+		Dear {{ refer.name }},
+	{% else %}
+		Dear Friend,
+	{% endif %}
+	</p><br/>
+	<p>
+	{{ sender.firstName }} {{ sender.lastName }} has just sent you an online chating invitation from Chat4Each. Our chating 
+	service is available through desk and mobile browser as well as ios and android devices. You can leave video and voice message 
+	to your friends. Also you can do video chat through your devices! Our service is completely <font color='red'><b>Free</b></font>!
+	</p>
+	
+	{% if refer.message.length>0 %}
+	<p><br/>
+	{{ sender.firstName }} {{ sender.lastName }} also left message as follows:
+	</p>
+	<p><br/>
+	{{ refer.message}}
+	</p>
+	
+	{% endif %}
+	
+	
+	<p><br/>
+	Please click following link to accept the invitation:
+	</p>
+	
+	<p><br/>
+		<a href="{{url}}">Accept Invitation.</a>
+	</p>
+	
+	
+{% endblock %}
+

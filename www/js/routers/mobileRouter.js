@@ -19,7 +19,7 @@ define(function(require){
 		DialingView = require('views/DialingView'),
 		VideoChatRoom = require('views/VideoChatRoomView'),
 		VideoRecorder = require('views/VideoRecorderView'),
-		ForgetPasswordView = require('views/ForgetPasswordView'),
+		ForgetPasswordView = require('views/ForgetPasswordView')
 		io = require("socket.io")
 		;
     // Extends Backbone.Router
@@ -53,12 +53,20 @@ define(function(require){
             "dialing/:member_id":"dialing",
             "videochat/:room": "videoChatRoom",
             "videoRecord/:room":"videoRecord",
-            "forgetPassword": "forgetPassword"
+            "forgetPassword": "forgetPassword",
+            "accept_refer/:refer_id": "accept_refer"
+        },
+        
+        accept_refer: function(refer_id){
+        	registerView = new RegisterView(refer_id);
+        	this.changePage(registerView);
+        	return true;
         },
         
         forgetPassword: function(){ 
         	forgetPasswordView = new ForgetPasswordView();
         	this.changePage(forgetPasswordView);
+        	return true;
         },
         
         videoRecord: function(room){

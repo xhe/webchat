@@ -3,6 +3,7 @@ define(function(require){
 	var Backbone 		= require('backbone'),
 		search_friend_tpl		= require('text!tpl/search_friend.html'),
 		search_friend_result_tpl		= require('text!tpl/friend_searchresult.html'),
+		refer_friend_detail_tpl		= require('text!tpl/friend_refer_detail.html'),
 		appConfig = require('common/app-config'),
 		util = require('common/utils'),
 		HeaderView = require('views/HeaderView'),
@@ -51,9 +52,41 @@ define(function(require){
 			this.model.bind("reset", this.render, this);
 		},
 		
+		events:{
+	        	"click #btnRefer": "sendRefer"
+	    },
+		
+	    sendRefer: function(){
+	    	this.model.refer(
+	    			$("#search_email").val(),
+	    			$("#txtReceipientName").val(),  
+	    			$( "#refer_msg").val(),
+	    			function(data){
+	    				if(data.status=='success'){
+	    					util.alert("Invitation has been sent out successfully.");
+	    					$.mobile.navigate("#");
+	    				}else{
+	    					util.alert("Invitation can not be sent out due to following reason: \n" + data.err);
+	    				}
+	    			}
+	    	);
+	    },
+		
 		render: function(){
-    		$(this.el).html(_.template( search_friend_result_tpl, { 'contacts': this.model.users, 'serverUrl': (window.hostURL?window.hostURL:"")   }));
-    		$( ".listview" ).listview().listview( "refresh" );
+			if( this.model.users.length==0){
+				if($("#search_email").val()!==""){
+					$(this.el).html(_.template(refer_friend_detail_tpl));
+					$( "#refer_msg").textinput();
+					$("#txtReceipientName").textinput();
+				}else{
+					$(this.el).html(_.template( search_friend_result_tpl, { 'contacts': this.model.users, 'serverUrl': (window.hostURL?window.hostURL:"")   }));
+					$( ".listview" ).listview().listview( "refresh" );
+				}
+			}else{
+				$(this.el).html(_.template( search_friend_result_tpl, { 'contacts': this.model.users, 'serverUrl': (window.hostURL?window.hostURL:"")   }));
+				$( ".listview" ).listview().listview( "refresh" );
+			}
+    		
 		}
     	
     });

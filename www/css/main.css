@@ -316,3 +316,8 @@ img.offline{
 	font-family: FontAwesome;
     text-decoration: inherit;
 }
+
+#divContactSearchResult{
+	margin-top: -23px;
+	padding-top: 0px;
+}

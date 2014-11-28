@@ -6,6 +6,8 @@ var invitation_service = require('../services/invitation');
 var util = require('../services/utils');
 var push_notification_service = require('../services/push_notify');
 var swig = require('swig');
+var mongoose = require('mongoose');
+var Client = mongoose.model('Client');
 
 exports.countries = function(req, res){
 	country_service.getAll(req, res);
@@ -224,6 +226,21 @@ exports.ios_register = function(req, res){
 	});
 }
 
+exports.refer = function(req, res){
+	user_service.refer(
+			req.user, 
+			req.body.email, 
+			req.body.name, 
+			req.body.message, 
+			function(err, refer){
+				if(err){
+					res.jsonp({status: 'failed', err: err});
+				}else{
+					res.jsonp({status: 'success', refer: refer});
+				}
+			}
+	);
+}
 
 exports.resetPasswrod = function(req, res){
 	user_service.sendResetPwdEmail(req.body.email, function(err){
@@ -231,6 +248,22 @@ exports.resetPasswrod = function(req, res){
 			res.jsonp({status: 'failed', err: err});
 		}else{
 			res.jsonp({status: 'success'});
+		}
+	});
+}
+
+exports.getRefer = function(req, res){
+	user_service.getRefer( req.params.id, function(err, refer){
+		if(err){
+			res.jsonp({status: 'failed', err: err});
+		}else{
+			var referNames = refer.name.split(" ");
+			var client = new Client({
+				email: refer.to,
+				firstName: referNames.length>0?referNames[0]:"",
+				lastName : referNames.length>1?referNames[1]:""
+			});
+			res.jsonp({status: 'success', user: client});
 		}
 	});
 }

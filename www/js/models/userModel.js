@@ -11,6 +11,26 @@ define(function (require) {
 		model: User,
 		url: config.serverUrl + 'users',
 		
+		fetchReferer: function(refer_id, cb){
+			var _this = this;
+			$.get(config.serverUrl+'refer/'+refer_id, function(data){
+				cb(data.user);
+			});
+		},
+		
+		refer: function(email, name, message, cb){
+			$.post( config.serverUrl+'refer', 
+					{
+						email: email,
+						name: name,
+						message: message
+					},
+					function(result){
+						cb(result);
+					}
+			);
+		},
+		
 		search_users: function(phoneNumber, email, name){
 				
 			var _this = this;

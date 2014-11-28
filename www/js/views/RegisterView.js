@@ -15,12 +15,24 @@ define(function(require){
     var RegisterView = Backbone.View.extend( {
     	
     	user: null,
-    	
+    	userCollection: null,
+        refer_id: null,
+        
         // The View Constructor
-        initialize: function() {
+        initialize: function(refer_id) {
         	 this.template = _.template( register_tpl );
         	 if(util.isUserLoggedIn())
         		 this.user = util.getLoggedInUser();
+        	 if(refer_id)
+        	 {
+        		 this.refer_id = refer_id
+        		 userCollection = new User.UserCollection();
+	        	 userCollection.fetchReferer( refer_id, function(data){
+	        		 $("#firstName").val(data.firstName);
+	        		 $("#lastName").val(data.lastName);
+	        		 $("#email").val(data.email);
+	        	 });
+        	 }
         },
         
         events:{
@@ -50,7 +62,8 @@ define(function(require){
 		        		screenName: $("#screenName").val(),
 		        		email: $("#email").val(),
 		        		password:  $("#password").val(),
-		        		userId: this.user._id
+		        		userId: this.user._id,
+		        		refer_id: this.refer_id
             		});
             	}else{
             		var user = new User.User({
@@ -60,7 +73,8 @@ define(function(require){
 		        		lastName: $("#lastName").val(),
 		        		screenName: $("#screenName").val(),
 		        		email: $("#email").val(),
-		        		password:  $("#password").val()
+		        		password:  $("#password").val(),
+		        		refer_id: this.refer_id
             		});
             	}
             	
@@ -112,9 +126,9 @@ define(function(require){
         },
         
         render: function() {           
-            $(this.el).html(this.template({ user: this.user }));
+            $(this.el).html(this.template({ user: this.user, mode: this.refer_id?"refer":"register" }));
             new FooterView({ el: $(".footerContent", this.el)}).render();
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( this.user?'Profile Update':'Register' ).render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( this.refer_id?"Accept Invitation":( this.user?'Profile Update':'Register' ) ).render();
             new CountryListView({model: new CountryCollection.CountryCollection()});
             return this;
         }

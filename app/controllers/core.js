@@ -35,7 +35,6 @@ exports.reset_password_post = function(req, res){
 			}
 		}
 	});
-	
 }
 
 
@@ -48,4 +47,9 @@ exports.activation = function(req, res){
 exports.sendemail = function(req, res){
 	var email_service =  require('../services/email'); 
 	email_service.sendTestEmail();
+}
+
+exports.refer_accept = function(req, res){
+	console.log( req.params.email);
+	console.log( req.params.inviter_id);
 }

@@ -6,12 +6,15 @@ var mongoose = require('mongoose'),
 	ChatRoom =mongoose.model('ChatRoom'),
 	_ = require("lodash"),
 	email_service = require('./email'),
-	user_service = require('./user')
+	user_service = require('./user'),
+	Refer = mongoose.model('Refer'),
+	invitation_service = require('./invitation')
 	;
+var async = require('async');
 
 exports.createUser = function(req, res){
 	
-	var updatePwdToken = function(client, updatePwd, updateUser){
+	var updatePwdToken = function(client, updatePwd, updateUser, cb){
 		
 		if(updatePwd){
 			client.password_salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
@@ -19,7 +22,7 @@ exports.createUser = function(req, res){
 		}
 		
 		
-		client.save( function(err){
+		client.save( function(err, doc){
 			if(err){
 				if(err.code==11000 && String(err).indexOf('screenName') > 0){
 					Client.findUniqueUsername(client.screenName, null, function(data){
@@ -31,31 +34,75 @@ exports.createUser = function(req, res){
 			}else{
 				updateToken(client, req, res, updateUser);
 			}
+			if(cb){
+				cb( err, doc );
+			}
+			
 		});
 	};
-
-	if('userId' in req.body){ // this is update
-		Client.findById(req.body.userId, function(err, client){
-			if(err){
-				res.jsonp({'status':'failed', 'errors': err});
-			}else{
-				client.countryCode = req.body.countryCode;
-				client.phoneNumber = req.body.phoneNumber;
-				client.firstName = req.body.firstName;
-				client.lastName = req.body.lastName;
-				client.email = req.body.email;
-				client.screenName = req.body.screenName;
-				if('password' in req.body && req.body.password.length>0){ 
-					client.password = req.body.password;
-					updatePwdToken(client, true, true);
-				}else{ 
-					updatePwdToken(client, false, true);
-				}
-			}
-		});
+	
+	var createRelationship = function(refer_id, invitee, cb){
+		Refer
+			.findById(refer_id)
+			.populate('from')
+			.exec(function(err, doc){
+				invitation_service.invite( doc.from, invitee._id, doc.message, null,  
+						function(result){
+							if(result.status=='failed'){
+								cb(result.error);
+							}else{
+								invitation_service.replyInvitation(invitee, result.content._id, 'accept', '', function(result){
+									if(result.status=='failed'){
+										cb(result.error);
+									}else{
+										cb(null, result.invitation)
+									}
+								},
+								true );
+							}
+						},  
+						true );
+			});
+	};
+	
+	if( req.body.refer_id && req.body.refer_id.length>0){
+		var client = new Client(req.body); //invitee
+		async.waterfall([
+		                  async.apply( updatePwdToken, client, true, false),
+		                  async.apply( createRelationship, req.body.refer_id)
+		                 ], 
+		                 function(err, doc){
+							if(err){
+								res.jsonp({'status':'failed', 'err': err });
+							}else{
+								res.jsonp({'status':'success', 'invitation': doc });
+							}
+						 }
+		);
 	}else{
-		var client = new Client(req.body); 
-		updatePwdToken(client, true, false);
+		if('userId' in req.body){ // this is update
+			Client.findById(req.body.userId, function(err, client){
+				if(err){
+					res.jsonp({'status':'failed', 'errors': err});
+				}else{
+					client.countryCode = req.body.countryCode;
+					client.phoneNumber = req.body.phoneNumber;
+					client.firstName = req.body.firstName;
+					client.lastName = req.body.lastName;
+					client.email = req.body.email;
+					client.screenName = req.body.screenName;
+					if('password' in req.body && req.body.password.length>0){ 
+						client.password = req.body.password;
+						updatePwdToken(client, true, true);
+					}else{ 
+						updatePwdToken(client, false, true);
+					}
+				}
+			});
+		}else{
+			var client = new Client(req.body); 
+			updatePwdToken(client, true, false);
+		}
 	}
 	
 };
@@ -296,3 +343,44 @@ exports.updatepassword = function(client, newpassword, cb){
 	});
 };
 
+exports.refer = function(user, email, name, msg, cb){
+	Refer.findByEmail(email, function(err, refer){
+		if(err){
+			cb(err);
+		}else{
+			if(refer){
+				var difSeconds =( new Date().getTime() - refer.created.getTime() )/1000;
+				//already sent - check if timedif is good
+				if( difSeconds< 3600*24 ){ 
+					cb('You have already sent email within last 24 hours, please wait for 24 hours before sending email again.');
+				} else {
+					//send email here
+					cb(null, refer);
+					email_service.sendReferalEmail(refer, user);
+				}
+			} else { 
+				var refer = new Refer({
+					from: user,
+					to: email,
+					message: msg,
+					name: name
+				});
+				refer.save( function(err, doc){
+					//let's send email here
+					cb(null, refer);
+					email_service.sendReferalEmail(refer, user );
+				});
+			}
+		}
+	});
+}
+
+exports.getRefer = function(refer_id, cb){
+	Refer
+		.findById(refer_id)
+		.populate('from')
+		.exec(function(err, refer){
+			cb(err, refer);
+		});
+		
+}

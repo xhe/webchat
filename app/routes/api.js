@@ -45,5 +45,8 @@ module.exports = function(app){
 	app.route("/api/ios_register").post(user_service.requiresLogin, api.ios_register );
 
 	app.route('/api/resetPasswrod').post(api.resetPasswrod);
+	app.route('/api/refer').post(user_service.requiresLogin, api.refer);
+	app.route('/api/refer/:id').get(api.getRefer);
+	
 
 }

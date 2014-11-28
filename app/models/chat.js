@@ -114,6 +114,42 @@ ChatRoomSchema.methods.havingUnviewedMsg = function(user, room, cb){
 	
 };
 
+var ReferSchema = new Schema({
+   from: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Client'
+   },
+   to: {
+		type: String
+   },
+   name: {
+	   type: String
+   },
+   message: {
+  		type: String,
+		default: '',
+		trim: true,
+   },
+   status:{
+  		type: Number,
+  		default: 0,
+   },
+   created: {
+		type: Date,
+		default: Date.now
+	},
+   updated: {
+   		type: Date,
+		default: Date.now
+   }
+});
+
+ReferSchema.statics.findByEmail = function(email, cb){
+	this.findOne({to: email}, function(err, refer){
+		cb(err, refer);
+	});
+};
+
 var InvitationSchema = new Schema({
 	from: {
 				type: mongoose.Schema.Types.ObjectId,
@@ -161,3 +197,4 @@ mongoose.model('ChatMessage', ChatMessageSchema);
 mongoose.model('ChatRoomVisitLog', ChatRoomVisitLogSchema);
 mongoose.model('Audio', AudioSchema);
 mongoose.model('Video', VideoSchema);
+mongoose.model('Refer', ReferSchema);

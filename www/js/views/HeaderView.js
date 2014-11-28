@@ -4,7 +4,6 @@ define(function(require){
 		header_tpl		= require('text!tpl/header.html')
 		util = require('common/utils')
 		;
-		
 
     var HeaderView =  Backbone.View.extend( {
     	setTitle: function(title){
@@ -34,7 +33,7 @@ define(function(require){
         	 }
          },
     	
-    	render: function(){
+    	render: function(){ 
     		$(this.el).html(_.template( header_tpl, { user: util.getLoggedInUser(), title: this.title, serverUrl: (window.hostURL?window.hostURL:"")  }));
 		}
     });

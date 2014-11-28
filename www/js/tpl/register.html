@@ -5,8 +5,11 @@
 		<div data-role="content">
 				
 				<div class="error" id="divErrorGeneral"/>
+				<% if (mode=='refer'){%>
+					<h4>Please fill following form to accept invitation</h4>
+				<%}%>
 				
-				<h4>Please enter your phone number:<h4>
+				<h4>Phone number:<h4>
 					
 				<div data-role="fieldcontain" class="ui-hide-label">
 					<label for="selCountryCode">Country:</label>

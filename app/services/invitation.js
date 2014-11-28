@@ -37,7 +37,7 @@ exports.findInvitationById = function(id, cb){
 	;
 };
 
-exports.invite = function(invitor, inviteeId, msg, roomId,  cb){
+exports.invite = function(invitor, inviteeId, msg, roomId,  cb,  disableNotify){
 	Client.findById(new ObjectId(inviteeId), function(err, invitee){
 		
 		if(err){
@@ -72,7 +72,8 @@ exports.invite = function(invitor, inviteeId, msg, roomId,  cb){
 											//notify socket
 											invitation.from = utils.simplifyUser(invitation.from, true);
 											invitation.to =   utils.simplifyUser(invitation.to, true);
-											socket_serivce["sendInvitation"](invitation);
+											if(!disableNotify)
+												socket_serivce["sendInvitation"](invitation);
 											cb({status:"success", content: invitation });
 										});
 										
@@ -107,7 +108,8 @@ exports.invite = function(invitor, inviteeId, msg, roomId,  cb){
 											//notify socket
 											invitation.from = utils.simplifyUser(invitation.from, true);
 											invitation.to =   utils.simplifyUser(invitation.to, true);
-											socket_serivce["sendInvitation"](invitation);
+											if(!disableNotify)
+												socket_serivce["sendInvitation"](invitation);
 											cb({status:"success", content: invitation });
 										});
 										
@@ -121,7 +123,7 @@ exports.invite = function(invitor, inviteeId, msg, roomId,  cb){
 };
 
 
-exports.replyInvitation = function(invitee, invitation_id, action, msg, cb){
+exports.replyInvitation = function(invitee, invitation_id, action, msg, cb, disableNotification){
 	Invitation.findById( new ObjectId(invitation_id))
 	  .populate('to')
 	  .populate('from')
@@ -136,10 +138,11 @@ exports.replyInvitation = function(invitee, invitation_id, action, msg, cb){
 		  }
 		  invitation.seen = false;
 		  invitation.save(function(){
+			  
 			  invitation.from = utils.simplifyUser(invitation.from, true);
 			  invitation.to = utils.simplifyUser(invitation.to, true);
-			  socket_serivce["replyInvitation"](invitation);
-			  cb(invitation);
+			  if(!disableNotification)
+				  socket_serivce["replyInvitation"](invitation);
 			  	
 			  if(action=='accept'){
 				//create chat room here
@@ -150,9 +153,10 @@ exports.replyInvitation = function(invitee, invitation_id, action, msg, cb){
 				  		room.save(function(err){
 							if(err){
 								cb({status:"failed", error: err});
+							}else{
+								cb({status:"success",invitation: invitation  });
 							}
 						});
-				  		
 				  	}else{
 				  		ChatRoom.find({creator: invitation.from, members:[invitation.to]}).
 							exec(function(err, chatrooms){
@@ -168,11 +172,15 @@ exports.replyInvitation = function(invitee, invitation_id, action, msg, cb){
 									room.save(function(err){
 										if(err){
 											cb({status:"failed", error: err});
+										}else{
+											cb({status:"success",invitation: invitation  });
 										}
 									});
 								}
 						});
 				  	}
+			  }else{
+				  cb({status:"success",invitation: invitation  });
 			  }
 			  
 		  });
