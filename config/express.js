@@ -18,8 +18,8 @@ var express = require('express'),
 	config = require('./config'),
 	consolidate = require('consolidate'),
 	path = require('path'),
-    multer = require('multer'),
-    img = require('easyimage');
+    multer = require('multer');
+    //img = require('easyimage');
 
 module.exports = function(db) {
 	// Initialize express app

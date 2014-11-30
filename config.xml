@@ -10,5 +10,20 @@
     <content src="index.html" />
     
     <access origin="*" />
+	<!-- Default application icon -->
+<icon src="www/res/icons/icon.png" />
+
+<!--
+    Default icon should work, but cordova don't overwrite
+    the default on all densities
+-->
+<icon src="www/res/icons/icon.png" platform="android" density="ldpi" />
+<icon src="www/res/icons/icon.png" platform="android" density="mdpi" />
+<icon src="www/res/icons/icon.png" platform="android" density="hdpi" />
+<icon src="www/res/icons/icon.png" platform="android" density="xhdpi" />
+
+<preference name="SplashScreen" value="screen" />
+<preference name="SplashScreenDelay" value="10000" />
+
 	
 </widget>

@@ -7,6 +7,12 @@
         "files": {
             "framework": {
                 "parents": {
+                    "MediaPlayer.framework": [
+                        {
+                            "xml": "false",
+                            "count": 1
+                        }
+                    ],
                     "ImageIO.framework": [
                         {
                             "xml": "true",
@@ -22,7 +28,7 @@
                     "CoreGraphics.framework": [
                         {
                             "xml": "false",
-                            "count": 3
+                            "count": 4
                         }
                     ],
                     "AssetsLibrary.framework": [
@@ -42,18 +48,20 @@
                             "xml": "true",
                             "count": 2
                         }
-                    ],
-                    "MediaPlayer.framework": [
-                        {
-                            "xml": "false",
-                            "count": 1
-                        }
                     ]
                 }
             },
             "config.xml": {
                 "parents": {
                     "/*": [
+                        {
+                            "xml": "<feature name=\"StreamingMedia\"><param name=\"ios-package\" value=\"StreamingMedia\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"PushPlugin\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
+                            "count": 1
+                        },
                         {
                             "xml": "<feature name=\"Camera\"><param name=\"ios-package\" value=\"CDVCamera\" /></feature>",
                             "count": 1
@@ -87,11 +95,7 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"PushPlugin\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"StreamingMedia\"><param name=\"ios-package\" value=\"StreamingMedia\" /></feature>",
+                            "xml": "<feature name=\"SplashScreen\"><param name=\"ios-package\" value=\"CDVSplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -110,6 +114,12 @@
         }
     },
     "installed_plugins": {
+        "com.hutchind.cordova.plugins.streamingmedia": {
+            "PACKAGE_NAME": "com.chat4each"
+        },
+        "com.phonegap.plugins.PushPlugin": {
+            "PACKAGE_NAME": "com.chat4each"
+        },
         "org.apache.cordova.camera": {
             "PACKAGE_NAME": "com.chat4each"
         },
@@ -131,10 +141,7 @@
         "org.apache.cordova.vibration": {
             "PACKAGE_NAME": "com.chat4each"
         },
-        "com.phonegap.plugins.PushPlugin": {
-            "PACKAGE_NAME": "com.chat4each"
-        },
-        "com.hutchind.cordova.plugins.streamingmedia": {
+        "org.apache.cordova.splashscreen": {
             "PACKAGE_NAME": "com.chat4each"
         }
     },
