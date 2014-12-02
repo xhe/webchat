@@ -86,8 +86,8 @@ define(function(require){
 	            			{
 	            				success: function(model, response){
 	            					if(response.status=='failed'){
-	            						if(response.errors.code){
-	            							err=response.errors.err;
+	            						if(response.err.code){
+	            							err=response.err.err;
 	            							pos1 = err.indexOf(":");
 	            							pos2= err.indexOf("$", pos1+1);
 	            							errStr = err.substr(0, pos1)+": "+err.substr(pos2+1);

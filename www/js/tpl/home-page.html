@@ -2,16 +2,20 @@
 		
 		<div class="headerContent">
 			<div data-role="header">
-					<div style="position: absolute;left=10px;padding-top: 5px; cursor: pointer;" class="home">
-							<% if (user.thumbFileName && user.thumbFileName.indexOf('.')>0 ){  %>
-								<img src="<%=serverUrl%>/uploads/thumb/<%= user.thumbFileName%>"/>
-							<%}else{%>
-								Welcome, <%= user.screenName%>
-							<%}%>
-					</div>
-					
-					
+					<div style="position: absolute;left=0px;padding-top: 0px; cursor: pointer;" class="home">
+							<table>
+								<tr>
+									<td valign="middle" height="40px;">
+									<% if (user.thumbFileName && user.thumbFileName.lastIndexOf('.')>0 ){  %>
+										<img src="<%=serverUrl%>/uploads/thumb/<%= user.thumbFileName%>" height="38" width='38'/>
+									<%}else{%>
+										<span class='homeIcon'><%= user.screenName%></span>
+									<%}%>
+									</td>
+								</tr>
+							</table>
 							
+					</div>
 				<h1>
 					Home
 				</h1>			

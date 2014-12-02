@@ -230,6 +230,8 @@ UserSchema.methods.updateToken = function(cb, valid_period){
 	}else{
 		this.token_expire_date = new Date(now+valid_period*1000);
 	}
+	//var fn = this.getThumb(config.profile_image_sizes[0]);
+	//this.thumbFileName = fn?fn:'../../img/nobody_32.png';
 	this.thumbFileName = this.getThumb(config.profile_image_sizes[0]);
 	var _this=this
 	this.save(function(err){

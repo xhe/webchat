@@ -149,8 +149,10 @@ define(function(require){
 		},
 		
 		deleteSelectedImages: function(){
-			if(confirm("Are you sure to delelet the photos?"))
+			if(confirm("Are you sure to delelet the photos?")){
 				this.model.removePhotos(this.selectedPhotoIds);
+			}
+				
 		},
 		
 		changeHeaderImage: function(){
@@ -208,7 +210,10 @@ define(function(require){
     	render: function(){
     		Photo.currentCollection = this.model.models;
     		$(this.el).html(_.template( this.tpl, { 'results': this.model.models,  serverUrl: (window.hostURL?window.hostURL:"")  }));
-		}
+    		if(this.model.models.length>0){
+    			this.selectedPhotoIds = [ this.model.models[0].get('_id') ]
+    		}
+    	}
     	
     });
     

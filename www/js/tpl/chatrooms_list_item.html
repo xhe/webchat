@@ -3,10 +3,7 @@
 		
 		<tr>
 			<td  width="100%" style="text-align:right">
-			
-				<div style="float: right; padding-top: 12px;">
-					<%=chat.creator.screenName %>
-				</div>
+				
 				<div style="float: right;padding-right: 20px;">
 						<% if(videoPath!==""){%>
 							<% if(mobile){ %>
@@ -29,25 +26,35 @@
 						<%}%>
 				</div>				
 			</td>
-			<td width="60px">
-				<a href="#larget_photo/<%= encodeURIComponent(photoLargePath) %>">
-					<img src="<%= photoPath %>"/>
-				</a>
+			<td width="60px" align="center">
+			
+				<% if(photoPath!==''){%>
+					<a href="#larget_photo/<%= encodeURIComponent(photoLargePath) %>">
+						<img src="<%= photoPath %>" height="30px" width="30px"/>
+					</a>
+				<%}else{%>
+					<i class="fa fa-user" style="font-size: 30px"></i>
+				<%}%>
+				<br/>
+				<%=chat.creator.screenName %>
 			</td>
 		<tr>
 	<%}else{%>
 		<tr>
-			<td width="60px">
-				<a href="#larget_photo/<%= encodeURIComponent(photoLargePath) %>">
-					<img src="<%= photoPath %>"/>
-				</a>
+			<td width="60px"  align="center">
+				<% if(photoPath!==''){%>
+					<a href="#larget_photo/<%= encodeURIComponent(photoLargePath) %>">
+						<img src="<%= photoPath %>" height="30px" width="30px"/>
+					</a>
+				<%}else{%>
+					<i class="fa fa-user" style="font-size: 30px"></i>
+				<%}%>
+				<br/>
+				<%=chat.creator.screenName %>
 			</td>
 			
 			<td  width="100%" >
 
-				<div style="float: left; padding-top: 12px;">
-					<%=chat.creator.screenName %>
-				</div>
 				<div style="float: left;padding-left: 20px;">
 						<% if(videoPath!==""){%>
 							<% if(mobile){ %>

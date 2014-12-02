@@ -83,6 +83,12 @@ define(function(require){
 					$( ".listview" ).listview().listview( "refresh" );
 				}
 			}else{
+				
+				_.each(  this.model.users, function(user){
+					user.photoPath = util.retrieveThumbNailPath(user, 50);
+				});
+				
+				
 				$(this.el).html(_.template( search_friend_result_tpl, { 'contacts': this.model.users, 'serverUrl': (window.hostURL?window.hostURL:"")   }));
 				$( ".listview" ).listview().listview( "refresh" );
 			}

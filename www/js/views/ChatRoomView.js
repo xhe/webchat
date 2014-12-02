@@ -102,7 +102,12 @@ define(function(require){
 			});
 			
 			
-    		$(this.el).html(_.template( chatroom_list_tpl, { own_rooms: this.model.result.own_rooms, join_rooms: this.model.result.join_rooms, user: util.getLoggedInUser() }));
+    		$(this.el).html(_.template( chatroom_list_tpl, 
+    				{ own_rooms: this.model.result.own_rooms, 
+    				join_rooms: this.model.result.join_rooms, 
+    				user: util.getLoggedInUser(),
+    				showMemberHeadImg: util.showMemberHeadImg
+    				}));
     		$( ".listview" ).listview().listview( "refresh" );
     		
 		}

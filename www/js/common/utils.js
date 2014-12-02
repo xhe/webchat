@@ -295,7 +295,8 @@ define(function(require){
 			 
 			//now, let's fetch largest one
 			var largeDim = 0;
-			var path=""; 
+			//var path=(window.hostURL?window.hostURL:"")+ '/img/nobody_32.png';
+			var path='';
 			for(var i=photos.length-1;i>=0;i--){
 				if(photos[i].use_as_head)
 					for(var j=0;j<photos[i].renders.length;j++)
@@ -307,7 +308,24 @@ define(function(require){
 			}
 			return path;		
 		},
-
+		
+		showMemberHeadImg: function(member){
+			if( member.headImg ){
+				if( member.isOnline ){
+					 return '<img src="'+ member.headImg +'" style="border:#008000 5px solid"/>';
+				}else{
+					 return '<img src="'+ member.headImg +'" style="border:#cccccc 5px solid"/>';
+				}
+			}else{
+				if( member.isOnline ){
+					 return '<span style="border:#008000 5px solid; padding:5px">' + member.screenName+'</div>';
+				}else{
+					 return '<span style="border:#cccccc 5px solid; padding:5px">' + member.screenName+'</div>';
+				}
+			}
+				
+		},
+		
 		
 		retrieveMsgThumbNailPath: function(renders, dimention){
 			for(var j=0;j<renders.length;j++)

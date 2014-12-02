@@ -77,11 +77,15 @@ define(function(require){
         		 }
         		 
         		 //Don't show call button if not supported
+        		 var thumbNailUrl = util.retrieveThumbNailPath(member, 50);
         		 if( !window.platform && ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ) ){ 
         			 var callLink = "#dialing/"+member._id; 
+        			 
             		 $("#ulContactsList").append($("<li>").html(
-            				 		"<table width='100%'><tr><td width='35%' align='center'>"+
-            				 		"<img style='"+styleStr+"' src='" +  util.retrieveThumbNailPath(member, 50) +"'/>" +
+            				 		"<table width='100%'><tr><td width='35%' align='center'>"
+            				 		+
+            				 		(thumbNailUrl==""? "<span class='noHeadImg'></span>" :  ("<img style='"+styleStr+"' src='" +  thumbNailUrl  +"'/>") )
+            				 		+
             				 		"<br/>"+member.firstName+" "+ member.lastName +
             				 		"</td><td width='30%'><a href='"+callLink+"' data-role='button' class='hrefCall' data-inline='true' ></a></td>"+
             				 		"<td width='35%'><a data-role='button' class='hrefDetail' data-inline='true' >Detail</a></td></tr></table>"
@@ -89,8 +93,10 @@ define(function(require){
             				 );
         		 }else{
         			$("#ulContactsList").append($("<li>").html(
-     				 		"<table width='100%'><tr><td width='35%' align='center'>"+
-     				 		"<img style='"+styleStr+"' src='" +  util.retrieveThumbNailPath(member, 50) +"'/>" +
+     				 		"<table width='100%'><tr><td width='35%' align='center'>"
+        					+
+    				 		(thumbNailUrl==""? "<span class='noHeadImg'></span>" :  ("<img style='"+styleStr+"' src='" +  thumbNailUrl  +"'/>") )
+    				 		+
      				 		"</td><td width='30%'><strong>"+ member.firstName+" "+ member.lastName +"</strong></td>"+
      				 		"<td width='35%'><a data-role='button' class='hrefDetail' data-inline='true' >Detail</a></td></tr></table>"
      				 	)
