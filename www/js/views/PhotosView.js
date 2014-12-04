@@ -36,11 +36,11 @@ define(function(require){
 	     // A button will call this function
 	     // To capture photo
 	     capturePhoto: function() {
-	    	 window.open('photoUploader.html#type=camera&host='+window.hostURL, '_self', 'location=no');
+	    	 window.open('photoUploader.html#type=camera&host='+window.hostURL);
 	     },
 	      
 	     uploadPhoto: function() { 
-	    	 window.open('photoUploader.html#type=picture&host='+window.hostURL, '_self', 'location=no');
+	    	 window.open('photoUploader.html#type=picture&host='+window.hostURL);
 	     },
 	     
 	     fileSelected: function(event){

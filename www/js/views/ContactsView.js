@@ -62,8 +62,12 @@ define(function(require){
          },
          
          render: function(){
+        	 if(this.result.length==0){
+        		 $("#h1NoContact").show();
+        	 }else{
+        		 $("#h1NoContact").hide();
+        	 }
         	 
-        	 $("#headerText").html("Contact (" + this.result.length +")");
         	 $("#ulContactsList").empty();
         	 _.each(this.result, function(member){
         		 var online = window.socketEventService.isUserOnline( member );

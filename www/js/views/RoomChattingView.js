@@ -262,17 +262,17 @@ define(function(require){
         },
         
         recordAudioMobile: function(){
-         	window.open('mediaUploader.html#type=audio&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
+         	window.open('mediaUploader.html#type=audio&host='+window.hostURL+"&roomId="+current_roomId);
         },
         
         recordVideoMobile: function(){
-         	window.open('mediaUploader.html#type=video&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
+         	window.open('mediaUploader.html#type=video&host='+window.hostURL+"&roomId="+current_roomId);
         },
         attPhotos: function(){
-        	window.open('photoUploader.html#type=picture&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
+        	window.open('photoUploader.html#type=picture&host='+window.hostURL+"&roomId="+current_roomId);
         },
         attCamera: function(){
-        	 window.open('photoUploader.html#type=camera&host='+window.hostURL+"&roomId="+current_roomId, '_self', 'location=no');
+        	 window.open('photoUploader.html#type=camera&host='+window.hostURL+"&roomId="+current_roomId);
         },
         
         attachMedia: function(){

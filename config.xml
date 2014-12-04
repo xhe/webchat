@@ -23,7 +23,7 @@
 <icon src="www/res/icons/icon.png" platform="android" density="xhdpi" />
 
 <preference name="SplashScreen" value="screen" />
-<preference name="SplashScreenDelay" value="10000" />
+<preference name="SplashScreenDelay" value="3000" />
 
 	
 </widget>
