@@ -10,7 +10,8 @@ var mongoose = require('mongoose'),
 	crypto = require('crypto'),
 	config = require('../../config/config'),
 	 _ = require('lodash'),
-	 utils = require('../services/utils')
+	 utils = require('../services/utils'),
+	 path = require('path')
 	;
 var ObjectId = require('mongoose').Types.ObjectId; 
 var ChatRoom = mongoose.model('ChatRoom');
@@ -29,13 +30,13 @@ var PhotoSchema = new Schema({
 	renders: [ PhotoRenderSchema ],
 });
 
-PhotoSchema.post('remove', function (doc) {
-	
+PhotoSchema.pre('remove', function (doc) {
+	console.log('removing photo')
 	var path_original = __dirname+'/../../www/uploads/original/';
 	var path_thumb =  __dirname+'/../../www/uploads/thumb/';
-	fs.unlink(path_original+doc.filename);
+	fs.unlink(path.join(path_original,doc.filename) );
 	_.forEach(doc.renders, function(render){
-		fs.unlink(path_thumb+render.filename);
+		fs.unlink(path.join(path_thumb,render.filename));
 	});
 	
 });

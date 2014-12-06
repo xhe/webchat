@@ -1,6 +1,9 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema
 	;
+var fs = require('fs'),
+	path = require('path')
+;
 
 var AudioSchema = new Schema({
 	filename: String,
@@ -10,12 +13,22 @@ var AudioSchema = new Schema({
 		}
 });
 
+AudioSchema.post('remove', function(doc){
+	var path =  __dirname+'/../../www/uploads/audio/'; 
+	fs.unlink(   path.join(path, doc.filename) )
+});
+
 var VideoSchema = new Schema({
 	filename: String,
 	created: {
 		type: Date,
 		default: Date.now
 	}
+});
+
+VideoSchema.post('remove', function(doc){
+	var path =  __dirname+'/../../www/uploads/video/';
+	fs.unlink(   path.join(path, doc.filename) )
 });
 
 var ChatMessageSchema = new Schema({

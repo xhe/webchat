@@ -42,7 +42,7 @@ exports.processProfileImages = function(imagePath, user,  cb){
 			use_as_head: (user.photos && user.photos.length>0)?false:true,
 			filename: user._id+"_" + ts +"_"+fileName,		
 		});
-		
+
 		photo.renders = results;
 		user.photos.push(photo);
 		user.save(function(err){
@@ -98,10 +98,9 @@ exports.processChatImages = function(imagePath, user, roomId,  cb){
 		
 		photo = new Photo({
 			use_as_head: false,
-			filename: user._id+"_"+fileName,		
+			filename: user._id+"_"+ts+"_"+fileName,		
 		});
 		photo.renders = results;
-		
 		wr = fs.createWriteStream( filePath+'original/'+user._id+"_"+ts+"_"+fileName);
 		wr.on('close', function(ex){
 					fs.unlink(imagePath);
