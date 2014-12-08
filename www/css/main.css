@@ -357,3 +357,11 @@ img.offline{
     padding-right: 5px;
     padding-left: 5px;
 }
+
+.profSettingLnk{
+	position: absolute;right: 20px; top: 5px;
+	cursor: pointer;
+}
+.divSettingItem{
+	margin-bottom: 20px;
+}

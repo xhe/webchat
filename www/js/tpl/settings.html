@@ -1,0 +1,60 @@
+<section id="splashPage">
+		
+		<div class="headerContent"></div>
+		
+		<div data-role="content">
+	<div class='divSettingItem'>
+	<strong>Chatting records storage</strong> 
+    <hr/>
+    		<table>
+				<tr>
+				<td><label for="selKeepChattingRecord">Forever:</label></td>
+				<td>
+					<select name="selKeepChattingRecord" id="selKeepChattingRecord" data-role="slider">
+					    <option value="on"  <%= user.settings_records_forever?"selected='selected'":'' %>>On</option>
+					    <option value="off" <%= user.settings_records_forever?'':"selected='selected'" %>">Off</option>
+					</select>
+				</td>
+				</tr>
+			</table>
+			
+			<% if(user.settings_records_forever){%>
+				<div id='divChatRecordDays' style="display: none;">
+			<%}else{%>
+				<div id='divChatRecordDays' >
+			<%}%>
+			
+				<label for="txtDaysRecordAlive">Days for keeping chatting records:</label>
+				<input name="txtDaysRecordAlive" id="txtDaysRecordAlive" value="<%= user.settings_records_days%>" min="0" max="30" step="1" data-highlight="true" type="range">
+			</div>
+			
+			<% if(user.settings_records_forever){%>
+				<div id='divChatMediaDays' >
+			<%}else{%>
+				<div id='divChatMediaDays' style="display: none;">
+			<%}%>
+				<label for="txtDaysMediaAlive">Days for keeping chatting medias: (Max 30 days):</label>
+				<input name="txtDaysMediaAlive" id="txtDaysMediaAlive" value="<%= user.settings_media_days%>"  min="0" max="30" step="1" data-highlight="true" type="range">
+			</div>
+	</div>		
+	
+	<div class='divSettingItem'>
+	<strong style="margin-top: 20px;">Notification Setting</strong>
+    	<hr/>
+    	<table>
+				<tr>
+				<td><label for="selSilentNotification">Disable Notification Sound:</label></td>
+				<td>
+					<select name="selSilentNotification" id="selSilentNotification" data-role="slider">
+					    <option value="on" 	<%= user.settings_disable_sounds?"selected='selected'":'' %> >On</option>
+					    <option value="off" <%= user.settings_disable_sounds?'':"selected='selected'" %> >Off</option>
+					</select>
+				</td>
+				</tr>
+			</table>
+	</div>
+	
+		
+		<div class="footerContent"></div>
+		
+</section>

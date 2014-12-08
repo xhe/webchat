@@ -1,32 +1,6 @@
 <section id="splashPage">
 		
 		<div class="headerContent">
-			<div data-role="header">
-					<div style="position: absolute;left=0px;padding-top: 0px; cursor: pointer;" class="home">
-							<table>
-								<tr>
-									<td valign="middle" height="40px;">
-									<% if (user.thumbFileName && user.thumbFileName.lastIndexOf('.')>0 ){  %>
-										<img src="<%=serverUrl%>/uploads/thumb/<%= user.thumbFileName%>" height="38" width='38'/>
-									<%}else{%>
-										<span class='homeIcon'><%= user.screenName%></span>
-									<%}%>
-									</td>
-								</tr>
-							</table>
-							
-					</div>
-				<h1>
-					Home
-				</h1>			
-				
-				<div style="position: absolute;right: 15px;top:0px">
-				<a href='#logout' data-role='button' style="width: 55px">
-					Logout</a>
-				</div>
-					
-				
-			</div>
 		</div>
 		
 		<div data-role="content">
@@ -36,7 +10,7 @@
 			<a href="#add_friend" data-role="button" data-icon="plus">Add Friend</a>
 			<a href="#invitations" data-role="button">Invitation <span id="divTotalInvitations"></span></a>
 			<a href="#contacts" data-role="button">My Contacts</a>
-			<a href="#profiles" data-role="button">Update Profile</a>
+			
 			<button id='btnRefresh' data-icon="refresh">Refresh</button>
 			
 		</div>

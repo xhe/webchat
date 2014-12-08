@@ -13,14 +13,15 @@ var mongoose = require('mongoose'),
 	PhotoSchema = mongoose.model('PhotoSchema'),
 	Audio= mongoose.model('Audio'),
 	Video= mongoose.model('Video'),
-	path = require('path')
+	path = require('path'),
+	Client = mongoose.model('Client')
 	;
 	
 var getChatMsgBefore = function(days, cb){
 	
 	var ts = new Date().getTime()-days*3600*24*1000;
 	//ts = new Date().getTime()
-	var preDate = new Date( ts ); console.log( preDate )
+	var preDate = new Date( ts ); 
 	ChatMessage
 		.find(	
 				{
@@ -44,46 +45,53 @@ var getChatMsgBefore = function(days, cb){
 		.exec(function(err, chats){
 			cb(err, chats);
 		})
-	
 };
 
-var cleanMediasForChats = function(chats, cb){
+var deleteChatMedia = function (chat, cb){
 	
-	var deleteMedia = function (chat, cb){
-		chat.remove(function(err, doc){
-		
-				if(doc.photo){ 
-					var path_original = __dirname+'/../../www/uploads/original/';
-					var path_thumb =  __dirname+'/../../www/uploads/thumb/';
-					
-					fs.unlink(path_original+doc.photo.filename );
-					_.forEach(doc.photo.renders, function(render){
-						fs.unlink(path_thumb + render.filename);
-					});
-				
-					PhotoSchema
-					.findById(doc.photo._id)
-					.remove().exec();
-				}
-				
-					
-				if(doc.audio){
-					var path =  __dirname+'/../../www'; 
-					fs.unlink(   path + doc.audio.filename )
-					Audio.findById(doc.audio._id).remove().exec();
-				}
-				
-				if(doc.video){
-					var path =  __dirname+'/../../www'; 
-					fs.unlink(   path+ doc.video.filename )
-					Video.findById(doc.video._id).remove().exec();
-				}
-				
+			if(chat.photo){ 
+				var path_original = __dirname+'/../../www/uploads/original/';
+				var path_thumb =  __dirname+'/../../www/uploads/thumb/';
+				fs.unlink(path_original+chat.photo.filename );
+				_.forEach(chat.photo.renders, function(render){
+					fs.unlink(path_thumb + render.filename);
+				});
 			
-			cb(null, chat);
+				PhotoSchema
+				.findById(chat.photo._id)
+				.remove().exec();
+			}
+			
+				
+			if(chat.audio){
+				var path =  __dirname+'/../../www'; 
+				fs.unlink(   path + chat.audio.filename )
+				Audio.findById(chat.audio._id).remove().exec();
+			}
+			
+			if(chat.video){
+				var path =  __dirname+'/../../www'; 
+				fs.unlink(   path+ chat.video.filename )
+				Video.findById(chat.video._id).remove().exec();
+			}
+			
+		
+		cb(null, chat);
+}
+
+var cleanChats = function(chats, cb){
+	
+	
+	var deleteChat = function(chat, cb){
+		chat.remove(function(err, doc){
+			if(err)
+				cb(err)
+			else
+				deleteChatMedia(doc, cb);
 		});
 	}
-	async.eachLimit( chats, 10, deleteMedia, function(err, results){
+	
+	async.eachLimit( chats, 10, deleteChat, function(err, results){
 		cb(err, results);
 	})
 	
@@ -94,7 +102,7 @@ exports.cleanMedias = function(days, cb){
 	async.waterfall(
 			[
 				async.apply(getChatMsgBefore, days),
-				async.apply(cleanMediasForChats)
+				async.apply(cleanChats)
 			 ],
 			 function(err, result){
 				cb(err, result);
@@ -102,5 +110,139 @@ exports.cleanMedias = function(days, cb){
 			
 	);
 	
+}
+
+var getUsersToProcess = function(max, days, cb){
+	var ts = new Date().getTime()-days*3600*24*1000;
+	//ts = new Date().getTime()
+	var preDate = new Date( ts ); 
+	Client
+		.find(
+				{
+					$or:[
+							{
+								processed: { "$lt": preDate }
+							},
+							{
+								processed: null
+							}
+					     ]
+					}
+				)
+		.limit(max)
+		.exec(function(err, clients){ 
+			cb(err, clients);
+		})
+		;
+}
+
+var getChatsForClientBefore = function(client, beforeDate, cb){  
+	ChatMessage
+		.find({
+			$and: [
+			        {
+			        	creator: client
+			        },
+			       	{
+			       		created: { "$lt": beforeDate }
+			       	}
+			       ]
+		})
+		.populate('photo audio video')
+		.exec(function(err, chats){
+			cb(err, chats)
+		})
+		;
+}
+
+var getChatsWidthMediaForClientBefore = function(client, beforeDate, cb){
+	ChatMessage
+		.find({
+			$and: [
+			        {
+			        	creator: client
+			        },
+			       	{
+			       		created: { "$lt": beforeDate }
+			       	},
+			    	{ 
+						$or:[ 
+				             	{ photo: { $ne: null }},
+				             	{ audio: { $ne: null }},
+				             	{ video: { $ne: null }}
+				             ]
+					}
+			       ]
+		})
+		.populate('photo audio video')
+		.exec(function(err, chats){ 
+			cb(err, chats)
+		})
+		;
+}
+
+var cleanMediasAndChat4Clients = function(clients, cb){
+	
+	var cleanMediasAndChat4Client = function(client, cb){
+		if(!client.settings_records_forever){  //removing record completely
+			var ts = new Date().getTime()-client.settings_records_days*3600*24*1000;
+			async.waterfall(
+					[
+						async.apply(getChatsForClientBefore, client, ts),
+						async.apply(cleanChats)
+					 ],
+					 function(err, result){
+						if(!err)
+						{
+							client.processed = new Date().getTime()
+							client.save( function(err, doc){
+								cb(err, result);
+							});
+						}else{
+							cb(err, result);
+						}
+					}
+			);
+		} else {
+			//let's remove media here
+			var ts = new Date().getTime()-client.settings_media_days*3600*24*1000;
+			async.waterfall(
+					[
+						async.apply(getChatsWidthMediaForClientBefore, client, ts),
+						async.apply(cleanChats)
+					 ],
+					 function(err, result){
+						if(!err)
+						{
+							client.processed = new Date().getTime()
+							client.save( function(err, doc){
+								cb(err, result);
+							});
+						}else{
+							cb(err, result);
+						}
+					}
+			);
+		}
+	}
+	
+	async.eachLimit( clients, 10, cleanMediasAndChat4Client, function(err, results){
+		cb(err, results);
+	})
+	
+}
+
+exports.cleanChatAndMedia = function(max, days, cb){
+	
+	async.waterfall(
+			[
+				async.apply(getUsersToProcess, max, days),
+				async.apply(cleanMediasAndChat4Clients)
+			 ],
+			 function(err, result){
+				cb(err, result);
+			}
+			
+	);
 }
 

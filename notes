@@ -140,3 +140,6 @@ adding this to init.d/mongod
   	
   	http://chat4each.com:81/scp
   	xhe/hxf179100
+  	
+  	db.chatmessages.update({photo:{$ne: null}}, {$set: { created: new Date('2013') }  })
+  	db.clients.update({}, {$set: { processed: null }})

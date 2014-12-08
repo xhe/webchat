@@ -1,16 +1,17 @@
-// format node cleanMedia.js days
+// format node cleanChatAndMedia.js maxNumToProcess daysBefore
 var args = process.argv;
-var days = args[2];
-if(args.length!=3){
-	console.log("please use format:  node cleanMedia.js days ");
+if(args.length!=4){
+	console.log("please use format:  node cleanChatAndMedia.js maxNumToProcess daysBefore  ");
 	process.exit(0);
 }
+var max = args[2];
+var days = args[3];
 
 process.env.NODE_ENV = 'development';
 
 
 var cli = require('../services/cli');
-cli.cleanMedias( days, function(err, result){
+cli.cleanChatAndMedia( max, days, function(err, result){
 	
 	if(err){
 		console.log('error');
@@ -22,7 +23,6 @@ cli.cleanMedias( days, function(err, result){
 		console.log( 'finished' );
 		process.exit(0)
 	}
-	
 } );
 
 var fs = require('fs');

@@ -1,14 +1,50 @@
 
 		<div data-role="header">
-						<a data-role='button' data-icon="home" href="#">Home</a>
+		
+			<% if (homeHeader ){%>
+				<div style="position: absolute;left=0px;padding-top: 0px; cursor: pointer;" class="home">
+							<table>
+								<tr>
+									<td valign="middle" height="40px;">
+									<% if (user.thumbFileName && user.thumbFileName.lastIndexOf('.')>0 ){  %>
+										<img src="<%=serverUrl%>/uploads/thumb/<%= user.thumbFileName%>" height="38" width='38'/>
+									<%}else{%>
+										<span class='homeIcon'><%= user.screenName%></span>
+									<%}%>
+									</td>
+								</tr>
+							</table>
+							
+					</div>
+			<%}else{%>
+				<a href="#" data-rel="back" class="ui-btn-left ui-btn ui-icon-back ui-btn-icon-notext ui-shadow ui-corner-all"  data-role="button" role="button">Back</a>
+				
+			<%}%>
+			
 			<h1>
 				<%=title%>
-			</h1>	
+				
+			</h1>		
+				
 					
-			<% if(user._id){%>
-				<a href='#logout' data-role='button' style="width: 55px">
-				Logout
-				</a>
-			<%}%>
+				<i class="profSettingLnk fa fa-ellipsis-v" style="font-size: 40px;" 
+					onclick="$('#popupBasic').popup( { positionTo:'.profSettingLnk',dismissible: true, transition: 'pop'} ).popup( 'open');"></i>
+					
+					<div data-role="popup" id="popupBasic">
+						
+						<ul data-role="listview" data-inset="true">
+						    <li  data-icon="false"><a href='#settings'>Settings...</a></li>
+						    <li data-icon="false"><a href="#profiles">Update Profile</a></li>
+						    
+						    
+						    <% if (!homeHeader ){%>
+						    	<li data-icon="home"><a  href="#">Home</a></li>
+						    <%}%>
+						    
+						    <li data-icon="back"><a  href='#logout'>Logout</a></li>
+						</ul>
+						
+					</div>
+				
 		</div>
 		

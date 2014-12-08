@@ -6,6 +6,15 @@ define(function(require){
 		;
 
     var HeaderView =  Backbone.View.extend( {
+    	
+    	homeHeader: false,
+    	
+    	
+    	setHomeheader: function(){
+    		this.homeHeader = true;
+    		return this;
+    	},
+    	
     	setTitle: function(title){
     		this.title = title;
     		return this;
@@ -19,7 +28,13 @@ define(function(require){
     	},
     	
     	events:{
-         	"click .home": "home"
+         	"click .home": "home",
+         	"click #lnkRefresh": "refresh"
+         },
+         
+         refresh: function(){
+         	location.reload(); 
+         	return false;
          },
          
          home: function(){
@@ -34,7 +49,12 @@ define(function(require){
          },
     	
     	render: function(){ 
-    		$(this.el).html(_.template( header_tpl, { user: util.getLoggedInUser(), title: this.title, serverUrl: (window.hostURL?window.hostURL:"")  }));
+    		$(this.el).html(_.template( header_tpl, 
+    					{ user: util.getLoggedInUser(), 
+    						title: this.title, 
+    						serverUrl: (window.hostURL?window.hostURL:""),
+    						homeHeader: this.homeHeader
+    						}));
 		}
     });
       

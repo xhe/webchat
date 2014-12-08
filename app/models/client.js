@@ -31,14 +31,14 @@ var PhotoSchema = new Schema({
 });
 
 PhotoSchema.pre('remove', function (doc) {
-	console.log('removing photo')
 	var path_original = __dirname+'/../../www/uploads/original/';
 	var path_thumb =  __dirname+'/../../www/uploads/thumb/';
-	fs.unlink(path.join(path_original,doc.filename) );
-	_.forEach(doc.renders, function(render){
-		fs.unlink(path.join(path_thumb,render.filename));
-	});
-	
+	if(fs.existsSync( path.join(path_original,doc.filename) ))
+		fs.unlink(path.join(path_original,doc.filename) );
+		_.forEach(doc.renders, function(render){
+			if(fs.existsSync(path.join(path_thumb,render.filename )))
+				fs.unlink(path.join(path_thumb,render.filename));
+		});
 });
 
 
@@ -118,6 +118,23 @@ var UserSchema = new Schema({
 	
 	photos: [ PhotoSchema ],
 	
+	settings_records_forever: {
+		type: Boolean,
+		default: false
+	},
+	settings_records_days: {
+		type: Number,
+		default: 30
+	},
+	settings_media_days: {
+		type: Number,
+		default: 30
+	},
+	settings_disable_sounds: {
+		type: Boolean,
+		default: false
+	},
+	
 	thumbFileName: {
 		type: String,
 		default: ''
@@ -140,7 +157,11 @@ var UserSchema = new Schema({
 	},
 	activated: {
 		type: Date
-	}
+	},
+	processed:{
+		type: Date
+	},
+		
 });
 
 UserSchema.pre('save', function (next) {

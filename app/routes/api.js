@@ -48,5 +48,5 @@ module.exports = function(app){
 	app.route('/api/refer').post(user_service.requiresLogin, api.refer);
 	app.route('/api/refer/:id').get(api.getRefer);
 	
-
+	app.route('/api/update_settings').post(user_service.requiresLogin, api.update_settings);
 }

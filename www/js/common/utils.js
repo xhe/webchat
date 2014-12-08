@@ -56,6 +56,14 @@ define(function(require){
 				return false;
 			}	
 		},	
+		updateLoggedUser : function(user){
+			window.user = user;
+			window.user.loggedIn = true;
+			window.user.thumbFileName=user.thumbFileName;
+			delete user.photos
+			$.cookie('token', JSON.stringify(user));
+		},
+		
 		setLoggedInUser: function(user, getRegId){
 			window.user = user;
 			window.user.loggedIn = true;
@@ -364,7 +372,9 @@ define(function(require){
 			if(window.platform){
 				navigator.notification.vibrate(ms?ms:500);
 			}
-			document.getElementById('audioBeep').play();
+			
+			if( !getLoggedInUser().settings_disable_sounds )
+				document.getElementById('audioBeep').play();
 		},
 		
 		getXirSysCredential: function(room, cb){

@@ -266,4 +266,15 @@ exports.getRefer = function(req, res){
 			res.jsonp({status: 'success', user: client});
 		}
 	});
+},
+
+exports.update_settings = function(req, res){
+	var settings = req.body.settings;
+	req.user.settings_records_forever = req.body.records_forever;
+	req.user.settings_records_days = req.body.records_days;
+	req.user.settings_media_days = req.body.media_days;
+	req.user.settings_disable_sounds = req.body.disable_sounds;
+	req.user.save(function(err,doc){
+		res.jsonp({status: 'success', user: doc})
+	});
 }
