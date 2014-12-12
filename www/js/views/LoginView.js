@@ -47,7 +47,10 @@ define(function(require){
         },
         
         render: function() {           
-            $(this.el).html(this.template({ url:window.hostURL?window.hostURL:'',  mobile: window.platform==undefined?false:true}));
+            $(this.el).html(this.template({ url:window.hostURL?window.hostURL:'',  
+            				mobile: window.platform==undefined?false:true,
+            				util: util
+            }));
             //new FooterView({ el: $(".footerContent", this.el)}).render();
             return this;
         }
