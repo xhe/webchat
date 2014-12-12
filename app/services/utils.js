@@ -9,6 +9,16 @@ exports.simplifyUser = function(client, noToken) {
 	client.token_expire_date = undefined;
 	client.token_date = undefined;
 	client.email = undefined;
+	client.settings_records_forever = undefined;
+	client.settings_records_days = undefined;
+	client.settings_media_days = undefined;
+	client.settings_disable_sounds = undefined;
+	client.gcm_registration_id = undefined;
+	client.ios_registration_id = undefined;
+	client.created = undefined;
+	client.activated = undefined;
+	client.processed = undefined;
+	
 	if (noToken)
 		client.token = undefined;
 	client.phoneNumber = undefined;

@@ -11,7 +11,8 @@ var mongoose = require('mongoose'),
 	config = require('../../config/config'),
 	 _ = require('lodash'),
 	 utils = require('../services/utils'),
-	 path = require('path')
+	 path = require('path'),
+	 async = require('async')
 	;
 var ObjectId = require('mongoose').Types.ObjectId; 
 var ChatRoom = mongoose.model('ChatRoom');
@@ -33,12 +34,13 @@ var PhotoSchema = new Schema({
 PhotoSchema.pre('remove', function (doc) {
 	var path_original = __dirname+'/../../www/uploads/original/';
 	var path_thumb =  __dirname+'/../../www/uploads/thumb/';
-	if(fs.existsSync( path.join(path_original,doc.filename) ))
-		fs.unlink(path.join(path_original,doc.filename) );
-		_.forEach(doc.renders, function(render){
-			if(fs.existsSync(path.join(path_thumb,render.filename )))
-				fs.unlink(path.join(path_thumb,render.filename));
-		});
+	if(doc.filename)
+		if(fs.existsSync( path.join(path_original,doc.filename) ))
+			fs.unlink(path.join(path_original,doc.filename) );
+			_.forEach(doc.renders, function(render){
+				if(fs.existsSync(path.join(path_thumb,render.filename )))
+					fs.unlink(path.join(path_thumb,render.filename));
+			});
 });
 
 
@@ -305,27 +307,27 @@ UserSchema.statics.findUniqueUsername = function(screenName, suffix,callback){
 };
 
 UserSchema.methods.removePhoto = function(photoIds, callback){
-	var total = photoIds.length;
-	var start = 0;
+	
+	var path_original = __dirname+'/../../www/uploads/original/';
+	var path_thumb =  __dirname+'/../../www/uploads/thumb/';
 	var _self = this;
-	
-	var _removePhoto = function(photoId){
-		_self.photos.id(photoId).remove(); //let's add preDelete event listener in the photoSchema to remove photo as well.
-		_self.save(function(err){
-			if(err){
-				console.log(err);
-			}else{
-				start++;
-				if(start == total){
-					callback();
-				}else{
-					_removePhoto(photoIds[start]);
-				}	
-			}
-		});
+	var _removePhoto = function(photoId, cb){
+		var photo = _self.photos.id(photoId);
+		if(fs.existsSync( path.join(path_original,photo.filename) ))
+				fs.unlink(path.join(path_original,photo.filename) );
+				_.forEach(photo.renders, function(render){
+					if(fs.existsSync(path.join(path_thumb,render.filename )))
+						fs.unlink(path.join(path_thumb,render.filename));
+				});
+		_self.photos.pull({ _id: new ObjectId(photoId )});
+		cb(null);
 	};
-	
-	_removePhoto(photoIds[0]);
+	async.map( photoIds, _removePhoto, function(err, results){
+		_self.save( function(err, doc){
+			callback(err, doc);
+		})
+	});
+
 };
 
 UserSchema.methods.updateDefaultHead = function(photoId, callback){

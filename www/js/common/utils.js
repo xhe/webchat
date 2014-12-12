@@ -330,8 +330,30 @@ define(function(require){
 				}else{
 					 return '<span style="border:#cccccc 5px solid; padding:5px">' + member.screenName+'</div>';
 				}
-			}
-				
+			}	
+		},
+		
+		showMemberHeadImgForChatRoom: function(members){
+			
+			var output = "";
+			var height = members.length==2?50:25;
+			var width = 25;
+			_.each(members, function(member){
+				if( member.headImg ){
+					if( member.isOnline ){
+						output+= "<div style='float: left;'><img src='"+ member.headImg +"' width="+width+"px height=" + height + "px></div>";
+					}else{
+						output+= "<div style='float: left;'><img src='"+ member.headImg +"' width="+width+"px height=" + height + "px></div>";
+					}
+				}else{
+					if( member.isOnline ){
+						output+= "<div style='float: left; text-align: center; font-size: 20px; width: 25px; border: 1px #cccccc solid'>"+ member.screenName.substr(0,1).toUpperCase() +"</div>";
+					}else{
+						output+= "<div style='float: left; text-align: center; font-size: 20px; width: 25px; border: 1px #cccccc solid'>"+ member.screenName.substr(0,1).toUpperCase() +"</div>";
+					}
+				}
+			});
+			return output;
 		},
 		
 		

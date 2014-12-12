@@ -76,8 +76,10 @@ define(function(require){
         			styleStr = "border:#008000 5px solid"
         		 }
         		 var link="detail";
+        		 var title = "Detail"
         		 if( invRoomId ){
         			 link="invite_detail/"+member._id+"/"+invRoomId;
+        			 title = "Invite"
         		 }
         		 
         		 //Don't show call button if not supported
@@ -92,7 +94,7 @@ define(function(require){
             				 		+
             				 		"<br/>"+member.firstName+" "+ member.lastName +
             				 		"</td><td width='30%'><a href='"+callLink+"' data-role='button' class='hrefCall' data-inline='true' ></a></td>"+
-            				 		"<td width='35%'><a data-role='button' class='hrefDetail' data-inline='true' >Detail</a></td></tr></table>"
+            				 		"<td width='35%'><a href='#"+link+"' data-role='button' class='hrefDetail' data-inline='true' >"+title+"</a></td></tr></table>"
             				 	)
             				 );
         		 }else{
@@ -102,7 +104,7 @@ define(function(require){
     				 		(thumbNailUrl==""? "<span class='noHeadImg'></span>" :  ("<img style='"+styleStr+"' src='" +  thumbNailUrl  +"'/>") )
     				 		+
      				 		"</td><td width='30%'><strong>"+ member.firstName+" "+ member.lastName +"</strong></td>"+
-     				 		"<td width='35%'><a data-role='button' class='hrefDetail' data-inline='true' >Detail</a></td></tr></table>"
+     				 		"<td width='35%'><a href='#"+link+"' data-role='button' class='hrefDetail' data-inline='true' >"+title+"</a></td></tr></table>"
      				 	)
      				 ); 
         		 }

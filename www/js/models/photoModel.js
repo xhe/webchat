@@ -42,16 +42,16 @@ define(function (require) {
 		removePhotos: function(photoIds){
 			var _this = this;
 			$.ajax({
-			    url: config.serverUrl+'myphotos', 
-			    data:
-			    	{
-						photoIds: photoIds
-					},
-			    type: 'DELETE',
-			    success: function(result) {
-			    	utils.alert("Selected images have been removed successfully.")
-					_this.fetch({reset: true});
-			    }
+			url: config.serverUrl+'myphotos',
+			data:
+			{
+			photoIds: photoIds
+			},
+			type: 'DELETE',
+			success: function(result) {
+			utils.alert("Selected images have been removed successfully.")
+			_this.fetch({reset: true});
+			}
 			});
 		},
 		

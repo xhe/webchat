@@ -12,6 +12,7 @@ define(function (require) {
 		url: config.serverUrl + 'contacts',
 		
 		get_contacts: function(){
+			
 			_self = this;
 			util.ajax_get(config.serverUrl+'contacts', this.callback, true);
 		},

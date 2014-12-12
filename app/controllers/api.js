@@ -98,6 +98,12 @@ exports.delete_photos = function(req, res){
 	});
 }
 
+exports.delete_myphotos = function(req, res){
+	req.user.removePhoto(req.body.photoIds, function(){
+		res.jsonp({status:"success"});
+	});
+}
+
 exports.chatrooms = function(req, res){
 	chat_service.findUserCreatedRooms(req.user, function(rooms){
 		var ownRooms = rooms;

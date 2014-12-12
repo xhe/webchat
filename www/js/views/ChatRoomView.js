@@ -86,18 +86,26 @@ define(function(require){
 		render: function(){
 			
 			_.each(this.model.result.own_rooms, function(room){
+				room.creator.headImg = util.retrieveThumbNailPath( room.creator, 50);
+				room.creator.isOnline = window.socketEventService.isUserOnline(room.creator);
+				room.membersToRender = [room.creator];
 				_.each(room.members, function(member){
 					member.headImg = util.retrieveThumbNailPath( member, 50);
 					member.isOnline = window.socketEventService.isUserOnline(member);
+					if(room.membersToRender.length<5)
+						room.membersToRender.push(member);
 				});
 			});
 			
 			_.each(this.model.result.join_rooms, function(room){
 				room.creator.headImg = util.retrieveThumbNailPath( room.creator, 50);
 				room.creator.isOnline = window.socketEventService.isUserOnline(room.creator);
+				room.membersToRender = [room.creator];
 				_.each(room.members, function(member){
 					member.headImg = util.retrieveThumbNailPath( member, 50);
 					member.isOnline = window.socketEventService.isUserOnline(member);
+					if(room.membersToRender.length<5 /*&& member._id!== util.getLoggedInUser()._id*/)
+						room.membersToRender.push(member);
 				});
 			});
 			
@@ -106,7 +114,8 @@ define(function(require){
     				{ own_rooms: this.model.result.own_rooms, 
     				join_rooms: this.model.result.join_rooms, 
     				user: util.getLoggedInUser(),
-    				showMemberHeadImg: util.showMemberHeadImg
+    				showMemberHeadImg: util.showMemberHeadImg,
+    				showMemberHeadImgForChatRoom: util.showMemberHeadImgForChatRoom
     				}));
     		$( ".listview" ).listview().listview( "refresh" );
     		
