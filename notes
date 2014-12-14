@@ -147,3 +147,6 @@ adding this to init.d/mongod
   	crontab:
   	0 * * * * root  node /srv/nodejs/webchat/app/cli/cleanMedia.js 30
 	30 * * * * root node /srv/nodejs/webchat/app/cli/cleanChatAndMedia.js 100 30
+	
+	google play sign key:
+	http://developer.android.com/tools/publishing/app-signing.html
