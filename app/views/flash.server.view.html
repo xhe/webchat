@@ -1,0 +1,27 @@
+{% extends 'emails/layout-nofooter.html.server.view.html'%}
+{% block content %}
+	<p class="homeDownload">
+		
+		{% if os=='iOS'  %}
+			
+				<img src="/img/apple-300.png"  style="border: 0px;"/>
+			
+		{% else %}
+			<a href="https://play.google.com/store/apps/details?id=com.chat4each" style="border: 0px;">
+				<img src="/img/android-300.png"  style="border: 0px;"/>
+			</a>
+		{% endif %}
+		
+		<br/></br/>
+		<a href='/m'>Continue to website</a>
+	
+	</p>
+	
+	
+	<style>
+		.homeDownload{
+			text-align: center;padding-top: 30px;
+			width: 100%;
+		}
+	</style>
+{% endblock %}
