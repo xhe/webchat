@@ -365,3 +365,7 @@ img.offline{
 .divSettingItem{
 	margin-bottom: 20px;
 }
+.spanUploadPercentage{
+	float: right;padding-right: 20px;padding-top: 20px;
+	color: green;
+}

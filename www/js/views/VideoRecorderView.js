@@ -97,13 +97,13 @@ define(function(require){
         	$("#btn-start-recording").prop('disabled', false);
         	$("#btn-stop-recording").prop('disabled', true);
         	if(window.twoInOne) {
-        		window.videoRecorder.stopRecording(function() {
-        			postFiles(window.videoRecorder.getBlob());
+        		window.videoRecorder.stopRecording(function(videoURL) {
+        			postFiles(window.videoRecorder.getBlob(),null, videoURL);
         		});
         	}else{
         		window.videoRecorder.stopRecording(function() {
-            		window.audioRecorder.stopRecording(function() {
-            			      postFiles(window.videoRecorder.getBlob(), window.audioRecorder.getBlob());
+            		window.audioRecorder.stopRecording(function(videoURL) {
+            			      postFiles(window.videoRecorder.getBlob(), window.audioRecorder.getBlob(), videoURL);
                     });
                 });
         	}
@@ -124,52 +124,13 @@ define(function(require){
 
 
 // this function submits both audio/video or single recorded blob to nodejs server
-function postFiles(video, audio){
-    // getting unique identifier for the file name
-    var fileName = generateRandomString();
-    var formData = new FormData();
-	if(audio)
-	{
-    	var type_audio = audio.type.split('/')[1];
-    	var fileName_audio = fileName + '.' + audio.type.split('/')[1];
-    	formData.append('audio', audio, fileName_audio); 
+function postFiles(video, audio, videoURL){
+	window.recordedVideo = {
+			video: video,
+			audio: audio,
+			videoURL: videoURL
 	}
-    
-	if(video)
-	{
-		var type_video = video.type.split('/')[1];
-		var fileName_video = fileName + '.' + video.type.split('/')[1];
-		formData.append('video', video, fileName_video);
-	}
-	 
-	util.showBusy();
-	$.ajax({
-	    type: 'POST',
-	    url: '/api/upload_chat_video_file/'+window.videoRecordChatRoom,
-	    data: formData,
-	    contentType: false,
-	    cache: false,
-	    processData: false,
-	  }).done(function(){ 
-		  $("#recordAudio").removeClass('stop');
-		  $("#recordAudio").addClass('recordAudio');
-		  util.hideBudy();
-		  alert("Video message has been uploaded successfully.");
-		  window.history.back();
-	  });
-	 
-	if(window.mediaStream){
-    	window.mediaStream.stop();
-    }
+	window.history.back();
 }
 
-function generateRandomString(){
-	if (window.crypto) {
-        var a = window.crypto.getRandomValues(new Uint32Array(3)),
-            token = '';
-        for (var i = 0, l = a.length; i < l; i++) token += a[i].toString(36);
-        return token;
-    } else {
-        return (Math.random() * new Date().getTime()).toString(36).replace( /\./g , '');
-    }
-}
+

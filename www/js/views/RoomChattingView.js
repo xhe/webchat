@@ -5,6 +5,7 @@ define(function(require){
 	var Backbone 		= require('backbone'),
 		room_chatting_view_tpl		= require('text!tpl/room_chatting_view.html'),
 		room_chatting_item_view_tpl		= require('text!tpl/chatrooms_list_item.html'),
+		room_chatting_item_view_tmp_tpl		= require('text!tpl/chatrooms_list_item_tmp.html'),
 		util = require('common/utils'),
 		HeaderView = require('views/HeaderView'),
 		ChatMessageModel = require('models/chatMessageModel'),
@@ -15,35 +16,69 @@ define(function(require){
 	var chat_message_event_initialized = false;
 	var current_roomId = null;
 	
+	window.fileSelectedNonSaved = false;
+	
+	var removeSelectedMedia = function(){
+		window.fileSelectedNonSaved = false;
+		$('#messages li:last').remove();
+	}
+	
+	var appendChatMsgTmp = function(chatData){
+		
+		if(window.fileSelectedNonSaved){
+			//just multiple select, no save yet, we need to remove last one
+			$('#messages li:last').remove();
+		}else{
+			window.fileSelectedNonSaved = true;
+		}
+		
+		if(  $('#messages')[0] ){
+				
+				 var oldscrollHeight = $('#messages')[0].scrollHeight;
+	        	 $('#messages')
+    		 	.append( 
+		 				$('<li>').html(
+		 						 _.template( room_chatting_item_view_tmp_tpl,
+		 								 		chatData
+		 								  )		
+		 				)		
+		 			);
+	        	 var newscrollHeight = $('#messages')[0].scrollHeight;
+	       		 if(newscrollHeight > oldscrollHeight){ //COMPARES
+	       		        $("#messages").scrollTop($("#messages")[0].scrollHeight); //Scrolls
+	       		  }
+			}
+	};
+	
 	var  appendChatMsg = function(chat){
       	if(current_roomId === chat.room ){
-      			if(  $('#messages')[0] ){
-      				
-      				 var oldscrollHeight = $('#messages')[0].scrollHeight;
-			        	 $('#messages')
-		     		 	.append( 
-		 		 				$('<li>').html(
-		 		 						 _.template( room_chatting_item_view_tpl,
-		     		 								  { 
-		 		 							 			photoPath: util.retrieveThumbNailPath(chat.creator, 50), 
-		 		 							 			photoLargePath: util.retrieveThumbNailPath(chat.creator, 10000), 
-		 		 							 			msgPhotoPath: chat.photo? util.retrieveMsgThumbNailPath(chat.photo.renders, 100) : "", 
-		 		 							 			msgPhotoLargePath: chat.photo? util.retrieveMsgThumbNailPath(chat.photo.renders, 10000) : "", 
-		 		 							 			chat: chat,
-		 		 							 			audioPath: (chat.audio && chat.audio.filename)?util.convertToHostPath( chat.audio.filename ):"",
-		 		 							 			videoPath: (chat.video && chat.video.filename)?util.convertToHostPath( chat.video.filename ):"",
-		 		 							 			user: util.getLoggedInUser(),
-		 		 							 			mobile: window.platform?true:false
-		     		 								  }
-		 		 								  )		
-		 		 				)		
-		 		 			);
-			        	 var newscrollHeight = $('#messages')[0].scrollHeight;
-			       		 if(newscrollHeight > oldscrollHeight){ //COMPARES
-			       		        $("#messages").scrollTop($("#messages")[0].scrollHeight); //Scrolls
-			       		  }
-      			}
-		 		
+      			
+      		if(  $('#messages')[0] ){
+	      				
+	      				 var oldscrollHeight = $('#messages')[0].scrollHeight;
+				        	 $('#messages')
+			     		 	.append( 
+			 		 				$('<li>').html(
+			 		 						 _.template( room_chatting_item_view_tpl,
+			     		 								  { 
+			 		 							 			photoPath: util.retrieveThumbNailPath(chat.creator, 50), 
+			 		 							 			photoLargePath: util.retrieveThumbNailPath(chat.creator, 10000), 
+			 		 							 			msgPhotoPath: chat.photo? util.retrieveMsgThumbNailPath(chat.photo.renders, 100) : "", 
+			 		 							 			msgPhotoLargePath: chat.photo? util.retrieveMsgThumbNailPath(chat.photo.renders, 10000) : "", 
+			 		 							 			chat: chat,
+			 		 							 			audioPath: (chat.audio && chat.audio.filename)?util.convertToHostPath( chat.audio.filename ):"",
+			 		 							 			videoPath: (chat.video && chat.video.filename)?util.convertToHostPath( chat.video.filename ):"",
+			 		 							 			user: util.getLoggedInUser(),
+			 		 							 			mobile: window.platform?true:false
+			     		 								  }
+			 		 								  )		
+			 		 				)		
+			 		 			);
+				        	 var newscrollHeight = $('#messages')[0].scrollHeight;
+				       		 if(newscrollHeight > oldscrollHeight){ //COMPARES
+				       		        $("#messages").scrollTop($("#messages")[0].scrollHeight); //Scrolls
+				       		  }
+	      			}
 			} 
       };
       
@@ -56,9 +91,23 @@ define(function(require){
         	 this.chatMessageCollection = new ChatMessageModel.ChatMessageCollection();
         	 var _self = this;
         	  if(!chat_message_event_initialized){
-        			window.socketEventService.on( window.socketEventService.EVENT_TYPE_CHATMESSAGE, 
+        		  window.socketEventService.on( window.socketEventService.EVENT_TYPE_CHATMESSAGE, 
 		            			function(msg){ //alert('in room chatting view');
-			        				appendChatMsg( JSON.parse(msg));
+			        				//not media upload
+        							var msg = JSON.parse(msg);
+        							if(util.getLoggedInUser().screenName=== msg.creator.screenName && msg.video){
+        								//for video, remove last one here
+        								removeSelectedMedia();
+        								appendChatMsg( msg);
+        							}	
+        							else
+	        							if( util.getLoggedInUser().screenName!== msg.creator.screenName
+	        								&& ( msg.photo	|| msg.audio || msg.video)
+	        								||
+	        								util.getLoggedInUser().screenName=== msg.creator.screenName
+	        								&& !msg.photo && !msg.audio && !msg.video
+	        							)
+				        					appendChatMsg( msg);
 			        			}
             		);
         		 chat_message_event_initialized = true;
@@ -112,7 +161,8 @@ define(function(require){
         	"click .hrefVideoChatRoom": "playVideoChatRoom",
         	"click .hrefAudioChatRoom": "playAudioChatRoom",
         	"click #recordAudioMobile": "recordAudioMobile",
-        	"click #recordVideoMobile": "recordVideoMobile"
+        	"click #recordVideoMobile": "recordVideoMobile",
+        	"change #file-select-chat": "fileSelected"
         },
         
         playVideoChatRoom: function(event){
@@ -155,14 +205,7 @@ define(function(require){
         
         recordRTC: null,
         recording: false,
-        posting: false,
         recordAudio: function(){
-        	
-        	if(!this.recording && this.posting){
-        		console.log("to stop");
-        		return;
-        	}
-        	
         	self = this;
         	if(!this.recording){
         		navigator.getUserMedia =  (navigator.getUserMedia ||
@@ -193,37 +236,93 @@ define(function(require){
     			}
         	}else{
         		this.recording = false;
-        		this.posting = true;
         		_self=this;
         		recordRTC.stopRecording(function(audioURL) { 
-        			  util.showBusy();
         			  var formData = new FormData();
         			  var data =  recordRTC.getBlob();
         			  var type = data['type'].split('/')[1];
         			  var fileName = new Date().getTime()+"_"+ (Math.floor(Math.random() * 100) + 1) +"."+type;
         			  formData.append('audio', data, fileName); 
-        			  $.ajax({
-        			    type: 'POST',
-        			    url: '/api/upload_chat_audio_file/'+current_roomId,
-        			    data: formData,
-        			    contentType: false,
-        			    cache: false,
-        			    processData: false,
-        			  }).done(function(){ 
-        				  $("#recordAudio").removeClass('stop');
-        				  $("#recordAudio").addClass('recordAudio');
-        				  _self.posting = false;
-        				  util.hideBudy();
-        			  });
         			  
+        			  window.fileSelectedNonSaved = false;
+        			  appendChatMsgTmp({
+				 			photoPath:'', // util.retrieveThumbNailPath(util.getLoggedInUser(), 50), 
+				 			photoLargePath:'', // util.retrieveThumbNailPath(util.getLoggedInUser(), 10000), 
+				 			msgPhotoPath: '', 
+				 			msgPhotoLargePath: '', 
+				 			audioPath: audioURL,
+				 			videoPath: "",
+				 			user: util.getLoggedInUser(),
+				 			mobile: window.platform?true:false
+        			  });
+        			 
+        			  (
+	        				function(dom){
+	        					var xhr = new XMLHttpRequest();
+	        					xhr.open('POST', '/api/upload_chat_audio_file/'+current_roomId, true);
+	        					xhr.onprogress=function(evt) 
+	        	        		{
+	        	        			   if (evt.lengthComputable) 
+	        	        			   {  //evt.loaded the bytes browser receive
+	        	        			      //evt.total the total bytes seted by the header
+	        	        			     var percentComplete = (evt.loaded / evt.total)*100;  
+	        	        			     if( percentComplete==100 ){
+	        	        			    	 dom.html("Upload Completed.");
+	        	        			    	 $("#ctrAttach").hide();
+	        	        			    	 $("#ctrInputMsg").show();
+	        	        			     }else{
+	        	        			    	 dom.html("Uploaded: "+percentComplete +"%");
+	        	        			     }
+	        	        			   } 
+	        	        		};
+	        	        		xhr.onload = function () {
+	                	        
+	        						if (xhr.status !== 200) {
+	                	        		  util.alert('An error occurred!');
+	                	        	  }
+	                	        	};
+	                	        	// Send the Data.
+	                	        xhr.send(formData);
+	                	        $("#recordAudio").removeClass('stop');
+	               				$("#recordAudio").addClass('recordAudio');
+	        				}
+        			  )( $('#messages li:last .spanUploadPercentage') );
         			});
         	}
         	
         },
-        
+     
+        fileSelected: function(event){
+	    	  var file = event.target.files[0];
+	    	 	// Only process image files.
+	    	  if (!file.type.match('image.*')) {
+	    	        alert("Please select image only");
+	    	  }else{
+	    		    var reader = new FileReader();
+			    	      // Closure to capture the file information.
+			    	  reader.onload =  function(e) {
+			    		  
+			    		  appendChatMsgTmp({
+			    			 
+						 			photoPath:'', // util.retrieveThumbNailPath(util.getLoggedInUser(), 50), 
+						 			photoLargePath:'', // util.retrieveThumbNailPath(util.getLoggedInUser(), 10000), 
+						 			msgPhotoPath: e.target.result, 
+						 			msgPhotoLargePath: e.target.result, 
+						 			audioPath: "",
+						 			videoPath: "",
+						 			user: util.getLoggedInUser(),
+						 			mobile: window.platform?true:false
+			    		  });
+			    		  
+			    	  };
+			    	  reader.readAsDataURL(file);  
+	    	  }
+	     },
+  
         upload: function(event){
         	event.preventDefault();
-        	
+        	//now change this flag to false so as to enable next file select
+        	window.fileSelectedNonSaved = false;
         	
         	var form = document.getElementById('file-form-chat');
         	var fileSelect = document.getElementById('file-select-chat');
@@ -243,21 +342,41 @@ define(function(require){
         	if(count==0){
         		util.alert("Please select image first.");
         	}else{
-        		util.showBusy();
-        		var xhr = new XMLHttpRequest();
-	        	xhr.open('POST', '/api/upload_chat_file/'+current_roomId, true);
-	        	// Set up a handler for when the request finishes.
-	        	_this=this;
-	        	xhr.onload = function () {
-	        	  if (xhr.status === 200) {
-	        		  util.hideBudy();
-	        		  $("#file-select-chat").val("");
-	        	  } else {
-	        		  util.alert('An error occurred!');
-	        	  }
-	        	};
-	        	// Send the Data.
-	        	xhr.send(formData);
+        		
+        		(
+        			function(dom){
+        				var xhr = new XMLHttpRequest();
+                		xhr.onprogress=function(evt) 
+        	        		{
+        	        			   if (evt.lengthComputable) 
+        	        			   {  //evt.loaded the bytes browser receive
+        	        			      //evt.total the total bytes seted by the header
+        	        			     var percentComplete = (evt.loaded / evt.total)*100;  
+        	        			     if( percentComplete==100 ){
+        	        			    	 dom.html("Upload Completed.");
+        	        			    	 $("#ctrAttach").hide();
+        	        			    	 $("#ctrInputMsg").show();
+        	        			     }else{
+        	        			    	 dom.html("Uploaded: "+percentComplete +"%");
+        	        			     }
+        	        			   } 
+        	        		};
+        	        	
+        	        	xhr.open('POST', '/api/upload_chat_file/'+current_roomId, true);
+        	        	// Set up a handler for when the request finishes.
+        	        	_this=this;
+        	        	xhr.onload = function () {
+        	        	  if (xhr.status === 200) {
+        	        		  $("#file-select-chat").val("");
+        	        	  } else {
+        	        		  util.alert('An error occurred!');
+        	        	  }
+        	        	};
+        	        	// Send the Data.
+        	        	xhr.send(formData);
+        			}
+        		)( $('#messages li:last .spanUploadPercentage') );
+        	
         	}
         },
         
@@ -279,9 +398,20 @@ define(function(require){
         	$("#ctrAttach").show();
         	$("#ctrInputMsg").hide();
         },
+        
         chatRoomBack:function(){
-        	$("#ctrAttach").hide();
-        	$("#ctrInputMsg").show();
+        	
+        	if(window.fileSelectedNonSaved){
+        		if(confirm('You have selected media, but not upload yet, please cancel to click button in order to upload. Otherwise, continue to give up your selection.')){
+        			removeSelectedMedia();
+        			$("#ctrAttach").hide();
+            		$("#ctrInputMsg").show();
+        		}
+        	}else{
+        		$("#ctrAttach").hide();
+        		$("#ctrInputMsg").show();
+        	}
+        	
         },
         
         sendMessage: function(){
@@ -305,6 +435,84 @@ define(function(require){
         }
     });
     
+    function generateRandomString(){
+    	if (window.crypto) {
+            var a = window.crypto.getRandomValues(new Uint32Array(3)),
+                token = '';
+            for (var i = 0, l = a.length; i < l; i++) token += a[i].toString(36);
+            return token;
+        } else {
+            return (Math.random() * new Date().getTime()).toString(36).replace( /\./g , '');
+        }
+    }
+    
+    var postVideo = function(video, audio, videoURL){
+    	
+    	appendChatMsgTmp({
+ 			photoPath:'', // util.retrieveThumbNailPath(util.getLoggedInUser(), 50), 
+ 			photoLargePath:'', // util.retrieveThumbNailPath(util.getLoggedInUser(), 10000), 
+ 			msgPhotoPath: '', 
+ 			msgPhotoLargePath: '', 
+ 			audioPath: '',
+ 			videoPath: videoURL,
+ 			user: util.getLoggedInUser(),
+ 			mobile: window.platform?true:false
+    	});
+    	
+    	var fileName = generateRandomString();
+        var formData = new FormData();
+    	if(audio)
+    	{
+        	var type_audio = audio.type.split('/')[1];
+        	var fileName_audio = fileName + '.' + audio.type.split('/')[1];
+        	formData.append('audio', audio, fileName_audio); 
+    	}
+        
+    	if(video)
+    	{
+    		var type_video = video.type.split('/')[1];
+    		var fileName_video = fileName + '.' + video.type.split('/')[1];
+    		formData.append('video', video, fileName_video);
+    	}
+    	if(window.mediaStream){
+        	window.mediaStream.stop();
+        }
+    	
+    	(
+    			function(dom){
+    				var xhr = new XMLHttpRequest();
+            		xhr.onprogress=function(evt) 
+    	        		{
+    	        			   if (evt.lengthComputable) 
+    	        			   {  //evt.loaded the bytes browser receive
+    	        			      //evt.total the total bytes seted by the header
+    	        			     var percentComplete = (evt.loaded / evt.total)*100;  
+    	        			     if( percentComplete==100 ){
+    	        			    	 dom.html("Upload Completed.");
+    	        			     }else{
+    	        			    	 dom.html("Uploaded: "+percentComplete +"%");
+    	        			     }
+    	        			   } 
+    	        		};
+    	        	
+    	        	xhr.open('POST', '/api/upload_chat_video_file/'+current_roomId, true);
+    	        	// Set up a handler for when the request finishes.
+    	        	_this=this;
+    	        	xhr.onload = function () {
+    	        	  if (xhr.status === 200) {
+    	        		  $("#file-select-chat").val("");
+    	        	  } else {
+    	        		  util.alert('An error occurred!');
+    	        	  }
+    	        	};
+    	        	// Send the Data.
+    	        	xhr.send(formData);
+    			}
+    	)($('#messages li:last .spanUploadPercentage'));
+    }
+    
+    //https://gist.github.com/shiawuen/1534477
+    
     var RoomChattingListView =  Backbone.View.extend({
     	 
     	initialize: function() {
@@ -318,6 +526,12 @@ define(function(require){
         	 while(tmpResults.length>0){
         		 appendChatMsg(tmpResults.pop());
         	 } 
+        	 
+        	 if(window.recordedVideo)
+        	 {
+        		 postVideo( window.recordedVideo.video, window.recordedVideo.audio, window.recordedVideo.videoURL )
+        	 }
+        	 window.recordedVideo = null;
          }
     });
     

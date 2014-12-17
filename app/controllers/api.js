@@ -48,7 +48,8 @@ exports.upload_chat_file = function(req, res){
 	
 };
 
-exports.upload_chat_audio_file = function(req, res){ console.log( req.files );
+exports.upload_chat_audio_file = function(req, res){ 
+	
 	chat_service.addAudioForChatMessage( req.files.audio.path, req.user,  req.params.roomId, function(message){
 		if(message){
 			res.jsonp(message);
@@ -59,6 +60,8 @@ exports.upload_chat_audio_file = function(req, res){ console.log( req.files );
 	
 };
 exports.upload_chat_video_file = function(req, res, next){
+	//res.end("uploaded")
+	
 	var audioPath = req.files.audio? req.files.audio.path:"";
 	var videoPath = req.files.video? req.files.video.path:"";
 
@@ -283,4 +286,11 @@ exports.update_settings = function(req, res){
 	req.user.save(function(err,doc){
 		res.jsonp({status: 'success', user: doc})
 	});
-}
+},
+
+
+exports.uploadTest = function(req, res, next){
+	console.log( req.files );
+	console.log(' uploaded ');
+	res.end('finished')
+};

@@ -261,7 +261,6 @@ exports.addVideoForChatMessage = function(audioPath, videoPath, user, roomId, cb
 		        }
 			});
 		} else {
-			console.log("==>" + mergedFile.substr(mergedFile.length-4) )
 			if(  mergedFile.substr(mergedFile.length-4).toLowerCase() =='.mov' ){
 				mergedFile = mergedFile.substr(0, mergedFile.length-4)+"_"+ new Date().getTime() +".mp4";
 				//ffmpeg -i movie.mov -vcodec copy -acodec copy out.mp4
@@ -281,7 +280,7 @@ exports.addVideoForChatMessage = function(audioPath, videoPath, user, roomId, cb
 				wr.on('close', function(ex){
 							fs.unlink(videoPath);
 				});
-				fs.createReadStream(videoPath).pipe(wr);
+				fs.createReadStream(videoPath).pipe(wr); 
 				cb(null, mergedFile.replace("www",""));
 			}
 		}
@@ -289,8 +288,10 @@ exports.addVideoForChatMessage = function(audioPath, videoPath, user, roomId, cb
 	
 	
 	var createNewChatMsg = function(roomId,user, filePath, cb){ 
+		
+		var index = filePath.indexOf('//');
 		var video = new Video({
-			filename: filePath
+			filename: filePath.substr(index+1)
 		});
 		video.save(function(err, vid){
 			var message = new ChatMessage({
