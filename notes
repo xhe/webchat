@@ -150,3 +150,20 @@ adding this to init.d/mongod
 	
 	google play sign key:
 	http://developer.android.com/tools/publishing/app-signing.html
+	
+	
+	need update ffmpeg:
+	http://injustfiveminutes.com/2013/07/17/how-to-compile-latest-version-of-ffmpeg-on-centos-5/
+	Then 
+	http://ffmpeg.org/download.html
+	git clone git://source.ffmpeg.org/ffmpeg.git ffmpeg
+	.configure && make && make install
+	
+	https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu
+	
+	./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib"  --bindir="$HOME/bin" 
+	PATH="$HOME/bin:$PATH" make
+	make install
+	make distclean
+	hash -r
+	

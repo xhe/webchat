@@ -246,10 +246,13 @@ exports.addVideoForChatMessage = function(audioPath, videoPath, user, roomId, cb
 		pos = videoPath.indexOf('uploads');
 		fileName = videoPath.substr(pos+8);
 		filePath = videoPath.substr(0,pos+8 );	
-		var mergedFile =  filePath+'video/'+user._id+"_"+fileName
+		var mergedFile =  filePath+'video/'+user._id+"_"+fileName+'.mov';
 		
 		if(audioPath.length>0 ){
 			var command = "ffmpeg -i " + audioPath + " -i " + videoPath + " -map 0:0 -map 1:0 " + mergedFile;
+			
+			//var command = "ffmpeg -i " + audioPath + " -i " + videoPath + " -map 0:0 -map 1:0 -strict 2 " + mergedFile +'.mov';
+			
 			var  exec = require('child_process').exec;
 			exec(command, function(err, stdout, stderr){
 		        if(err){
