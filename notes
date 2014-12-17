@@ -132,8 +132,9 @@ http://www.krizna.com/centos/installing-node-js-centos-6-sample-app/
 12. Update init.d/, continue using mongod so as to make sure it is after mongo started
 adding this to init.d/mongod
 	export NODE_ENV="production"
-  	export PORT="80"
-  	cd /srv/nodejs/webchat && /usr/local/bin/node  app 1>"/srv/nodejs/webchat/log/app.log" 2>&$
+        export PORT="80"
+        export PATH=$PATH:/usr/local/bin/
+        cd /srv/nodejs/webchat && /usr/local/bin/node  app > /srv/nodejs/webchat/log/app.log 2>&1
 
   	13. yum install ImageMagick 
   	db.removeDatabase()

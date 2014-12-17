@@ -251,10 +251,8 @@ exports.addVideoForChatMessage = function(audioPath, videoPath, user, roomId, cb
 		if(audioPath.length>0 ){
 			mergedFile = mergedFile +".mov";
 			var command = "ffmpeg -i " + audioPath + " -i " + videoPath + " -map 0:0 -map 1:0 -strict -2 " + mergedFile;
-			
-			//var command = "ffmpeg -i " + audioPath + " -i " + videoPath + " -map 0:0 -map 1:0 -strict 2 " + mergedFile +'.mov';
-			
 			var  exec = require('child_process').exec;
+			console.log( command )
 			exec(command, function(err, stdout, stderr){
 		        if(err){
 		        	cb(err);
