@@ -272,6 +272,7 @@ define(function(require){
 	        	        			    	 $("#ctrInputMsg").show();
 	        	        			     }else{
 	        	        			    	 dom.html("Uploaded: "+percentComplete +"%");
+	        	        			    	 dom.html("Uploading");
 	        	        			     }
 	        	        			   } 
 	        	        		};
@@ -358,6 +359,7 @@ define(function(require){
         	        			    	 $("#ctrInputMsg").show();
         	        			     }else{
         	        			    	 dom.html("Uploaded: "+percentComplete +"%");
+        	        			    	 dom.html("Uploading");
         	        			     }
         	        			   } 
         	        		};
@@ -491,6 +493,7 @@ define(function(require){
     	        			    	 dom.html("Upload Completed.");
     	        			     }else{
     	        			    	 dom.html("Uploaded: "+percentComplete +"%");
+    	        			    	 dom.html("Uploading");
     	        			     }
     	        			   } 
     	        		};
