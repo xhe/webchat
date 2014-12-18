@@ -82,6 +82,42 @@ define(function(require){
 			} 
       };
       
+      window.postMediaDataToServer = function(formData, url){
+     	 (
+  				function(dom){
+  					dom.html("Uploading");
+  					var xhr = new XMLHttpRequest();
+  					xhr.open('POST', url+current_roomId, true);
+  					xhr.onprogress=function(evt) 
+  	        		{
+  	        			   if (evt.lengthComputable) 
+  	        			   {  //evt.loaded the bytes browser receive
+  	        			      //evt.total the total bytes seted by the header
+  	        			     var percentComplete = (evt.loaded / evt.total)*100;  
+  	        			     if( percentComplete==100 ){
+  	        			    	 dom.html("Upload Completed.");
+  	        			    	 $("#ctrAttach").hide();
+  	        			    	 $("#ctrInputMsg").show();
+  	        			     }else{
+  	        			    	 dom.html("Uploaded: "+percentComplete +"%");
+  	        			     }
+  	        			   } 
+  	        		};
+  	        		xhr.onload = function () {
+          	        	if (xhr.status !== 200) {
+          	        		  util.alert('An error occurred!');
+          	        	}
+          	        	var resp = JSON.parse(xhr.response);
+          	        	dom.parentsUntil('tr')[0].parentNode.querySelector('i').setAttribute('data-msgid', resp._id);
+  	        		};
+          	        	// Send the Data.
+          	        xhr.send(formData);
+          	        $("#recordAudio").removeClass('stop');
+         				$("#recordAudio").addClass('recordAudio');
+  				}
+			  )( $('#messages li:last .spanUploadPercentage') );
+     };
+     
 	// Extends Backbone.View
     var RoomChattingView = Backbone.View.extend( {
 
@@ -108,7 +144,7 @@ define(function(require){
 	        								&& !msg.photo && !msg.audio && !msg.video
 	        							)
 				        					appendChatMsg( msg);
-			        			}
+        						}
             		);
         		 chat_message_event_initialized = true;
         	  };
@@ -162,7 +198,23 @@ define(function(require){
         	"click .hrefAudioChatRoom": "playAudioChatRoom",
         	"click #recordAudioMobile": "recordAudioMobile",
         	"click #recordVideoMobile": "recordVideoMobile",
-        	"change #file-select-chat": "fileSelected"
+        	"change #file-select-chat": "fileSelected",
+        	"click .btnRemoveMsg": "removeMsg",
+        	"click #btnStartUpload": "upload"
+        },
+        
+        removeMsg: function(event){
+        	
+        	var parents = $(event.target).parentsUntil('ul');
+        	window.removedTarget = parents[ parents.length-1 ];
+        	if(confirm("Are you sure you want to remove this chat message?"))
+        		  this.chatMessageCollection.removeMsg( event.target.getAttribute('data-msgid'), function(data){
+			        		if(data.status=='success'){
+			        			window.removedTarget.remove();
+			        		}else{
+			        			console.log("erro")
+			        		}
+			        	});
         },
         
         playVideoChatRoom: function(event){
@@ -256,43 +308,14 @@ define(function(require){
 				 			mobile: window.platform?true:false
         			  });
         			 
-        			  (
-	        				function(dom){
-	        					var xhr = new XMLHttpRequest();
-	        					xhr.open('POST', '/api/upload_chat_audio_file/'+current_roomId, true);
-	        					xhr.onprogress=function(evt) 
-	        	        		{
-	        	        			   if (evt.lengthComputable) 
-	        	        			   {  //evt.loaded the bytes browser receive
-	        	        			      //evt.total the total bytes seted by the header
-	        	        			     var percentComplete = (evt.loaded / evt.total)*100;  
-	        	        			     if( percentComplete==100 ){
-	        	        			    	 dom.html("Upload Completed.");
-	        	        			    	 $("#ctrAttach").hide();
-	        	        			    	 $("#ctrInputMsg").show();
-	        	        			     }else{
-	        	        			    	 dom.html("Uploaded: "+percentComplete +"%");
-	        	        			    	 dom.html("Uploading");
-	        	        			     }
-	        	        			   } 
-	        	        		};
-	        	        		xhr.onload = function () {
-	                	        
-	        						if (xhr.status !== 200) {
-	                	        		  util.alert('An error occurred!');
-	                	        	  }
-	                	        	};
-	                	        	// Send the Data.
-	                	        xhr.send(formData);
-	                	        $("#recordAudio").removeClass('stop');
-	               				$("#recordAudio").addClass('recordAudio');
-	        				}
-        			  )( $('#messages li:last .spanUploadPercentage') );
-        			});
+        			  window.postMediaDataToServer(formData, '/api/upload_chat_audio_file/');
+        		});
         	}
-        	
         },
-     
+        
+      
+        
+        
         fileSelected: function(event){
 	    	  var file = event.target.files[0];
 	    	 	// Only process image files.
@@ -314,7 +337,7 @@ define(function(require){
 						 			user: util.getLoggedInUser(),
 						 			mobile: window.platform?true:false
 			    		  });
-			    		  
+			    		  $("#btnStartUpload").button();
 			    	  };
 			    	  reader.readAsDataURL(file);  
 	    	  }
@@ -343,42 +366,7 @@ define(function(require){
         	if(count==0){
         		util.alert("Please select image first.");
         	}else{
-        		
-        		(
-        			function(dom){
-        				var xhr = new XMLHttpRequest();
-                		xhr.onprogress=function(evt) 
-        	        		{
-        	        			   if (evt.lengthComputable) 
-        	        			   {  //evt.loaded the bytes browser receive
-        	        			      //evt.total the total bytes seted by the header
-        	        			     var percentComplete = (evt.loaded / evt.total)*100;  
-        	        			     if( percentComplete==100 ){
-        	        			    	 dom.html("Upload Completed.");
-        	        			    	 $("#ctrAttach").hide();
-        	        			    	 $("#ctrInputMsg").show();
-        	        			     }else{
-        	        			    	 dom.html("Uploaded: "+percentComplete +"%");
-        	        			    	 dom.html("Uploading");
-        	        			     }
-        	        			   } 
-        	        		};
-        	        	
-        	        	xhr.open('POST', '/api/upload_chat_file/'+current_roomId, true);
-        	        	// Set up a handler for when the request finishes.
-        	        	_this=this;
-        	        	xhr.onload = function () {
-        	        	  if (xhr.status === 200) {
-        	        		  $("#file-select-chat").val("");
-        	        	  } else {
-        	        		  util.alert('An error occurred!');
-        	        	  }
-        	        	};
-        	        	// Send the Data.
-        	        	xhr.send(formData);
-        			}
-        		)( $('#messages li:last .spanUploadPercentage') );
-        	
+        		 window.postMediaDataToServer(formData, '/api/upload_chat_file/');
         	}
         },
         
@@ -449,7 +437,7 @@ define(function(require){
     }
     
     var postVideo = function(video, audio, videoURL){
-    	
+    	window.fileSelectedNonSaved = false;
     	appendChatMsgTmp({
  			photoPath:'', // util.retrieveThumbNailPath(util.getLoggedInUser(), 50), 
  			photoLargePath:'', // util.retrieveThumbNailPath(util.getLoggedInUser(), 10000), 
@@ -480,41 +468,8 @@ define(function(require){
         	window.mediaStream.stop();
         }
     	
-    	(
-    			function(dom){
-    				var xhr = new XMLHttpRequest();
-            		xhr.onprogress=function(evt) 
-    	        		{
-    	        			   if (evt.lengthComputable) 
-    	        			   {  //evt.loaded the bytes browser receive
-    	        			      //evt.total the total bytes seted by the header
-    	        			     var percentComplete = (evt.loaded / evt.total)*100;  
-    	        			     if( percentComplete==100 ){
-    	        			    	 dom.html("Upload Completed.");
-    	        			     }else{
-    	        			    	 dom.html("Uploaded: "+percentComplete +"%");
-    	        			    	 dom.html("Uploading");
-    	        			     }
-    	        			   } 
-    	        		};
-    	        	
-    	        	xhr.open('POST', '/api/upload_chat_video_file/'+current_roomId, true);
-    	        	// Set up a handler for when the request finishes.
-    	        	_this=this;
-    	        	xhr.onload = function () {
-    	        	  if (xhr.status === 200) {
-    	        		  $("#file-select-chat").val("");
-    	        	  } else {
-    	        		  util.alert('An error occurred!');
-    	        	  }
-    	        	};
-    	        	// Send the Data.
-    	        	xhr.send(formData);
-    			}
-    	)($('#messages li:last .spanUploadPercentage'));
+    	window.postMediaDataToServer(formData, '/api/upload_chat_video_file/');
     }
-    
-    //https://gist.github.com/shiawuen/1534477
     
     var RoomChattingListView =  Backbone.View.extend({
     	 

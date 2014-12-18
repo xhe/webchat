@@ -30,6 +30,7 @@ module.exports = function(app){
 	app.route('/api/chatmessages/:roomId/:endts').get(user_service.requiresLogin,  api.chatmessagesbefore);
 	
 	app.route('/api/chatmessages').post(user_service.requiresLogin,  api.addChatMessage);
+	app.route('/api/chatmessages').delete(user_service.requiresLogin,  api.removeChatMessage);
 	
 	app.route('/api/contacts').get(user_service.requiresLogin,  api.getContacts);
 	

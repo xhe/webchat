@@ -2,6 +2,9 @@
 	<% if( user.screenName === chat.creator.screenName ){%>
 		
 		<tr>
+			<td>
+				<i class="fa fa-times-circle btnRemoveMsg" data-msgid="<%= chat._id %>" style="font-size: 30px;"></i>
+			</td>
 			<td  width="100%" style="text-align:right">
 				
 				<div style="float: right;padding-right: 20px;">

@@ -14,7 +14,8 @@ var mongoose = require('mongoose'),
 	Video = mongoose.model('Video'),
 	_ = require('lodash'),
 	async = require('async'),
-	fs = require('fs')
+	fs = require('fs'),
+	PhotoSchema = mongoose.model('PhotoSchema')
 	;
 
 exports.chatRoomNewChatMsg = function(user, room, cb ){
@@ -343,6 +344,52 @@ exports.addVideoForChatMessage = function(audioPath, videoPath, user, roomId, cb
 	                 ], cb);
 };
 
+exports.removeChatMsg = function(msgId, user, cb){
+	ChatMessage.findById(msgId)
+	.populate('creator photo audio video')
+	.exec(function(err, chat){
+		if(err){
+			cb(err);
+		}else{
+			if(chat && chat.creator.screenName === user.screenName ){
+						
+				chat.remove(function(err, doc){
+					if(err)
+						cb(err)
+					else{
+						if(chat.photo){ 
+							var path_original = __dirname+'/../../www/uploads/original/';
+							var path_thumb =  __dirname+'/../../www/uploads/thumb/';
+							fs.unlink(path_original+chat.photo.filename );
+							_.forEach(chat.photo.renders, function(render){
+								fs.unlink(path_thumb + render.filename);
+							});
+						
+							PhotoSchema
+							.findById(chat.photo._id)
+							.remove().exec();
+						}	
+						if(chat.audio){
+							var path =  __dirname+'/../../www'; 
+							fs.unlink(   path + chat.audio.filename )
+							Audio.findById(chat.audio._id).remove().exec();
+						}
+						if(chat.video){
+							var path =  __dirname+'/../../www'; 
+							fs.unlink(   path+ chat.video.filename )
+							Video.findById(chat.video._id).remove().exec();
+						}
+						cb(null, chat);
+					}
+				});
+				
+			}else{
+				cb('Invalid msgId');
+			}
+		}
+	})
+	
+};
 
 exports.addAudioForChatMessage = function(audioPath, user, roomId, cb){
 	var message = new ChatMessage({

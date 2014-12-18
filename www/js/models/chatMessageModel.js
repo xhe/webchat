@@ -12,6 +12,21 @@ define(function (require) {
 		url: config.serverUrl + 'chatmessages',
 		roomId: null,
 		
+		removeMsg: function(msgId, cb){
+			
+			$.ajax({
+		        type: "DELETE",
+		        url: config.serverUrl + 'chatmessages',
+		        data: {
+		        	msgId: msgId
+		        },
+		        success: function(data){
+		        	cb(data)
+		        }
+		        });
+			
+		},
+		
 		getChatMessages: function(roomId){
 			this.roomId = roomId;
 			_self = this;
