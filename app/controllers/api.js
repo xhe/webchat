@@ -296,7 +296,6 @@ exports.uploadTest = function(req, res, next){
 };
 
 exports.removeChatMessage = function(req, res, next){
-	console.log( req.body.msgId);
 	chat_service.removeChatMsg(req.body.msgId, req.user, function(err, data){
 		if(err){
 			res.jsonp({status: 'failed', err: err});
