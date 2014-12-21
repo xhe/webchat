@@ -3,27 +3,6 @@
 <head>
   <meta charset="utf-8">
   
-  <style>
-  	.loading{
-  		width: 200px;
-	    height: 50px;
-	    padding-top: 15px;
-	    background-color: #393939;
-	    border-radius: 10px;
-		text-align: center;
-		font-size: 26px;
-		color: #fff;
-		
-	    position: absolute;
-	    top:0;
-	    bottom: 0;
-	    left: 0;
-	    right: 0;
-	
-	    margin: auto;
-	    display: none;
-  	}
-  </style>
   
 </head>
 	
@@ -42,12 +21,16 @@
 		    					navigator.device.capture.captureVideo(captureSuccess, captureError);
 		    					break;
 	    				}
-	    				
 	    		}
-	    		
 
 				function captureSuccess(mediaFiles) {
-					 uploadFile(mediaFiles[0].fullPath, mediaFiles[0].name);
+					var filesData = {
+							mediaType: mediaType,
+							mediaFiles: mediaFiles,
+							roomId: roomId
+					}
+					sessionStorage.setItem('filesDataForMedia', JSON.stringify( filesData) );
+					window.history.back();
 	            }
 	            function captureError(error) {
 	                var msg = 'An error occurred during capture: ' + error.code;
@@ -74,46 +57,5 @@
 	    			
 	    			fetchingMedia(mediaType);
 	    		});
-				
-				function uploadFile(fullPath, fileName){
-				 
-					 var options = new FileUploadOptions();
-			         options.fileKey = mediaType;
-			         options.fileName = fileName;
-			         options.httpMethod = 'POST';
-		
-			         var params = new Object();
-			         params.imageURI = fullPath;
-			         options.params = params;
-			         options.chunkedMode = false;
-			         var ft = new FileTransfer();
-			         
-			        var loaderIcon = document.getElementById('loader');
-			        loaderIcon.style.display='block';
-			        
-			         ft.upload(fullPath, hostURL + (mediaType==="audio"? '/api/upload_chat_audio_file/' : '/api/upload_chat_video_file/' )+ roomId , 
-			         	function(){
-			         		loaderIcon.style.display='none';
-			         		navigator.notification.alert("Your media has been uploaded successfully.", 
-			         									function(){
-			         										 loaderIcon.style.display='none';
-			         										window.history.back();
-			         									}, null, "Ok");
-			         	}, 
-			         	function(){
-			         		loaderIcon.style.display='none';
-			         		navigator.notification.alert("Your media can not be uploaded now, please try later.", 
-			         									function(){
-			         										 loaderIcon.style.display='none';
-			         										window.history.back();
-			         									}, null, "Ok");
-			         	}, 
-			         	options, true);
-	
-				}
        	</script>
-       	
- <body>
- 	<div class='loading' id='loader' style="display:none">Uploading...</div>
-</body>
 </html>

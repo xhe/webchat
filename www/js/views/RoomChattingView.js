@@ -23,7 +23,7 @@ define(function(require){
 		$('#messages li:last').remove();
 	}
 	
-	var appendChatMsgTmp = function(chatData){
+	var appendChatMsgTmp = function(chatData){ 
 		
 		if(window.fileSelectedNonSaved){
 			//just multiple select, no save yet, we need to remove last one
@@ -131,7 +131,10 @@ define(function(require){
 		            			function(msg){ //alert('in room chatting view');
 			        				//not media upload
         							var msg = JSON.parse(msg);
-        							if(util.getLoggedInUser().screenName=== msg.creator.screenName && msg.video){
+        							if(util.getLoggedInUser().screenName=== msg.creator.screenName && (msg.video || msg.audio) 
+        							  ||
+        							  util.getLoggedInUser().screenName=== msg.creator.screenName && window.platform && (msg.video || msg.audio || msg.photo) 
+        							){
         								//for video, remove last one here
         								removeSelectedMedia();
         								appendChatMsg( msg);
@@ -490,6 +493,116 @@ define(function(require){
         		 postVideo( window.recordedVideo.video, window.recordedVideo.audio, window.recordedVideo.videoURL )
         	 }
         	 window.recordedVideo = null;
+        	 
+        	 if( sessionStorage.getItem('filesDataForMedia') ) {
+        		 
+        		 var filesData = JSON.parse ( sessionStorage.getItem('filesDataForMedia'));
+        		 var mediaType = filesData.mediaType;
+        		 var mediaFiles = filesData.mediaFiles;
+        		 var roomId = filesData.roomId;
+        		 
+        		 var fullPath = mediaFiles[0].fullPath;
+        		 var fileName = mediaFiles[0].name;
+        		 sessionStorage.setItem('filesDataForMedia', null);
+        		 
+        		 var options = new FileUploadOptions();
+		         options.fileKey = mediaType;
+		         options.fileName = fileName;
+		         options.httpMethod = 'POST';
+	
+		         var params = new Object();
+		         params.imageURI = fullPath;
+		         options.params = params;
+		         options.chunkedMode = false;
+		         var ft = new FileTransfer();
+        		 
+		         
+		        window.fileSelectedNonSaved = false;
+		        
+		        var audioPath = "";
+		        var videoPath = "";
+		        if( mediaType==="audio" ){
+		        	audioPath = "audio";
+		        	videoPath = "";
+		        }else{
+		        	audioPath = "";
+		        	videoPath = "video";
+		        }
+		        
+		     	appendChatMsgTmp({
+		  			photoPath:'', // util.retrieveThumbNailPath(util.getLoggedInUser(), 50), 
+		  			photoLargePath:'', // util.retrieveThumbNailPath(util.getLoggedInUser(), 10000), 
+		  			msgPhotoPath: '', 
+		  			msgPhotoLargePath: '', 
+		  			audioPath: audioPath,
+		  			videoPath: videoPath,
+		  			user: util.getLoggedInUser(),
+		  			mobile: window.platform?true:false
+		     	});
+		       
+		     	(
+		     		function(dom){
+		     			dom.html("Uploading...");
+	  					ft.upload(fullPath, window.hostURL + (mediaType==="audio"? '/api/upload_chat_audio_file/' : '/api/upload_chat_video_file/' )+ roomId , 
+					         	function(){
+	  								dom.html("Upload Completed.");
+					         	}, 
+					         	function(){
+					         		dom.html("Error uploading.");
+					         	}, 
+					         	options, true);
+			        }
+		     	)( $('#messages li:last .spanUploadPercentage') );
+        	 }
+        	 
+        	 if( sessionStorage.getItem('filesDataForPhoto') ) {
+        		 var filesData = JSON.parse ( sessionStorage.getItem('filesDataForPhoto'));
+        		 var file_loc = filesData.file_loc;
+        		 var roomId = filesData.roomId;
+        		 sessionStorage.setItem('filesDataForPhoto', null);
+        		 
+     		 	 
+        		 var options = new FileUploadOptions();
+		         options.fileKey = "photo";
+		         var imagefilename =  file_name + ".JPG";
+		         options.fileName = imagefilename;
+		         options.mimeType = "image/jpg";
+		         options.httpMethod = 'POST';
+	
+		         var params = new Object();
+		         params.imageURI = file_loc;
+		         options.params = params;
+		         options.chunkedMode = false;
+		         var ft = new FileTransfer();
+		         
+		         
+		         window.fileSelectedNonSaved = false;
+		         
+		         appendChatMsgTmp({
+			  			photoPath:'', // util.retrieveThumbNailPath(util.getLoggedInUser(), 50), 
+			  			photoLargePath:'', // util.retrieveThumbNailPath(util.getLoggedInUser(), 10000), 
+			  			msgPhotoPath: file_loc, 
+			  			msgPhotoLargePath: file_loc, 
+			  			audioPath: "",
+			  			videoPath: "",
+			  			user: util.getLoggedInUser(),
+			  			mobile: window.platform?true:false
+			     });
+		       
+		     	(	
+			     		function(dom){
+			     			dom.html("Uploading...");
+		  					ft.upload(file_loc, window.hostURL + '/api/upload_chat_file/'+roomId, 
+						         	function(){
+		  								dom.html("Upload Completed.");
+		  							}, 
+						         	function(){
+						         		dom.html("Error uploading.");
+						         	}, 
+						         	options, true);
+				       }
+			     )( $('#messages li:last .spanUploadPercentage') );
+        	 }
          }
     });
     

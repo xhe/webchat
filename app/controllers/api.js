@@ -37,9 +37,10 @@ exports.upload_profile_file = function(req, res){
 };
 
 exports.upload_chat_file = function(req, res){
-	
+	//console.log("uploading here " + req.files.photo.path);
 	chat_service.addPhotoForChatMessage( req.files.photo.path, req.user,  req.params.roomId, function(message){
 		if(message){
+			//console.log("uploaded  " ); console.log( message )
 			res.jsonp(message);
 		}else{
 			res.end("failed");
@@ -49,7 +50,7 @@ exports.upload_chat_file = function(req, res){
 };
 
 exports.upload_chat_audio_file = function(req, res){ 
-	
+	//console.log(  req.files.audio.path )
 	chat_service.addAudioForChatMessage( req.files.audio.path, req.user,  req.params.roomId, function(message){
 		if(message){
 			res.jsonp(message);
