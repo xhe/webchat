@@ -128,7 +128,7 @@ define(function(require){
         	 var _self = this;
         	  if(!chat_message_event_initialized){
         		  window.socketEventService.on( window.socketEventService.EVENT_TYPE_CHATMESSAGE, 
-		            			function(msg){ //alert('in room chatting view');
+		            			function(msg){ 
 			        				//not media upload
         							var msg = JSON.parse(msg);
         							if(util.getLoggedInUser().screenName=== msg.creator.screenName && (msg.video || msg.audio) 
@@ -141,7 +141,6 @@ define(function(require){
         							}	
         							else
 	        							if( util.getLoggedInUser().screenName!== msg.creator.screenName
-	        								&& ( msg.photo	|| msg.audio || msg.video)
 	        								||
 	        								util.getLoggedInUser().screenName=== msg.creator.screenName
 	        								&& !msg.photo && !msg.audio && !msg.video
@@ -554,14 +553,15 @@ define(function(require){
 			        }
 		     	)( $('#messages li:last .spanUploadPercentage') );
         	 }
-        	 
+        	
         	 if( sessionStorage.getItem('filesDataForPhoto') ) {
+        		 
         		 var filesData = JSON.parse ( sessionStorage.getItem('filesDataForPhoto'));
         		 var file_loc = filesData.file_loc;
         		 var roomId = filesData.roomId;
+        		 var file_name = filesData.file_name;
         		 sessionStorage.setItem('filesDataForPhoto', null);
-        		 
-     		 	 
+        
         		 var options = new FileUploadOptions();
 		         options.fileKey = "photo";
 		         var imagefilename =  file_name + ".JPG";
@@ -574,7 +574,7 @@ define(function(require){
 		         options.params = params;
 		         options.chunkedMode = false;
 		         var ft = new FileTransfer();
-		         
+	         
 		         
 		         window.fileSelectedNonSaved = false;
 		         
@@ -602,6 +602,8 @@ define(function(require){
 						         	options, true);
 				       }
 			     )( $('#messages li:last .spanUploadPercentage') );
+		     	
+		     	
         	 }
          }
     });

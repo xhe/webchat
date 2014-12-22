@@ -415,7 +415,7 @@ define(function(require){
 				navigator.notification.vibrate(ms?ms:500);
 			}
 			
-			if( !getLoggedInUser().settings_disable_sounds )
+			if( !this.getLoggedInUser().settings_disable_sounds )
 				document.getElementById('audioBeep').play();
 		},
 		

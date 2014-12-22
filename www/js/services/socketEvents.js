@@ -101,8 +101,8 @@ define(function (require) {
 			
 			socket.on(window.socketEventService.EVENT_TYPE_CHATMESSAGE, 
 					function(msg){
+				
 							window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_CHATMESSAGE, msg);
-							
 							if(JSON.parse(msg).creator.screenName!==util.getLoggedInUser().screenName){
 								util.vibrate();
 							}

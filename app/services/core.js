@@ -77,10 +77,8 @@ exports.processChatImages = function(imagePath, user, roomId,  cb){
 		
 		exec('identify  -format %[exif:*] '+imagePath, function(err, stdout, stderr){
 			var rotation = ' -strip '; //remove exif meta data - for ios
-			if(stdout.indexOf('Orientation')>0){
-				var orientationVal = stdout.substr( stdout.indexOf('Orientation')+12, 1 )
-				if(orientationVal==6)
-					rotation += ' -rotate 90 ';
+			if(stdout.indexOf('Orientation=6')>-1){ //should be Orientation
+				rotation += ' -rotate 90 ';
 			}
 			exec('convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' ' +filePath+'thumb/'+newName +' ',
 				function(err, stdout, stderr){

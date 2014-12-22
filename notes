@@ -151,8 +151,13 @@ adding this to init.d/mongod
 	
 	google play sign key:
 	http://developer.android.com/tools/publishing/app-signing.html
+	0. cordova build release
 	1. jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore /Users/fhe/webchat/platforms/android/ant-build/Chat4Each-release-unsigned.apk Chat4Each
-	2. /Users/fhe/Desktop/adt-bundle-mac-x86_64-20140702/sdk/build-tools/android-4.4W/zipalign -v 4 Chat4Each.apk Chat4Each-Release.apk
+	2. /Users/fhe/Desktop/adt-bundle-mac-x86_64-20140702/sdk/build-tools/android-4.4W/zipalign -v 4 /Users/fhe/webchat/platforms/android/ant-build/Chat4Each-release-unsigned.apk Chat4Each.apk
+	
+	
+	https://play.google.com/apps/publish/?dev_acc=17180470353005092009#ApkPlace:p=com.chat4each
+	
 	
 	need update ffmpeg:
 	http://injustfiveminutes.com/2013/07/17/how-to-compile-latest-version-of-ffmpeg-on-centos-5/

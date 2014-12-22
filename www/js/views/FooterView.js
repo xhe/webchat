@@ -31,7 +31,7 @@ define(function(require){
         				function(msg){  	
         			 		var chat = JSON.parse(msg);
         			 		if( chat.room !== currentRoomId){
-        			 			if( chat.creator._id !== util.getLoggedInUser()._id ){
+        			 			if( chat.creator.screenName !== util.getLoggedInUser().screenName ){
         			 				_this.notify('hrefFooterChatroom');
         			 			}
         			 		}	

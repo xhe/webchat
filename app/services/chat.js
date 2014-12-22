@@ -473,6 +473,7 @@ exports.call = function(type, caller, callee_userName, cb){
 };
 
 var broadcastMessage = function(message){ 
+	
 	//1. find room
 	ChatRoom
 		.findById( message.room )

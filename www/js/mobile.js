@@ -50,6 +50,10 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 			$('div[data-role="page"]').live('pagehide', function (event, ui) {
 			    $(event.currentTarget).remove();
 			});
+			
+			$('.btnBack').live('click', function(){
+				window.history.back();
+			});
 		}
 	)
 	

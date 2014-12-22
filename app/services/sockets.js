@@ -29,7 +29,7 @@ module.exports =  function(){
 				sockets_username_socket[name] = socket.id;
 				sockets_socketid_username[socket.id] = name;
 				allSockets[socket.id] = socket;
-				sendUserOnLineMsg(name);
+				//sendUserOnLineMsg(name);
 			});
 			
 			socket.on(EVENT_LOGOUT, function(){
@@ -72,6 +72,7 @@ module.exports =  function(){
 	  } 
   };
   var broadcastChatMessage = function(message, room){
+	
 	  _.forEach(room.members, function(member){ 
 		  sentChatMessage(message,member);
 		});
@@ -82,9 +83,10 @@ module.exports =  function(){
   };
   
   var sentChatMessage = function(message, member){
+	  //console.log('sending '+ message.message +' to ' + member.screenName);
 	  var socket = getSocketFromUserName(member.screenName);
 	  if(socket){
-		  //console.log("socket: sending msg " + EVENT_NOTIFY_CHAT_MESSAGE)
+		  //console.log("socket: sending msg " + EVENT_NOTIFY_CHAT_MESSAGE +" ==> " + member.screenName )
 		  socket.emit(EVENT_NOTIFY_CHAT_MESSAGE, JSON.stringify(message));
 	  }
   };
@@ -103,7 +105,7 @@ module.exports =  function(){
 		   });
 		   
 		   socket = getSocketFromUserName(name);
-		   if(socket)
+		   if( socket) //no need to send online msg
 			   socket.emit(EVENT_NOTIFY_ON_LINE_MEMBER, onlineContacts);
 	  });	  
   };
@@ -121,7 +123,7 @@ module.exports =  function(){
   };
   
   var getSocketFromUserName = function(userName){
-	   return allSockets[sockets_username_socket[userName]];
+	  return allSockets[sockets_username_socket[userName]];
   };
   
   var sendCallRequest = function(type, caller, callee_userName, cb){

@@ -24,12 +24,20 @@ exports.broadcastChatMessage = function(message, room){
 	var receipients = [];
 	
 	_.forEach( room.members, function(member){
-		if(message.creator._id!==member._id){
+		if(message.creator.screenName!==member.screenName){ 
 			receipients.push(member);
 		}
 	});
-	if(message.creator._id!=room.creator._id)
-		receipients.push(room.creator);
+	
+	if(message.creator.screenName!=room.creator.screenName){
+		var bExist = false;
+		_.each( receipients, function(member){
+			if(member.screenName === room.creator.screenName)
+				bExist = true;
+		})
+		if(!bExist)
+			receipients.push(room.creator);
+	}
 	
 	var msg = message.message;
 	if(message.photo){
@@ -41,6 +49,9 @@ exports.broadcastChatMessage = function(message, room){
 	}
 	
 	var msg =  message.creator.firstName+" "+ message.creator.lastName+": "+ msg;
+	
+	
+	
 	sendNotificationMsg(receipients, msg, function(err, result){
 		if(err){
 			console.log("Error: ");
@@ -63,6 +74,7 @@ var sendNotificationMsg = function(receipients, msg, cb){
 	var ios_registrationIds = [];
 	
 	_.each(receipients, function(receipient){
+			//console.log( receipient.screenName +" gcm:"+receipient.gcm_registration_id +" ios:"+receipient.ios_registration_id)
 			if(receipient.gcm_registration_id){
 				gcm_registrationIds.push( receipient.gcm_registration_id );
 			}
@@ -71,6 +83,9 @@ var sendNotificationMsg = function(receipients, msg, cb){
 			}
 	});
 	
+	//console.log( ios_registrationIds )
+	//console.log("======")
+	//console.log( gcm_registrationIds )
 	
 	if(ios_registrationIds.length>0 
 			&& config.push_notification.supported_platform_ios){
@@ -116,7 +131,7 @@ var sendNotificationMsg = function(receipients, msg, cb){
 				apnConnection = null;
 			}
 		);
-		
+		//console.log('pushigng to ' ); console.log( ios_registrationIds)
 		notification.alert = msg;
 		notification.badge = 1;
 		notification.sound = "ping.aiff";

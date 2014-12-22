@@ -99,6 +99,16 @@
 				
 				function upload(){
 		 			 
+					if( mediaFor==="chat" ){
+						var filesData = {
+								file_loc: file_uri,
+								roomId: roomId,
+								file_name:file_name
+						}
+						sessionStorage.setItem('filesDataForPhoto', JSON.stringify( filesData) );
+						window.history.back();
+					} else {
+					
 					 var options = new FileUploadOptions();
 			         options.fileKey = "photo";
 			         var imagefilename =  file_name + ".JPG";
@@ -134,7 +144,7 @@
 			         									}, null, "Ok");
 			         	}, 
 			         	options, true);
-	
+					}
 				}
 				
        	</script>
