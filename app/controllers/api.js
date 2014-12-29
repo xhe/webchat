@@ -184,6 +184,7 @@ exports.invitationReply = function(req, res){
 
 
 exports.chatmessages = function(req, res){
+	//console.log('retrieving from ' + req.params.roomId)
 	chat_service.retrieveChatMessages(req.user, req.params.roomId, null, function(data){
 		res.jsonp(data);
 	});

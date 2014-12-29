@@ -34,7 +34,7 @@ define(function(require){
         			 			if( chat.creator.screenName !== util.getLoggedInUser().screenName ){
         			 				_this.notify('hrefFooterChatroom');
         			 			}
-        			 		}	
+        			 		}
         				}
         		);
         		

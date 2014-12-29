@@ -148,6 +148,12 @@ define(function(require){
 				        					appendChatMsg( msg);
         						}
             		);
+        		 /*
+        		 document.addEventListener("resume", function(){
+        			 this.chatMessageCollection.getChatMessages(current_roomId);
+         		 }, false);
+         		*/
+        		  
         		 chat_message_event_initialized = true;
         	  };
         },

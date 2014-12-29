@@ -171,10 +171,9 @@ define(function(require){
 						user = $.parseJSON($.cookie('token') );
 					}
 				}
-				
 				$.post( appConfig.serverUrl + 'autologin', 
 						{ screenName: user.screenName, token: user.token },
-						function(data){
+						function(data){ 
 							if(data.status=='success'){
 								if(data.hasOwnProperty('user') ){
 									_this.setLoggedInUser(data.user);
@@ -184,8 +183,9 @@ define(function(require){
 							}else{
 								_this.logout();
 							}
-							if(cb)
+							if(cb){
 								cb();
+							}	
 						});
 			}else{
 				cb();
@@ -237,7 +237,7 @@ define(function(require){
 			if(forceUrlRequest == null){
 				forceUrlRequest = false;
 			}
-			
+	
 			if(forceUrlRequest){
 				this.urlRequest_callback = callback;
 				this.urlRequest_url = url;

@@ -35,6 +35,15 @@ define(function(require){
      		 			}
         		 );
         		 
+        		 window.socketEventService.on(window.socketEventService.EVENT_UPDATE_ROOMS_INFO, function(){
+        			 chatroomCollection.getChatrooms();
+        		 });
+        		 /*
+        		 document.addEventListener("resume", function(){
+        			 chatroomCollection.getChatrooms();
+        		 }, false);
+        		*/
+        		 
         		 user_on_off_line_event_initialized = true;
         	 }
         	 

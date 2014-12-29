@@ -24,6 +24,8 @@ define(function (require) {
 		this.EVENT_RTC_CALL_REQUEST="rtc_call_request";
 		this.EVENT_RTC_CALL_REQUEST_ACCEPT="rtc_call_request_accept";
 		this.EVENT_RTC_CALL_REQUEST_ACCEPT_CONFIRM="rtc_call_request_accept_confirm";
+		this.EVENT_UPDATE_ROOMS_INFO = "update_rooms_info";
+		this.EVENT_RESUME_UPDATE_CHATROOMS = "EVENT_RESUME_UPDATE_CHATROOMS";
 		
 		var socket = null;
 		this.screenName = ""; 
@@ -103,9 +105,13 @@ define(function (require) {
 					function(msg){
 				
 							window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_CHATMESSAGE, msg);
+							
 							if(JSON.parse(msg).creator.screenName!==util.getLoggedInUser().screenName){
 								util.vibrate();
-							}
+							};
+							
+							window.socketEventService.trigger(  window.socketEventService.EVENT_UPDATE_ROOMS_INFO );
+        			 			
 					}
 			);
 			
