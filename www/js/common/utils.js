@@ -67,8 +67,8 @@ define(function(require){
 				}else{
 						return false;
 				}
-			}else if(sessionStorage.user){
-				window.user = JSON.parse(sessionStorage.user);
+			}else if(localStorage.user){
+				window.user = JSON.parse(localStorage.user);
 				window.user.logginIn = true;
 				return true;
 			}else{
@@ -91,9 +91,9 @@ define(function(require){
 			delete user.photos
 			$.cookie('token', JSON.stringify(user));
 			
-			//now let's set into  sessionStorage for mobile app user
+			//now let's set into  localStorage for mobile app user
 			if( window.platform ){
-				sessionStorage.user = JSON.stringify(user);
+				localStorage.user = JSON.stringify(user);
 			}
 			//set socket here
 			window.socketEventService.connect(user.screenName);
@@ -155,18 +155,18 @@ define(function(require){
 			window.user = new User.User();
 			$.removeCookie('token');
 			if( window.platform ){
-				sessionStorage.removeItem('user');
+				localStorage.removeItem('user');
 			}
 			return false;
 		},
 		
 		autoLogin: function(cb){
 			var _this=this;
-			if($.cookie('token') || window.user || sessionStorage.user){
+			if($.cookie('token') || window.user || localStorage.user){
 				var user = window.user;
 				if(!user){
-					if(sessionStorage.user){
-						user = $.parseJSON( sessionStorage.user);
+					if(localStorage.user){
+						user = $.parseJSON( localStorage.user);
 					}else{
 						user = $.parseJSON($.cookie('token') );
 					}
