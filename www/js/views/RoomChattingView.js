@@ -1,5 +1,7 @@
 //http://blog.groupbuddies.com/posts/39-tutorial-html-audio-capture-streaming-to-node-js-no-browser-extensions
 //https://github.com/muaz-khan/WebRTC-Experiment/tree/master/RecordRTC
+
+//http://www.w3.org/TR/html-media-capture/
 define(function(require){
 	
 	var Backbone 		= require('backbone'),
@@ -113,7 +115,9 @@ define(function(require){
           	        	// Send the Data.
           	        xhr.send(formData);
           	        $("#recordAudio").removeClass('stop');
-         				$("#recordAudio").addClass('recordAudio');
+         			$("#recordAudio").addClass('recordAudio');
+         			$("#recordVideo").removeClass('stop');
+         			$("#recordVideo").addClass('recordVideo');
   				}
 			  )( $('#messages li:last .spanUploadPercentage') );
      };
@@ -200,15 +204,45 @@ define(function(require){
         	"click #btnChattingRoomBack_web": "chatRoomBack", 
         	"click #btnAttPhotos": "attPhotos",
         	"click #btnAttCamera": "attCamera",
-        	"submit #file-form-chat": "upload",
+        	//"submit #file-form-chat": "upload",
+        	"click #upload-button-chat": "selectFile",
         	"click #recordAudio":"recordAudio",
         	"click .hrefVideoChatRoom": "playVideoChatRoom",
         	"click .hrefAudioChatRoom": "playAudioChatRoom",
         	"click #recordAudioMobile": "recordAudioMobile",
         	"click #recordVideoMobile": "recordVideoMobile",
         	"change #file-select-chat": "fileSelected",
+        	"change #file-select-chat-video": "videoFileSelected",
         	"click .btnRemoveMsg": "removeMsg",
-        	"click #btnStartUpload": "upload"
+        	"click #btnStartUpload": "upload",
+        	"click #recordVideo": "recordVideo",
+        	
+        },
+        
+        recordVideo: function(){
+        	
+        	navigator.getUserMedia =  (navigator.getUserMedia ||
+                    navigator.webkitGetUserMedia ||
+                    navigator.mozGetUserMedia ||
+                    navigator.msGetUserMedia);
+        		if (navigator.getUserMedia ) {
+        			
+        			$.mobile.navigate("#videoRecord/"+ current_roomId );
+    			
+        		} else {
+    				
+    				if(util.iOS()){
+    					$("#file-select-chat-video").click();
+    				} else {
+    					util.alert("This video function is only available in chrome or firefox web browser, not in safari. Please open our website using one of these browsers.")
+        			}
+    			
+    			}
+        },
+        
+        
+        selectFile: function(){
+        	$("#file-select-chat").click();
         },
         
         removeMsg: function(event){
@@ -292,7 +326,7 @@ define(function(require){
     						);
     			} else {
     				console.log("getUserMedia not supported");
-    				util.alert("This video/audio function is only available in chrome or firefox web browser. Please open our website using one of these browsers.")
+    				util.alert("This audio function is only available in chrome or firefox web browser, not in safari. Please open our website using one of these browsers.")
     			}
         	}else{
         		this.recording = false;
@@ -321,8 +355,34 @@ define(function(require){
         	}
         },
         
-      
-        
+        videoFileSelected: function(){
+        	
+        	
+        	var input = document.querySelector('#file-select-chat-video'); // see Example 4
+	        var fileSelect = document.getElementById('file-select-chat-video');
+	        var files = fileSelect.files;
+	        // Create a new FormData object.
+	        var formData = new FormData();
+	        var count = 0;
+	        for(var i=0; i<files.length; i++){
+	        	var file = files[i];
+	        	if(!file.type.match('video.*'))
+	        		continue;        		
+	        	formData.append('video', file, file.name);
+	        	count++;
+	        }
+	        
+	        if(count==0){
+	        		util.alert("Please select video file.");
+	        }else{
+	        	 $("#recordVideo").removeClass('recordAudio');
+		    	 $("#recordVideo").addClass('stop');
+		    	 self.recording = true;
+		    	 //now change this flag to false so as to enable next file select
+			     window.fileSelectedNonSaved = false;
+			     window.postMediaDataToServer(formData, '/api/upload_chat_video_file/');
+	        }
+	    },
         
         fileSelected: function(event){
 	    	  var file = event.target.files[0];
@@ -350,7 +410,9 @@ define(function(require){
 			    	  reader.readAsDataURL(file);  
 	    	  }
 	     },
-  
+	   
+
+	     
         upload: function(event){
         	event.preventDefault();
         	//now change this flag to false so as to enable next file select

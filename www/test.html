@@ -4,5 +4,17 @@
 			<input type="file" name="fileToUpload" id="fileToUpload">
 			<input type="submit" value="Upload Image" name="submit">
 		</form>
+		
+		
+		<form action="server.cgi" method="post" enctype="multipart/form-data">
+  <input type="file" name="video" accept="video/*" capture>
+  <input type="submit" value="Upload">
+</form>
+
+<form action="server.cgi" method="post" enctype="multipart/form-data">
+  <input type="file" name="audio" accept="audio/*" capture>
+  <input type="submit" value="Upload">
+</form>
+		
 	</body>
 </html>

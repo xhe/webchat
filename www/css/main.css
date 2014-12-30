@@ -243,10 +243,10 @@ img.offline{
     text-decoration: inherit;
     font-size:26px;
 }
-#recordVideo{
+.recordVideo{
 	padding: 7px 10px 4px;
 }
-#recordVideo:before{
+.recordVideo:before{
 	content: "\f1c8";
 	font-family: FontAwesome;
     text-decoration: inherit;
@@ -359,8 +359,12 @@ img.offline{
 }
 
 .profSettingLnk{
-	position: absolute;right: 20px; top: 5px;
-	cursor: pointer;
+	 cursor: pointer;
+    font-size: 30px;
+    position: absolute;
+    right: 3px;
+    top: 8px;
+    width: 40px;
 }
 .divSettingItem{
 	margin-bottom: 20px;
@@ -372,4 +376,6 @@ img.offline{
 .btnRemoveMsg{
 	color: gray;
 	cursor: pointer;
+}
+.tblHeaderConfig{
 }

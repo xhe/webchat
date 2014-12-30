@@ -27,26 +27,32 @@
 				<%=title%>
 				
 			</h1>		
-				
-					
-				<i class="profSettingLnk fa fa-ellipsis-v" style="font-size: 40px;" 
-					onclick="$('#popupBasic').popup( { positionTo:'.profSettingLnk',dismissible: true, transition: 'pop'} ).popup( 'open');"></i>
-					
-					<div data-role="popup" id="popupBasic">
+				<!-- 
+				<span class="profSettingLnk" onclick="$('#popupBasic').popup( { positionTo:'.profSettingLnk',dismissible: true, transition: 'pop'} ).popup( 'open');">
+					<table class='tblHeaderConfig'>
+						<tr>
 						
+						<td valign="middle">Config</td>
+						<td ><i class="fa fa-ellipsis-v" style="font-size: 25px"></i></td>
+						</tr>
+					</table>
+				</span>
+				 -->
+				
+				
+				<i class="profSettingLnk fa fa-th" style="font-size: 35px;"
+onclick="$('#popupBasic').popup( { positionTo:'.profSettingLnk',dismissible: true, transition: 'pop'} ).popup( 'open');"></i>
+
+				
+					<div data-role="popup" id="popupBasic">
 						<ul data-role="listview" data-inset="true">
 						    <li  data-icon="false"><a href='#settings'>Settings...</a></li>
 						    <li data-icon="false"><a href="#profiles">Update Profile</a></li>
-						    
-						    
 						    <% if (!homeHeader ){%>
 						    	<li data-icon="home"><a  href="#">Home</a></li>
 						    <%}%>
-						    
 						    <li data-icon="back"><a  href='#logout'>Logout</a></li>
 						</ul>
-						
 					</div>
-				
 		</div>
 		

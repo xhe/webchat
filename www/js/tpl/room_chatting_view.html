@@ -17,28 +17,26 @@
 						<button id="btnAttCamera" data-inline="true" ></button>
 						<button id="btnChattingRoomBack_phone" data-inline="true"></button>
 					<%}else{%>
-						<form id="file-form-chat" method="POST">
-							<table>
-								<tr>
-										<td>
-											<input type="file" id="file-select-chat" name="photos_chat[]" accept="image/*;capture=camera"/>
-							  			</td>
-										<td>
-											<button type="submit" id="upload-button-chat" data-inline="true" class="attachImage"></button> 
-										</td>
-										<td>
-											<a  data-role="button"  id="recordAudio" class="recordAudio" data-inline="true"></a>
-										</td>
-										<td>
-											<a  data-role="button"  id="recordVideo" data-inline="true" href="#videoRecord/<%= roomId %>"></a>
-										</td>
-										<td>
-											<a  data-role="button"  id="btnChattingRoomBack_web" data-inline="true" data-icon="arrow-l"  ></a>
-										</td>
+						
+						<div style="display: none;width: 0px; height: 0px">
+								<form id="file-form-chat" method="POST" >
+											<input style="display: none;" type="file" id="file-select-chat" name="photos_chat[]" accept="image/*" capture >
+								</form>
+							  			
+							  	<form id="file-form-chat-video" method="POST" enctype="multipart/form-data">
+											<input style="display: none;" type="file" id="file-select-chat-video" name="videos_chat[]" accept="video/*" capture >
+								</form>
+						</div>
+						
+						
+											<button type="button" id="upload-button-chat" data-inline="true" class="attachImage"></button> 
 										
-								</tr>
-							</table>
-						</form>
+											<a  data-role="button"  id="recordAudio" class="recordAudio" data-inline="true"></a>
+										
+											<a  data-role="button"  id="recordVideo" class="recordVideo" data-inline="true" ></a>
+										
+											<a  data-role="button"  id="btnChattingRoomBack_web" data-inline="true" data-icon="arrow-l"  ></a>
+																
 					<%}%>
 				</div>
 				
