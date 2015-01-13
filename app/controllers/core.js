@@ -1,10 +1,19 @@
 var user_service =  require('../services/user');
+var MobileDetect = require('mobile-detect');
 
-exports.index = function(req, res){
-	//res.render('index.server.view.html');
-	res.redirect('/index.html');
+exports.index = function(req, res){ console.log(" hre ")
+	res.redirect('/m.html');
 }
 
+exports.flashpage = function(req, res){
+	var md = new MobileDetect(req.headers['user-agent']);
+	if( md.is('AndroidOS') || md.is('iOS') ){
+		res.render('flash', { 'os': md.os() });
+	} else {
+		res.redirect('/m');
+	}
+	
+}
 
 exports.reset_password= function(req, res){
 	user_service.checkEmailTokenValidity( req.params.email, req.params.token, function(err, user){
