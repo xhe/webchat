@@ -59,7 +59,7 @@ exports.processProfileImages = function(imagePath, user,  cb){
 	});
 };
 
-exports.processChatImages = function(imagePath, user, roomId,  cb){	
+exports.processChatImages = function(imagePath, user, path_appendix, cb){	
 
 	pos = imagePath.indexOf('uploads');
 	fileName = imagePath.substr(pos+8);
@@ -78,7 +78,7 @@ exports.processChatImages = function(imagePath, user, roomId,  cb){
 			if(stdout.indexOf('Orientation=6')>-1){ //should be Orientation
 				rotation += ' -rotate 90 ';
 			}
-			exec('convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' ' +filePath+'thumb/'+newName +' ',
+			exec('convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' ' +filePath+'thumb' + path_appendix +  '/'+ newName +' ',
 				function(err, stdout, stderr){
 					render = new PhotoRender({
 								filename: newName,
@@ -97,7 +97,7 @@ exports.processChatImages = function(imagePath, user, roomId,  cb){
 			filename: user._id+"_"+ts+"_"+fileName,		
 		});
 		photo.renders = results;
-		wr = fs.createWriteStream( filePath+'original/'+user._id+"_"+ts+"_"+fileName);
+		wr = fs.createWriteStream( filePath+'original' + path_appendix +'/'+user._id+"_"+ts+"_"+fileName);
 		wr.on('close', function(ex){
 					fs.unlink(imagePath);
 		});

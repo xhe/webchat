@@ -36,10 +36,10 @@ PhotoSchema.pre('remove', function (doc) {
 	var path_thumb =  __dirname+'/../../www/uploads/thumb/';
 	if(doc.filename)
 		if(fs.existsSync( path.join(path_original,doc.filename) ))
-			fs.unlink(path.join(path_original,doc.filename) );
+			fs.unlinkSync(path.join(path_original,doc.filename) );
 			_.forEach(doc.renders, function(render){
 				if(fs.existsSync(path.join(path_thumb,render.filename )))
-					fs.unlink(path.join(path_thumb,render.filename));
+					fs.unlinkSync(path.join(path_thumb,render.filename));
 			});
 });
 

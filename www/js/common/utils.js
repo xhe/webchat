@@ -313,6 +313,8 @@ define(function(require){
 			if(!user)
 				return "";
 			 var photos = user.photos;
+			 if(!photos)
+				 return "";
 			 for(var i=0; i<photos.length; i++)
     			if(photos[i].use_as_head)
     				for(var j=0;j<photos[i].renders.length;j++)
@@ -396,6 +398,27 @@ define(function(require){
 			return path;		
 		},
 		
+		retrieveHighlightThumbNailPath: function(photo, dimention){
+			
+			var renders = photo.renders;
+			for(var j=0;j<renders.length;j++)
+     					if(renders[j].dimension==dimention){
+     						fileName = renders[j].filename;
+     						return  (window.hostURL?window.hostURL:"")+ '/uploads/thumb_highlight/' + fileName;
+     					}
+			//now, let's fetch largest one
+			var largeDim = 0;
+			var path="";
+			for(var j=renders.length-1;j>=0;j--){
+				if(renders[j].dimension>largeDim){
+					fileName = renders[j].filename;
+					path = (window.hostURL?window.hostURL:"")+ '/uploads/thumb_highlight/' + fileName;
+					largeDim = renders[j].dimension;
+				}
+			}
+			return path;		
+		},
+		
 		alert: function(msg, title){
 			if(window.platform){
 				navigator.notification.alert(msg, function(){}, title?title:null, "Ok");
@@ -423,7 +446,17 @@ define(function(require){
 			$.get(appConfig.serverUrl+ 'get_xirsys/'+room, function(data){
 				cb(data);
 			})
-		}
+		},
+		
+		generateUUID: function(){
+		    var d = new Date().getTime();
+		    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+		        var r = (d + Math.random()*16)%16 | 0;
+		        d = Math.floor(d/16);
+		        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+		    });
+		    return uuid;
+		},
 		
 	};
 

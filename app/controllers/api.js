@@ -8,6 +8,7 @@ var push_notification_service = require('../services/push_notify');
 var swig = require('swig');
 var mongoose = require('mongoose');
 var Client = mongoose.model('Client');
+var highlight_service = require('../services/highlight');
 
 exports.countries = function(req, res){
 	country_service.getAll(req, res);
@@ -292,8 +293,6 @@ exports.update_settings = function(req, res){
 
 
 exports.uploadTest = function(req, res, next){
-	console.log( req.files );
-	console.log(' uploaded ');
 	res.end('finished')
 };
 
@@ -305,4 +304,94 @@ exports.removeChatMessage = function(req, res, next){
 			res.jsonp({status: 'success'});
 		}
 	});
+};
+
+exports.highlights = function(req, res){
+	
+	highlight_service.retrieveHighlights(req.user, req.params.owner, null, function(err, data){
+		if(err){
+			res.jsonp({status: 'failed', err: err});
+		}else{
+			res.jsonp({status: 'success',  contents: data});
+		}
+	});
+};
+
+exports.highlightsbefore = function(req, res){
+	highlight_service.retrieveHighlights(req.user, req.params.owner, req.params.ts, function(err, data){
+		if(err){
+			res.jsonp({status: 'failed', err: err});
+		}else{
+			res.jsonp({status: 'success',  contents: data});
+		}
+	});
 }
+
+exports.save_highlight = function(req, res){
+	
+	var originalPhotoIds = req.body.original_photos || [];
+	var originalAudioIds = req.body.original_audios || [];
+	originalPhotoIds = originalPhotoIds instanceof Array?originalPhotoIds: [originalPhotoIds];
+	originalAudioIds = originalAudioIds instanceof Array?originalAudioIds: [originalAudioIds];
+	
+	var id = req.body.id?( req.body.id=="null"?null:req.body.id) :null;
+	
+	highlight_service.createHighlight( id, req.user, req.body.content, req.body.shared,  originalPhotoIds, originalAudioIds, req.files,
+		function(err, data){
+			if(err){
+				res.jsonp({status: 'failed', err: err});
+			}else{
+				res.jsonp({status: 'success', content: data});
+			}
+		}
+	);
+};
+
+exports.save_highlightmedia = function(req, res){
+	highlight_service.createHighlight(req.params.id, req.user, null, null, "", "", req.files, 
+			function(err, data){
+				if(err){
+					res.jsonp({status: 'failed', err: err});
+				}else{
+					res.jsonp({status: 'success', content: data});
+				}
+			}
+		);
+};
+
+exports.get_highlight = function(req, res){
+	highlight_service.findById(req.params.id, function(err, doc){
+			if(err){
+				res.jsonp({status: 'failed', err: err});
+			}else{
+				res.jsonp({status: 'success', content: doc});
+			}
+	});
+};
+
+exports.updateHighlight = function(req, res){
+	
+	var originalPhotoIds = req.body.original_photos || [];
+	var originalAudioIds = req.body.original_audios || [];
+	originalPhotoIds = originalPhotoIds instanceof Array?originalPhotoIds: [originalPhotoIds];
+	originalAudioIds = originalAudioIds instanceof Array?originalAudioIds: [originalAudioIds];
+	
+	highlight_service.updateHighlightContent( req.params.id, req.user, req.body.content, req.body.shared, originalPhotoIds, originalAudioIds,
+			function(err, data){
+				if(err){
+					res.jsonp({status: 'failed', err: err});
+				}else{
+					res.jsonp({status: 'success', content: data});
+				}
+			});
+};
+
+exports.delete_highlight = function(req, res){
+	highlight_service.deleteHighlight( req.params.id, req.user, function( err, doc ){
+			if(err){
+					res.jsonp({status: 'failed', err: err});
+			}else{
+					res.jsonp({status: 'success', content: doc});
+			}
+	});
+};

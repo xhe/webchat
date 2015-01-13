@@ -561,7 +561,10 @@ define(function(require){
         	 }
         	 window.recordedVideo = null;
         	 
-        	 if( sessionStorage.getItem('filesDataForMedia') ) {
+        	 if( sessionStorage.getItem('filesDataForMedia')
+        			 && sessionStorage.getItem('filesDataForMedia')!=null
+        			 && sessionStorage.getItem('filesDataForMedia')!='null'
+        	 ) {
         		 
         		 var filesData = JSON.parse ( sessionStorage.getItem('filesDataForMedia'));
         		 var mediaType = filesData.mediaType;
@@ -622,7 +625,10 @@ define(function(require){
 		     	)( $('#messages li:last .spanUploadPercentage') );
         	 }
         	
-        	 if( sessionStorage.getItem('filesDataForPhoto') ) {
+        	 if( sessionStorage.getItem('filesDataForPhoto')
+        		 && sessionStorage.getItem('filesDataForPhoto')!='null'
+        		 &&  sessionStorage.getItem('filesDataForPhoto')!=null
+        	 ) {
         		 
         		 var filesData = JSON.parse ( sessionStorage.getItem('filesDataForPhoto'));
         		 var file_loc = filesData.file_loc;
@@ -662,7 +668,7 @@ define(function(require){
 			     			dom.html("Uploading...");
 		  					ft.upload(file_loc, window.hostURL + '/api/upload_chat_file/'+roomId, 
 						         	function(){
-		  								dom.html("Upload Completed.");
+		  								dom.html("Upload Completed."); 
 		  							}, 
 						         	function(){
 						         		dom.html("Error uploading.");

@@ -15,7 +15,7 @@ var AudioSchema = new Schema({
 
 AudioSchema.post('remove', function(doc){
 	var path =  __dirname+'/../../www/uploads/audio/'; 
-	fs.unlink(   path.join(path, doc.filename) )
+	fs.unlinkSync(   path.join(path, doc.filename) )
 });
 
 var VideoSchema = new Schema({
@@ -28,7 +28,7 @@ var VideoSchema = new Schema({
 
 VideoSchema.post('remove', function(doc){
 	var path =  __dirname+'/../../www/uploads/video/';
-	fs.unlink(   path.join(path, doc.filename) )
+	fs.unlinkSync(   path.join(path, doc.filename) )
 });
 
 var ChatMessageSchema = new Schema({

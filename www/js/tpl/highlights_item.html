@@ -1,0 +1,49 @@
+
+<table>
+
+	<tr>
+		<td width="60px" align="center" valign="middle">
+				<% if(photoPath!==''){%>
+					<a href="#larget_photo/<%= encodeURIComponent(photoLargePath) %>">
+						<img src="<%= photoPath %>" height="30px" width="30px"/>
+					</a>
+				<%}else{%>
+					<i class="fa fa-user" style="font-size: 30px"></i>
+				<%}%>
+				<br/>
+				<%=highlight.creator.screenName %>
+		</td>
+		
+		<td width="100%">
+		
+			<% if( highlight.contents  ) {%>
+				<%= highlight.contents  %>
+			<%}%>
+			
+			<div class="divHighlightItems" data-id="<%= highlight._id%>">
+				<%_.each( highlight.photos, function(photo){ %>
+					<img src="<%= util.retrieveHighlightThumbNailPath( photo, 50 )%>" width="50px" height="50px;" class='highlightMediaItem' />
+				<% }) %>
+				
+				<%_.each( highlight.audios, function(audio){ %>
+					<span style="width: 50px;height: 50px;float: left;">
+					<% if(mobile){ %>
+								<a  class="hrefAudioChatRoom" data-link="<%=util.convertToHostPath( audio.filename )%>"><div class='recordAudioMsg' ></div></a>
+							<%} else {%>
+								<a href="<%=util.convertToHostPath( audio.filename )%>" target="_blank"><div class='recordAudioMsg'></div></a>
+							<%}%>
+					</span>
+				<% }) %>
+			</div>
+		</td>
+		
+		<% if( user.screenName === highlight.creator.screenName ){%>
+			<td style="padding-right: 20px;" class="tdEditHighlight">
+				<a href="#update_highlight/<%= highlight._id%>"><i class="fa fa-edit" ></i></a> 
+			</td>
+		<% } %>		
+				
+	</tr>
+	
+	
+</table>

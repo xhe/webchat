@@ -163,6 +163,29 @@ img.offline{
     font-size:26px;
 }
 
+
+#btnAttPhotos-h{
+	padding: 7px 10px 4px;
+}
+
+#btnAttPhotos-h:before{
+	content: "\f1c5";
+	font-family: FontAwesome;
+    font-style: normal;
+    font-size:26px;
+}
+
+#btnAttCamera-h{
+	padding: 7px 10px 4px;
+}
+
+#btnAttCamera-h:before{
+	content: "\f030";
+	font-family: FontAwesome;
+    font-style: normal;
+    font-size:26px;
+}
+
 #btnChattingRoomBack_phone{
 	padding: 7px 10px 4px;
 }
@@ -305,8 +328,13 @@ img.offline{
 	content: "\f1c5";
 	font-family: FontAwesome;
     text-decoration: inherit;
-    font-size:30px;
+    font-size:26px;
 }
+
+.withText:before{
+	padding-right:10px;
+}
+
 .divHomeSubTitle{
 	font-size: 90%;
 	font-style: italic;
@@ -377,5 +405,102 @@ img.offline{
 	color: gray;
 	cursor: pointer;
 }
-.tblHeaderConfig{
+.divHighlightThumbs{
+	float: left;
+	margin-left: 5px;
+}
+
+.divRmvHighlightMedia{
+	background-color: gray;
+    color: white;
+    cursor: pointer;
+    height: 35px;
+    margin-top: -6px;
+    padding-top: 6px;
+    text-align: center;
+    width: 100px;
+}
+
+.divRmvHighlightMedia:before{
+	content: "\f05c";
+    font-family: FontAwesome;
+    font-size: 20px;
+    
+}
+
+.highlightsAudio{
+	border: 1px solid gray;
+    height: 84px;
+    padding-left: 20px;
+    padding-top: 20px;
+    cursor: pointer;
+}
+
+.highlightMediaItem{
+	float: left;
+	margin: 2px;
+}
+
+#highlights{
+	padding-left: 0px;
+}
+
+#highlights li{
+	list-style: none;
+}
+
+#highlights td{
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+#highlights tr{
+	border: solid 1px gray;
+	
+}
+
+#highlights li:nth-child(odd){
+	background: #eee;
+}
+
+#highlightContainer {
+	color: white;
+    height: 100%;
+    left: 0;
+    margin: 0 auto;
+    overflow: auto;
+    position: fixed;
+    right: 0;
+    padding-top: 20px;
+}
+
+.divHighlightItems{
+	cursor: pointer;
+}
+
+#divHighlightItemsWrapper {
+	background: none repeat scroll 0 0 black;
+    bottom: 0;
+    display: none;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    width: 100%;
+}
+
+#divHighlightItemPhotos{
+	overflow: auto;
+    width: 100%;
+}
+.tdEditHighlight a:link{
+	cursor: pointer;  font-size: 30px;color: gray;
+}
+
+.tdEditHighlight a:visited{
+	color: gray;
+}
+
+.cfx{
+	clear: both;
 }

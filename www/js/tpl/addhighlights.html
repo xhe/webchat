@@ -1,0 +1,75 @@
+<section id="splashPage">
+		
+		<div class="headerContent"></div>
+		
+		<div data-role="content" > 
+				
+				<label>Contents:</label>
+				
+				<textarea id='txtHightContent'/>
+				
+				
+				<label>Shared with:</label>
+				
+				<div id='highlightSharedDiv'>
+				<div data-role="fieldcontain">
+				    <fieldset data-role="controlgroup" data-type="horizontal">
+				    
+				    	 	<input type="radio" name="radSharedWith" value="1" id="radSharedWith-family"  />
+				         	<label for="radSharedWith-family">Family</label>
+				
+				         	<input type="radio" name="radSharedWith" value="2" id="radSharedWith-friend" />
+				         	<label for="radSharedWith-friend">Friend</label>
+				
+				         	<input type="radio" name="radSharedWith" value="3" id="radSharedWith-all" checked="checked"/>
+				         	<label for="radSharedWith-all">All</label>
+				
+				         	<input type="radio" name="radSharedWith" value="0" id="radSharedWith-none" />
+				         	<label for="radSharedWith-none">None</label>
+				    
+				    </fieldset>
+				</div>
+				</div>
+				
+				<label>Attachment</label>
+				
+				<div>
+					<% if(mobile){%>
+						<a  data-role="button"  id="recordAudioMobile-h" class="recordAudio" data-inline="true"></a>
+						<button id='btnAttPhotos-h' data-inline="true" ></button>
+						<button id="btnAttCamera-h" data-inline="true" ></button>
+					<%}else{%>
+						
+						<div style="display: none;width: 0px; height: 0px">
+								<form id="file-form-chat" method="POST" >
+											<input style="display: none;" type="file" id="file-select-highlight" name="photos_highlight" >
+								</form>
+						</div>
+						
+						<button type="button" id="upload-button-chat-h" data-inline="true" class="attachImage withText">Images</button> 
+						
+						<button type="button" id="recordAudio-h" data-inline="true" class="recordAudio withText">Sound</button> 
+						
+																
+					<%}%>
+				</div>
+				
+				
+				<div id='divSelectedMedias'>
+					
+				</div>
+				
+				<div class='cfx'></div>
+				
+				<button data-role="button" data-icon='check' id="btnSave" style="margin-top: 10px;">Sumbit</button>
+				
+				<% if(edit){%>
+					<button data-role="button" " data-icon="delete" id="btnRemove" style="margin-top: 10px;">Delete</button>
+				<%}%>
+		</div>
+		
+	<div class="footerContent">
+				
+	</div>
+		
+</section>

@@ -204,7 +204,7 @@ exports.addPhotoForChatMessage = function(filePath, user, roomId, cb){
 			ChatMessage
 			.findById(message._id)
 			.exec(function(err, message){
-				core_service.processChatImages(filePath, user, roomId,  function(photo){
+				core_service.processChatImages(filePath, user, '', function(photo){
 					message.photo = photo;
 					message.save( function(err) {
 						ChatMessage
@@ -360,9 +360,9 @@ exports.removeChatMsg = function(msgId, user, cb){
 						if(chat.photo){ 
 							var path_original = __dirname+'/../../www/uploads/original/';
 							var path_thumb =  __dirname+'/../../www/uploads/thumb/';
-							fs.unlink(path_original+chat.photo.filename );
+							fs.unlinkSync(path_original+chat.photo.filename );
 							_.forEach(chat.photo.renders, function(render){
-								fs.unlink(path_thumb + render.filename);
+								fs.unlinkSync(path_thumb + render.filename);
 							});
 						
 							PhotoSchema
@@ -371,12 +371,12 @@ exports.removeChatMsg = function(msgId, user, cb){
 						}	
 						if(chat.audio){
 							var path =  __dirname+'/../../www'; 
-							fs.unlink(   path + chat.audio.filename )
+							fs.unlinkSync(   path + chat.audio.filename )
 							Audio.findById(chat.audio._id).remove().exec();
 						}
 						if(chat.video){
 							var path =  __dirname+'/../../www'; 
-							fs.unlink(   path+ chat.video.filename )
+							fs.unlinkSync(   path+ chat.video.filename )
 							Video.findById(chat.video._id).remove().exec();
 						}
 						cb(null, chat);

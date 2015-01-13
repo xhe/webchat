@@ -79,15 +79,12 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 				document.addEventListener("resume", onResume, false);
 				//This is an event that fires when a Cordova application is retrieved from the background.
 				function onResume() {
-					/*setTimeout(function() { 
-						    utils.autoLogin(function(){ 
-								router = new Mobile();
-							});
-						}, 0);
-					*/
-					location.reload(); 
-			        
-				}
+					
+					if( location.hash.indexOf('#chatrooms')>-1 
+							|| location.hash.indexOf('#chatroom')>-1
+						)
+						location.reload(); 
+			    }
 				
 				document.addEventListener("offline", onOffline, false);
 				function onOffline() {

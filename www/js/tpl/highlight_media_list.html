@@ -1,0 +1,19 @@
+<% _.each(highlights, function(highlight){%>
+			
+			<div class="divHighlightThumbs">
+			
+			<% if(highlight.type==='photo'){%>
+				<img src="<%= highlight.path%>" width="100" height="100">
+			<% } else if(highlight.type==='audio'){ %>
+				<div class='highlightsAudio'>
+					<a href="<%=highlight.path%>" target="_blank"><div class='recordAudioMsg'></div></a>
+				</div>
+			<% } %>
+				
+				
+				<div class='divRmvHighlightMedia' data-uuid="<%= highlight.uuid %>">
+					Remove
+				</div>
+					
+			</div>
+<%})%>

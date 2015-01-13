@@ -21,7 +21,9 @@ define(function(require){
 		VideoRecorder = require('views/VideoRecorderView'),
 		ForgetPasswordView = require('views/ForgetPasswordView'),
 		SettingsView = require('views/SettingsView'),
-		io = require("socket.io")
+		io = require("socket.io"),
+		HighlightView = require('views/HighlightView'),
+		AddHighlightView = require('views/AddHighlightView')
 		;
     // Extends Backbone.Router
 	return Backbone.Router.extend( {
@@ -56,10 +58,51 @@ define(function(require){
             "videoRecord/:room":"videoRecord",
             "forgetPassword": "forgetPassword",
             "accept_refer/:refer_id": "accept_refer",
-            "settings":"settings"
+            "settings":"settings",
+            "myhighlights": "myhighlights",
+            "highlights/:name": "highlights",
+            "add_highlights": "add_highlights",
+            "update_highlight/:id": "update_highlight"
+        },
+        
+        update_highlight: function(id){
+        	if (this.login())
+        		return;
+        	addHighlightView = new AddHighlightView(id);
+        	this.changePage(addHighlightView);
+        	return true;
+        },
+        
+        add_highlights: function(){
+        	if (this.login())
+        		return;
+        	addHighlightView = new AddHighlightView();
+        	this.changePage(addHighlightView);
+        	return true;
+        },
+        
+        highlights: function(name){
+        	if (this.login())
+        		return;
+        	highlightView = new HighlightView(name);
+        	this.changePage(highlightView);
+        	return true;
+        	
+        },
+        
+        myhighlights: function(){
+        	if (this.login())
+        		return;
+        	
+        	highlightView = new HighlightView();
+        	this.changePage(highlightView);
+        	return true;
         },
         
         settings : function(){
+        	if (this.login())
+        		return;
+        	
         	settingsView = new SettingsView();
         	this.changePage(settingsView);
         	return true;

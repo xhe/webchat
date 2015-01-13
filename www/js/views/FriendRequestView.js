@@ -63,8 +63,14 @@ define(function(require){
          
     	 render: function(){
     		 $(this.el).html(_.template( request_friend_detail_tpl, { 'contact': this.model.user,  serverUrl: (window.hostURL?window.hostURL:"")  }));
-    		 $("#friendRequestMsg").textinput().textinput("refresh");
-    		 $( "#btnSendFriendRequest" ).button().button( "refresh" );
+    		 
+    		
+    			 $("#friendRequestMsg").textinput().textinput("refresh");
+        		 $( "#btnSendFriendRequest" ).button().button( "refresh" );
+        		 $("#radRelationship-family").checkboxradio().checkboxradio( "refresh" );
+    			 $("#radRelationship-friend").checkboxradio().checkboxradio( "refresh" );
+    		 
+    		 
     	 }
     	 
     	
