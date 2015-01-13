@@ -1,11 +1,11 @@
-{% extends 'emails/layout-nofooter.html.server.view.html'%}
+{% extends 'emails/layout-flash.html.server.view.html'%}
 {% block content %}
 	<p class="homeDownload">
 		
 		{% if os=='iOS'  %}
-			
+			<a href="https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=939421844&mt=8">
 				<img src="/img/apple-300.png"  style="border: 0px;"/>
-			
+			</a>
 		{% else %}
 			<a href="https://play.google.com/store/apps/details?id=com.chat4each" style="border: 0px;">
 				<img src="/img/android-300.png"  style="border: 0px;"/>
@@ -22,6 +22,7 @@
 		.homeDownload{
 			text-align: center;padding-top: 30px;
 			width: 100%;
+			font-size: 30px;
 		}
 	</style>
 {% endblock %}
