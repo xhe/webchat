@@ -41,8 +41,6 @@ var HighlightSchema = new Schema({
 
 HighlightSchema.methods.removePhotos = function(photoIds, callback){ 
 	
-	console.log("removing "); console.log( photoIds )
-	
 	var path_original = __dirname+'/../../www/uploads/original_highlight/';
 	var path_thumb =  __dirname+'/../../www/uploads/thumb_highlight/';
 	var _self = this;

@@ -227,10 +227,10 @@ var updateHightContent = function(id, creator, content, shared, originalPhotoIds
 	
 	var processOriginalPhotos = function(originalPhotoIds, highlight, cb){
 		
-		if( originalPhotoIds=="" || originalPhotoIds==null)
+		if(  !(originalPhotoIds instanceof Array) && ( originalPhotoIds=="" || originalPhotoIds==null))
 			cb(null, highlight);
 		else{
-			var ids = [];
+			var ids = []; 
 			_.each(highlight.photos, function(photo){
 				var exist = false;
 				_.each(originalPhotoIds, function(originalPhotoId){
@@ -250,7 +250,7 @@ var updateHightContent = function(id, creator, content, shared, originalPhotoIds
 
 	var processOriginalAudios = function(originalAudioIds, highlight, cb){
 		
-		if( originalAudioIds=="" || originalAudioIds==null )
+		if(  !(originalAudioIds instanceof Array) && (originalAudioIds=="" || originalAudioIds==null ))
 			cb(null, highlight);
 		else {
 			var ids = [];

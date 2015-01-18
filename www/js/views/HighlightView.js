@@ -286,6 +286,7 @@ define(function(require){
              		appendHighlightTmp (window.unsavedHighlight);
  	            	window.unsavedHighlight.saveData(function(){
  	            			window.unsavedHighlight = null;
+ 	            			$(".spanUploadingIndicator").html("Updated!")
  	            	});
              	} 
         	 }, 500);

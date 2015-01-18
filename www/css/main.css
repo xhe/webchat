@@ -538,6 +538,14 @@ img.offline{
 	display: block;
    text-align: center;
 }
+.spanUploadingIndicator{
+	color: green;
+    float: left;
+    height: 50px;
+    margin-left: 10px;
+    padding-top: 20px;
+    width: 100px;
+}
 
 .cfx{
 	clear: both;

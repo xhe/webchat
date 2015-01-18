@@ -373,7 +373,7 @@ exports.save_highlight = function(req, res){
 	var originalAudioIds = req.body.original_audios || [];
 	originalPhotoIds = originalPhotoIds instanceof Array?originalPhotoIds: [originalPhotoIds];
 	originalAudioIds = originalAudioIds instanceof Array?originalAudioIds: [originalAudioIds];
-	
+
 	var id = req.body.id?( req.body.id=="null"?null:req.body.id) :null;
 	
 	highlight_service.createHighlight( id, req.user, req.body.content, req.body.shared,  originalPhotoIds, originalAudioIds, req.files,

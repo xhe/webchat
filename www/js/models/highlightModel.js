@@ -273,7 +273,7 @@ define(function (require) {
 		        		if(JSON.parse(xhr.response).status=='failed'){
 		        			util.alert(JSON.parse(xhr.response).err);
 		        		} else {
-		        			util.alert("Successfully updated");
+		        			//util.alert("Successfully updated");
 		        			cb();
 		        		}
 		        	}
