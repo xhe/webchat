@@ -1,112 +1,91 @@
 <section id="splashPage">
-		
-	<div>
-		
-		<div id="divHighlightFilter" class="divHighlightFilterHidden">
-			
-			<div class="ui-field-contain">
-			    <select id="showHightlightType">
-			        <option value="0">My Own</option>
-			        <option value="1">My Families</option>
-			        <option value="2">My Friends</option>
-			        <option value="3">All</option>
-			    </select>
-			
+
+
+	<div id="divHighlightFilter" class="divHighlightFilterHidden">
+		<div class="ui-field-contain">
+			<select id="showHightlightType">
+				<option value="0">My Own</option>
+				<option value="1">My Families</option>
+				<option value="2">My Friends</option>
+				<option value="3">All</option>
+			</select>
+
 			<div id='divRelationList' style="display: none;">
-				<select id="selRelationship" >
+				<select id="selRelationship">
 					<option>All</option>
 				</select>
 			</div>
-			
-			
-			<label>
-				<input type="checkbox" checked="checked" id="chkFilterPeriod">
-				Whole Period
+
+			<label> <input type="checkbox" checked="checked"
+				id="chkFilterPeriod"> Whole Period
 			</label>
-			
+
 			<div id="divPeriod" style="display: none;">
-				<select id="selPeriod_from_y" style="float: left;" data-inline="true">
-					<% for(var y=2015; y<2020; y++){%>
-						<option value="<%= y%>"><%= y%></option>
-					<%}%>
-				</select>	
-				
-				<select id="selPeriod_from_m" style="float: left;" data-inline="true">
-					<% for(var m=1; m<=12; m++){%>
-						<option value="<%= m%>"><%= (m<10?"0":"") + m %></option>
-					<%}%>
-				</select>	
-				
-				<select id="selPeriod_from_d" style="float: left;" data-inline="true">
-					<% for(var d=1; d<=31; d++){%>
-						<option value="<%= d%>"><%= (d<10?"0":"") + d  %></option>
-					<%}%>
+				<select id="selPeriod_from_y" style="float: left;"
+					data-inline="true"> <% for(var y=2015; y<2020; y++){%>
+					<option value="<%= y%>"><%= y%></option> <%}%>
+				</select> <select id="selPeriod_from_m" style="float: left;"
+					data-inline="true"> <% for(var m=1; m<=12; m++){%>
+					<option value="<%= m%>"><%= (m<10?"0":"") + m %></option> <%}%>
+				</select> <select id="selPeriod_from_d" style="float: left;"
+					data-inline="true"> <% for(var d=1; d<=31; d++){%>
+					<option value="<%= d%>"><%= (d<10?"0":"") + d %></option> <%}%>
 				</select>
-				
+
 				<div style="clear: both;">To</div>
-				
+
 				<select id="selPeriod_to_y" style="float: left;" data-inline="true">
 					<% for(var y=2015; y<2020; y++){%>
-						<option value="<%= y%>"><%= y%></option>
-					<%}%>
-				</select>	
-				
-				<select id="selPeriod_to_m" style="float: left;" data-inline="true">
+					<option value="<%= y%>"><%= y%></option> <%}%>
+				</select> <select id="selPeriod_to_m" style="float: left;" data-inline="true">
 					<% for(var m=1; m<=12; m++){%>
-								<option value="<%= m%>"><%= (m<10?"0":"") + m %></option>
-					<%}%>
-				</select>	
-				
-				<select id="selPeriod_to_d" style="float: left;" data-inline="true">
+					<option value="<%= m%>"><%= (m<10?"0":"") + m %></option> <%}%>
+				</select> <select id="selPeriod_to_d" style="float: left;" data-inline="true">
 					<% for(var d=1; d<=31; d++){%>
-						<option value="<%= d%>"><%= (d<10?"0":"") + d  %></option>
-					<%}%>
+					<option value="<%= d%>"><%= (d<10?"0":"") + d %></option> <%}%>
 				</select>
 				<div style="clear: both;"></div>
 			</div>
-				
 		</div>
-			
-			
-<a id="hrefCancel" data-role="button" data-inline="true" data-icon="back">Cancel</a>
-<a id="hrefSubmit" data-role="button" data-inline="true" data-icon="check">Submit</a>
-		</div>
-		<div>
-		
-		
-			
-			<div class="headerContent"></div>
-				
-				<div style="margin:0px; padding:0px" data-role="content" > 
-						
-						<div style="width: 100%; text-align: center;">
-							<div data-role="controlgroup" data-type="horizontal" >
-								<button data-icon='search' data-inline="true" id='btnFilterHighlights'>Search</button>
-								<a href="#add_highlights" data-role="button" data-icon='plus' >Add</a>
-								<a data-role="button" id="btnMorePrevHighlight" data-icon='arrow-u'>More</a>
-							</div>
-						</div>
-						
-						
-						<ul id="highlights">
-						</ul>
-					
-				</div>
-				
-			<div class="footerContent">
-						
+
+
+		<a id="hrefCancel" data-role="button" data-inline="true"
+			data-icon="back">Cancel</a> <a id="hrefSubmit" data-role="button"
+			data-inline="true" data-icon="check">Submit</a>
+
+	</div>
+
+
+
+
+	<div class="headerContent"></div>
+
+	<div style="margin: 0px; padding: 0px" data-role="content">
+
+		<div style="width: 100%; text-align: center;">
+			<div data-role="controlgroup" data-type="horizontal">
+				<button data-icon='search' data-inline="true"
+					id='btnFilterHighlights'>Search</button>
+				<a href="#add_highlights" data-role="button" data-icon='plus'>Add</a>
+				<a data-role="button" id="btnMorePrevHighlight" data-icon='arrow-u'>More</a>
 			</div>
-		
+		</div>
+
+
+		<ul id="highlights">
+		</ul>
+
+	</div>
+
+	<div class="footerContent"></div>
+
+
+
+	<div id="divHighlightItemsWrapper">
+		<div id="highlightContainer">
+			<div id='divHighlightItemPhotos' />
+			<button id='btnBackToItemList'>Back</button>
 		</div>
 	</div>
 
-	
-	<div id="divHighlightItemsWrapper">
-	  <div id="highlightContainer">
-	  	<div id='divHighlightItemPhotos'/>
-	  	
-	  	<button id='btnBackToItemList'>Back</button>
-	  </div>
-	</div>
-		
 </section>

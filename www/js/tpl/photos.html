@@ -11,17 +11,22 @@
 			
 				<button id='btnPhotos' data-inline="true">Photos</button>
 				<button id="btnCamera" data-inline="true">Camera</button>
-				<hr/>
+				
 				
 			<%}else{%>
 			
 				<form id="file-form" method="POST">
-				  <input type="file" id="file-select" name="photos[]" accept="image/*" style="font-size: 30px;" capture>
+				  <input type="file" id="file-select" name="photos[]" accept="image/*" style="display: none;">
 				  <img id='selectedImg' style="max-width: 200px;max-height: 200px;min-height: 20px;display:none"/>
-				  <button type="submit" id="upload-button" style="margin-bottom: 30px;">Upload</button>
 				</form>
-					
+				
+				<button id="select-profile-photo" data-inline="true">Select Image</button>
+				<button id="upload-button" style="display: none;" data-inline="true">Upload</button>
+				
 			<%}%>
+			
+			<hr/>
+			
 			<div data-role="controlgroup" data-type="horizontal">
 				<a class='hrefShowType' data-type="grid" data-role="button" data-icon="grid">Grid</a>
 				<a class='hrefShowType' data-type="detail" data-role="button" data-icon="info">Detail</a>

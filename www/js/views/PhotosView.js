@@ -26,11 +26,17 @@ define(function(require){
         	 this.photoCollection = new Photo.PhotoCollection();
         },
         events:{
-        	"submit #file-form": "upload",
         	"click .hrefShowType": "changeShowType",
         	"click #btnPhotos": "uploadPhoto",
         	"click #btnCamera": "capturePhoto",
-        	"change #file-select": "fileSelected"
+        	"change #file-select": "fileSelected",
+        	"click #select-profile-photo": "selectProfilePhoto",
+        	"click #upload-button":"upload"
+        },
+        
+        selectProfilePhoto: function(){
+        	$("#file-select").click();
+        	$("#upload-button").show();
         },
         
 	     // A button will call this function
@@ -104,6 +110,7 @@ define(function(require){
 	        		  $("#selectedImg").hide();
 	        		  $("#file-select").val("");
 	        		  _this.photoCollection.fetch({reset: true});
+	        		  $("#upload-button").hide();
 	        	  } else {
 	        		  util.alert('An error occurred!');
 	        	  }

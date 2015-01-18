@@ -442,13 +442,28 @@ img.offline{
 	margin: 2px;
 }
 
+
+
+
+
+
 #highlights{
-	padding-left: 0px;
+		bottom: 50px;
+    left: 0;
+    list-style-type: none;
+    margin: 0;
+    overflow: auto;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 98px;
 }
 
 #highlights li{
-	list-style: none;
+	padding: 5px 10px; 
 }
+
+ #highlights li:nth-child(odd) { background: #eee; }
 
 #highlights td{
 	padding-left: 10px;
