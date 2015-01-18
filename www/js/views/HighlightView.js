@@ -8,7 +8,8 @@ define(function(require){
 		util = require('common/utils'),
 		HeaderView = require('views/HeaderView'),
 		FooterView = require('views/FooterView'),
-		HighlightModel = require('models/highlightModel')
+		HighlightModel = require('models/highlightModel'),
+		ContactModel = require('models/contactModel')
 		;
 	
 	
@@ -66,9 +67,11 @@ define(function(require){
 	// Extends Backbone.View
     var HighlightsView = Backbone.View.extend( {
     	
-        initialize: function(name) {
+        initialize: function(name, period_from, period_to) {
         	this.highlightCollection = new HighlightModel.HighlightCollection();
         	this.creator = name?name:"";
+        	this.period_from = period_from?period_from:"";
+        	this.period_to = period_to?period_to:"";
         	this.template = _.template( highlights_tpl );
         },
         
@@ -76,7 +79,87 @@ define(function(require){
         	"click .divHighlightItems": "clickHighlightItems",
         	"click #btnBackToItemList": "backToItemList",
         	"click .hrefAudioChatRoom": "playAudioChatRoom",
-        	"click #btnMorePrevHighlight": "loadMorePrev"
+        	"click #btnMorePrevHighlight": "loadMorePrev",
+        	"click #btnFilterHighlights": "showHighlightFilter",
+        	"click #hrefCancel":"closeFilter",
+        	"click #hrefSubmit": "submit",
+        	"change #chkFilterPeriod":"updateFilterPeriod",
+        	"change #showHightlightType":"updateShowHightlightType"
+        },
+        
+        submit: function(){
+        	//  highlights/:name/:period_from/:period_to
+        	var name = "";
+        	switch($("#showHightlightType").val()){
+        		case "0":
+        			name = util.getLoggedInUser().screenName; break;
+        		case "1":
+        			name = $("#selRelationship").val()=="all"?"all_families": $("#selRelationship").val(); break;
+        		case "2":
+        			name = $("#selRelationship").val()=="all"?"all_friends": $("#selRelationship").val(); break;
+        		case "3":
+        			name = "all";
+        			break
+        	}
+        	if(name==""){
+        		util.alert("Invalid selection, please modify your criteria and submit again");
+        	} else {
+        		var period_from = null;
+            	var period_to = null;
+            	if(!$("#chkFilterPeriod").is(":checked")){
+            		period_from = $("#selPeriod_from_y").val()+"-"+$("#selPeriod_from_m").val()+"-"+$("#selPeriod_from_d").val();
+            		period_to = $("#selPeriod_to_y").val()+"-"+$("#selPeriod_to_m").val()+"-"+$("#selPeriod_to_d").val();
+            	}
+            	
+            	$("#divHighlightFilter").removeClass('divHighlightFilterVisible').addClass("divHighlightFilterHidden")
+            	
+            	window.location =  "#highlights/"+name+"/"+period_from+"/"+period_to ;
+            	
+            	//$.mobile.navigate("#highlights/"+name+"/"+period_from+"/"+period_to);
+           
+        	}
+        	
+        },
+        
+        updateShowHightlightType: function(){
+        	if($("#showHightlightType").val()=="1" || $("#showHightlightType").val()=="2"){
+        		ContactModel.getContacts($("#showHightlightType").val(),
+        				function(contacts){
+        					
+		        			$("#selRelationship").empty(); 
+		        			if(contacts.length==0) {
+		        				$("#selRelationship").append("<option value=''>No Contact</option>");
+		        			} else {
+		        				$("#selRelationship").append("<option value='all'>All</option>");
+			        	    }
+		        			
+		        			_.each(contacts, function(contact){
+		        				$("#selRelationship").append("<option value='"+contact.screenName+"'>"+contact.firstName+" "+contact.lastName+"</option>");
+		               	    });
+		        			
+		        			$("#selRelationship").selectedIndex = 0;
+		       	     	  	$("#selRelationship").selectmenu("refresh");
+		       				$("#divRelationList").slideDown();
+		        		});
+        	} else {
+        		$("#divRelationList").slideUp();
+        	}
+        },
+        
+        updateFilterPeriod: function(){
+        	if(!$("#chkFilterPeriod").is(":checked")){
+        		$("#divPeriod").slideDown();
+        	}else{
+        		$("#divPeriod").slideUp();
+        	}
+        },
+        
+        closeFilter: function(){
+        	$("#divHighlightFilter").removeClass('divHighlightFilterVisible').addClass("divHighlightFilterHidden");
+        },
+        
+        showHighlightFilter: function(){
+        	$("#divHighlightFilter").removeClass('divHighlightFilterHidden').addClass("divHighlightFilterVisible")
         },
         
         loadMorePrev: function(){
@@ -163,13 +246,18 @@ define(function(require){
             $(this.el).html(this.template());
             var title = "My Highlights"
             if(this.creator){
-            	title = 'Hightlights | ' + this.creator;
+            	if(this.creator=="all_families"){
+            		title = 'Hightlights | Families';
+            	} else if(this.creator=="all_friends"){
+            		title = 'Hightlights | Friendes';
+            	} else 
+            		title = 'Hightlights | ' + this.creator;
             }
             new HeaderView({ el: $(".headerContent", this.el)}).setTitle(title).render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             
             new HighlightListView({ model: this.highlightCollection });
-            this.highlightCollection.fetchHighlights(this.creator);
+            this.highlightCollection.fetchHighlights(this.creator, this.period_from, this.period_to);
             return this;
         }
     } );

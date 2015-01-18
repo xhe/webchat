@@ -9,7 +9,8 @@ var mongoose = require('mongoose'),
 	_ = require('lodash'),
 	async = require('async'),
 	fs = require('fs'),
-	Highlight = mongoose.model('Highlight')
+	Highlight = mongoose.model('Highlight'),
+	relationship_service = require('./relationship')
 	;
 
 exports.findById = function(id, cb){
@@ -21,44 +22,128 @@ exports.findById = function(id, cb){
 		})
 };
 
-exports.retrieveHighlights = function(user, owner, before_ts, cb){
+exports.retrieveHighlights = function(user, owner, before_ts, period_from, period_to, cb){
 	
-	if(owner!==user.screenName){
-		//checking authority here
-	}
-	
-	var findUser = function(name, cb){
-		Client.findByUsername( name, cb);
+	var generateHighlightCreators = function(currentUser,  owner,  cb ){
+		
+		if(owner=='all_families'){
+			relationship_service.retrieveRelatedUsers(currentUser, 1, cb );
+			//find all familits
+		} else if(owner=='all_friends') {
+			relationship_service.retrieveRelatedUsers(currentUser, 2, cb );
+			//find all friends
+		} else if(owner=='all'){
+			relationship_service.retrieveRelatedUsers(currentUser, 3, cb );
+			//find all
+		} else {
+			if(owner!==user.screenName){
+				//checking authority here
+				relationship_service.detectRelationship( currentUser, owner, cb  );
+			} else {
+				cb ( null, [user] );
+			}
+		}
 	};
 	
-	var findMsgByUser = function(before_ts, creator, cb){
-		
-		var q= Highlight.find({
-			creator:	creator
-		});
-		
-		q.sort('-created');
-		q.limit(20);
-		q.populate('creator');
-		q.populate('photos');
-		q.populate('audios');
-		if(before_ts){
-			q.where('created').lt(before_ts);
-		}
-		
-		q.exec(function(err, docs){
+	var obtainRelationshipLevels = function( currentUser, creators, cb ){
+		var levelArray = {};
+		relationship_service.retrieveRelationshipsBetween( currentUser, creators, function(err, docs){
 			_.each(docs, function(doc){
-				doc.creator = utils.simplifyUser(doc.creator, true);
+				levelArray[doc.from.screenName] = doc.is_family;
 			});
+			
+			cb(null, creators, levelArray);
+		});
+	};
+	
+	var findMsgByUsers = function(before_ts, period_from, period_to,  currentUser, creators, levelsArray,cb){
+		
+			var q= Highlight.find({
+				creator:	
+					{
+						$in: creators
+					}	
+			});
+			
+			q.sort('-created');
+			q.limit(20);
+			q.populate('creator');
+			q.populate('photos');
+			q.populate('audios');
+			if(before_ts){
+				q.where('created').lt(before_ts);
+			}
+			if( period_from!=="null" && period_to!=="null") 
+				q.where("created").gte(period_from).lt(period_to);
+				
+			q.exec(function(err, docs){
+				var results = [];
+				_.each(docs, function(doc){ 
+					var toAdd = false;
+					if(doc.shared == 0) { //only self
+						if(doc.creator.screenName == currentUser.screenName )
+							toAdd = true;
+					} else if(doc.shared==1) { //family
+						if( levelsArray[doc.creator.screenName] || doc.creator.screenName == currentUser.screenName)
+							toAdd = true;
+					} else if(doc.shared==2 ){ //friend
+						if( !levelsArray[doc.creator.screenName] || doc.creator.screenName == currentUser.screenName)
+							toAdd = true;
+					}else { //all
+						toAdd = true;
+					}
+					
+					if(toAdd)
+						results.push(doc);
+				});
+				
+				cb(err, results);
+			});
+	};
+	
+
+	async.waterfall(
+			[
+			 	async.apply( generateHighlightCreators, user, owner),
+			 	async.apply( obtainRelationshipLevels, user),
+			 	async.apply( findMsgByUsers, before_ts, period_from, period_to,  user)
+			 ],
+			 cb
+	);
+	
+	/*
+	Client.findByUsername( owner, function(err, doc){
+		findMsgByUser(before_ts, doc, function(err, docs){
 			cb(err, docs);
 		});
-		
-	};
+	});
 	
-	async.waterfall([
-	                  async.apply( findUser, owner),
-	                  async.apply( findMsgByUser, before_ts )
-	                 ], cb);
+	var findMsgByUser = function(before_ts, creator, cb){
+		if(creator==null){
+			console.log( 'none creator ')
+			cb(null, []);
+		} else {
+			var q= Highlight.find({
+				creator:	creator
+			});
+			
+			q.sort('-created');
+			q.limit(20);
+			q.populate('creator');
+			q.populate('photos');
+			q.populate('audios');
+			if(before_ts){
+				q.where('created').lt(before_ts);
+			}
+			q.exec(function(err, docs){ 
+				_.each(docs, function(doc){
+					doc.creator = utils.simplifyUser(doc.creator, true);
+				});
+				cb(err, docs);
+			});
+		}
+	};
+	*/
 };
 
 exports.deleteHighlight = function(id, deletor, cb){

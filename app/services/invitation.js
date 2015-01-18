@@ -6,7 +6,8 @@ var mongoose = require('mongoose'),
 	socket_serivce = require('./sockets')(),
 	utils = require('./utils'),
 	invitation_service = require('./invitation'),
-	ChatRoom = mongoose.model('ChatRoom')
+	ChatRoom = mongoose.model('ChatRoom'),
+	relationship_service = require('./relationship')
 	;
 
 exports.STATUS_PENDING = 0;
@@ -124,12 +125,13 @@ exports.invite = function(invitor, inviteeId, msg, roomId,  cb,  disableNotify){
 
 
 exports.replyInvitation = function(invitee, invitation_id, action, msg, cb, disableNotification){
+	
 	Invitation.findById( new ObjectId(invitation_id))
 	  .populate('to')
 	  .populate('from')
 	  .populate('room')
 	  .exec(function(err, invitation){
-		  
+	  
 		  invitation.reply = msg;
 		  if(action=='accept'){
 			  invitation.status = invitation_service.STATUS_ACCEPTED;
@@ -143,7 +145,7 @@ exports.replyInvitation = function(invitee, invitation_id, action, msg, cb, disa
 			  invitation.to = utils.simplifyUser(invitation.to, true);
 			  if(!disableNotification)
 				  socket_serivce["replyInvitation"](invitation);
-			  	
+	  	
 			  if(action=='accept'){
 				//create chat room here
 				  	if(invitation.room){
@@ -160,7 +162,7 @@ exports.replyInvitation = function(invitee, invitation_id, action, msg, cb, disa
 				  	}else{
 				  		ChatRoom.find({creator: invitation.from, members:[invitation.to]}).
 							exec(function(err, chatrooms){
-								
+							
 								if(chatrooms.length==0){
 									
 									var room = new ChatRoom({
@@ -172,14 +174,16 @@ exports.replyInvitation = function(invitee, invitation_id, action, msg, cb, disa
 									room.save(function(err){
 										if(err){
 											cb({status:"failed", error: err});
-										}else{
+										}else{ 
 											cb({status:"success",invitation: invitation  });
 										}
 									});
+								} else {
+									cb({status:"success",invitation: invitation  });
 								}
 						});
 				  	}
-			  }else{
+			  }else{ 
 				  cb({status:"success",invitation: invitation  });
 			  }
 			  

@@ -79,11 +79,12 @@ define(function (require) {
 			);
 		},
 		
-		invite: function(msg, roomId, cb){
+		invite: function(msg, roomId, is_family, cb){
 			$.post( config.serverUrl+'invite/'+this.inviteeId, 
 					{
 						message: msg,
-						roomId: roomId
+						roomId: roomId,
+						is_family: is_family
 					},
 					function(result){
 						cb(result);

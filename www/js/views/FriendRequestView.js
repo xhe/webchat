@@ -51,7 +51,7 @@ define(function(require){
          },
     	 
          sendFriendRequest: function(){
-        	 this.model.invite( $("#friendRequestMsg").val(), window.invRoomId , function(result){
+        	 this.model.invite( $("#friendRequestMsg").val(), window.invRoomId , $("#radRelationship-family").is(':checked'), function(result){
         		if(result.status=="success"){
         			util.alert("User invitation has been sent.");
         			$.mobile.navigate("#");

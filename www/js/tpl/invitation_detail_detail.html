@@ -27,6 +27,40 @@
 				
 <textarea id="friendRequestReplyMsg"></textarea>	
 				
+<h4>Relationship:</h4>
+				
+				<div data-role="fieldcontain">
+				    <fieldset data-role="controlgroup" data-type="horizontal">
+				    
+				    		
+				    		<% if(invitation.is_family){ %>
+				    		<input type="radio" name="radRelationship-reply" value="1" id="radRelationship-reply-family" checked="checked"
+				    	 	/>
+				    	 		<label for="radRelationship-reply-family">Family</label>
+				         	<input type="radio" name="radRelationship-reply" value="2" id="radRelationship-reply-friend" 
+				         	/>
+				    		<label for="radRelationship-reply-friend">Friend</label>
+					     	
+				         	
+				    	<%}else{%>
+				    		<input type="radio" name="radRelationship-reply" value="1" id="radRelationship-reply-family" 
+				    	 	/>
+				    	 		<label for="radRelationship-reply-family">Family</label>
+				         	<input type="radio" name="radRelationship-reply" value="2" id="radRelationship-reply-friend" checked="checked"
+				         	/>
+				    		<label for="radRelationship-reply-friend">Friend</label>
+					     	
+				    	<%}%>
+				    	 	
+				    		
+				    			
+				    		</tr>
+				    	</table>
+				    	
+				    
+				    </fieldset>
+				</div>				
+				
 <input type='button' id="btnFriendRequestAccept" value='Accept'/>
 
 <input type='button' id="btnFriendRequestReject" value='Reject'/>

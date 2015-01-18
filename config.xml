@@ -7,7 +7,7 @@
     <author email="support@chat4each.com" href="http://www.chat4each.com">
         Chat4Each Team
     </author>
-    <content src="index.html" />
+    <content src="m.html" />
     
     <access origin="*" />
 	<!-- Default application icon -->

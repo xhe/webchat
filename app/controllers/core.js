@@ -1,7 +1,7 @@
 var user_service =  require('../services/user');
 var MobileDetect = require('mobile-detect');
 
-exports.index = function(req, res){ console.log(" hre ")
+exports.index = function(req, res){ 
 	res.redirect('/m.html');
 }
 

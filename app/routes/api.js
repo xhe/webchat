@@ -54,6 +54,9 @@ module.exports = function(app){
 	
 	app.route('/api/highlights/:owner').get(user_service.requiresLogin, api.highlights);
 	app.route('/api/highlights/:owner/:ts').get(user_service.requiresLogin, api.highlightsbefore);
+	app.route('/api/highlights/:owner/:period_from/:period_to').get(user_service.requiresLogin, api.highlights);
+	app.route('/api/highlights/:owner/:period_from/:period_to/:ts').get(user_service.requiresLogin, api.highlightsbefore);
+	
 	
 	app.route('/api/highlights').post(user_service.requiresLogin, api.save_highlight);
 	app.route('/api/highlights/:id').post(user_service.requiresLogin, api.save_highlightmedia);
@@ -61,7 +64,7 @@ module.exports = function(app){
 	app.route('/api/highlight/:id').delete(user_service.requiresLogin, api.delete_highlight);
 	
 	app.route('/api/updateHighlight/:id').post( user_service.requiresLogin, api.updateHighlight );
-	
+	app.route('/api/relationship').put( user_service.requiresLogin, api.updateRelationship);
 	
 	app.route('/api/uploadTest').post(api.uploadTest);
 }

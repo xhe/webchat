@@ -331,7 +331,6 @@ define(function (require) {
 					}, 
 					true);
 		}
-		
 	});
 	
 	HighlightCollection = Backbone.Collection.extend({
@@ -340,10 +339,17 @@ define(function (require) {
 		_self: null,
 		highlights: null,
 		
+		name: null,
+		period_from: null,
+		period_to: null,
 		
-		fetchHighlights: function(name){
+		fetchHighlights: function(name, period_from, period_to){
 			_self = this;
-			util.ajax_get(config.serverUrl+'highlights/'+util.getLoggedInUser().screenName, 
+			this.name = name?name:util.getLoggedInUser().screenName;
+			this.period_from = period_from?period_from:null;
+			this.period_to = period_to?period_to:null;
+			
+			util.ajax_get(config.serverUrl+'highlights/'+this.name+"/"+this.period_from+"/"+this.period_to, 
 					this.callback, 
 					true);
 		},
@@ -353,7 +359,7 @@ define(function (require) {
 			if(this.result.contents.length>0){
 				_self = this;
 				var oldestedTime = this.result.contents[ this.result.contents.length-1 ].created;
-				util.ajax_get(config.serverUrl+'highlights/'+util.getLoggedInUser().screenName +'/'+oldestedTime, 
+				util.ajax_get(config.serverUrl+'highlights/'+this.name +"/"+this.period_from+"/"+this.period_to +'/'+oldestedTime, 
 				function(data){
 					_self.result = data;
 					cb(data);

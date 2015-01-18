@@ -8,7 +8,8 @@ var mongoose = require('mongoose'),
 	email_service = require('./email'),
 	user_service = require('./user'),
 	Refer = mongoose.model('Refer'),
-	invitation_service = require('./invitation')
+	invitation_service = require('./invitation'),
+	Relationship = mongoose.model("Relationship")
 	;
 var async = require('async');
 
@@ -247,9 +248,44 @@ exports.search_friend = function(id, cb){
 	});
 };
 
-exports.get_contacts = function(userName, cb){ 
+exports.get_contacts = function(userName, cb){
+	
+	//let's search relationship table
+	
+	var findByUserName = function(userName, cb){
+		Client.findOne(
+				{screenName: userName}, 
+				function(err, user){
+					cb(err, user);
+				}
+		);
+	};
+	
+	var findRelationships = function(user, cb){
+		Relationship.find({
+			from: user
+		})
+		.populate("to")
+		.exec(function(err, docs){
+			var finalResults = [];
+			_.each(docs, function(doc){
+				var u = utils.simplifyUser(doc.to, true);
+				u.is_family = doc.is_family;
+				finalResults.push( u );
+			});
+			cb(err, finalResults);
+		})
+	};
+	
+	async.waterfall([
+	                 	async.apply( findByUserName, userName ),
+	                 	async.apply( findRelationships)
+	                 ], cb);
+	
+	
+	
 	//first find all rooms owned or participated
-	Client.findByUsername(userName, function(err, user){
+	/*Client.findByUsername(userName, function(err, user){
 		if(err)
 			console.log(err);
 		
@@ -290,6 +326,7 @@ exports.get_contacts = function(userName, cb){
 			});
 		}
 	);
+	*/
 };
 
 exports.sendResetPwdEmail = function(email, cb){

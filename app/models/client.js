@@ -163,8 +163,22 @@ var UserSchema = new Schema({
 	processed:{
 		type: Date
 	},
-		
+	is_family: {
+		type: Boolean, 
+		default: false
+	}	
 });
+
+UserSchema.statics.findByUsername = function(screenName, cb){
+	this.findOne({screenName: screenName}, function(err, user){
+		
+		if(!err && user){ 
+			cb(null, user);
+		}else{
+			cb(err);
+		}
+	});
+}
 
 UserSchema.pre('save', function (next) {
 	this.phoneNumber = this.phoneNumber.toString().replace( /^\D+/g, '');
@@ -189,8 +203,9 @@ UserSchema.methods.authenticate = function(password){
 	return result;
 };
 
-UserSchema.statics.findByUsername = function(screenName, cb){
+UserSchema.statics.findRelationship = function(screenName, cb){
 	this.findOne({screenName: screenName}, function(err, user){
+		
 		if(!err && user){ 
 			cb(null, user);
 		}else{

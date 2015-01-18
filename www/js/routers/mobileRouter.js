@@ -61,6 +61,7 @@ define(function(require){
             "settings":"settings",
             "myhighlights": "myhighlights",
             "highlights/:name": "highlights",
+            "highlights/:name/:period_from/:period_to": "highlights_period",
             "add_highlights": "add_highlights",
             "update_highlight/:id": "update_highlight"
         },
@@ -78,6 +79,14 @@ define(function(require){
         		return;
         	addHighlightView = new AddHighlightView();
         	this.changePage(addHighlightView);
+        	return true;
+        },
+        
+        highlights_period: function(name, period_from, period_to){
+        	if (this.login())
+        		return;
+        	highlightView = new HighlightView(name, period_from, period_to);
+        	this.changePage(highlightView);
         	return true;
         },
         

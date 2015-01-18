@@ -61,6 +61,7 @@ define(function(require){
          	 }, 1);
          },
          
+         
          render: function(){
         	 if(this.result.length==0){
         		 $("#h1NoContact").show();
@@ -75,7 +76,7 @@ define(function(require){
         		 if(online){
         			styleStr = "border:#008000 5px solid"
         		 }
-        		 var link="detail";
+        		 var link="highlights/"+member.screenName;
         		 var title = "Detail"
         		 if( invRoomId ){
         			 link="invite_detail/"+member._id+"/"+invRoomId;
@@ -83,28 +84,33 @@ define(function(require){
         		 }
         		 
         		 //Don't show call button if not supported
+        		 
+        		 var checkStr = member.is_family?"checked='checked'":"";
+        		 
         		 var thumbNailUrl = util.retrieveThumbNailPath(member, 50);
         		 if( !window.platform && ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ) ){ 
         			 var callLink = "#dialing/"+member._id; 
         			 
-            		 $("#ulContactsList").append($("<li>").html(
-            				 		"<table width='100%'><tr><td width='35%' align='center'>"
+            		 $("#ulContactsList").append($("<li style='padding-left: 5px; padding-right: 5px'>").html(
+            				 		"<table width='100%'><tr><td align='center'>"
             				 		+
             				 		(thumbNailUrl==""? "<span class='noHeadImg'></span>" :  ("<img style='"+styleStr+"' src='" +  thumbNailUrl  +"'/>") )
             				 		+
             				 		"<br/>"+member.firstName+" "+ member.lastName +
-            				 		"</td><td width='30%'><a href='"+callLink+"' data-role='button' class='hrefCall' data-inline='true' ></a></td>"+
-            				 		"<td width='35%'><a href='#"+link+"' data-role='button' class='hrefDetail' data-inline='true' >"+title+"</a></td></tr></table>"
+            				 		"</td><td ><a href='"+callLink+"' data-role='button' class='hrefCall' data-inline='true' ></a></td>"+
+            				 		"<td><a href='#"+link+"' data-role='button' class='hrefDetail' data-inline='true' >"+title+"</a></td><td><input onchange='updateRelationship(event)' type='checkbox' "+checkStr+" id='chkbox-"+member.screenName+"' class='custom chkContactName' data-mini='true' data-username='"+member.screenName+"'/><label for='chkbox-"+member.screenName+"'>Family</label></td></tr></table>"
             				 	)
             				 );
         		 }else{
-        			$("#ulContactsList").append($("<li>").html(
-     				 		"<table width='100%'><tr><td width='35%' align='center'>"
+        			 
+        			$("#ulContactsList").append($("<li style='padding-left: 5px; padding-right: 5px'>").html(
+     				 		"<table width='100%'><tr><td  align='center'>"
         					+
     				 		(thumbNailUrl==""? "<span class='noHeadImg'></span>" :  ("<img style='"+styleStr+"' src='" +  thumbNailUrl  +"'/>") )
     				 		+
-     				 		"</td><td width='30%'><strong>"+ member.firstName+" "+ member.lastName +"</strong></td>"+
-     				 		"<td width='35%'><a href='#"+link+"' data-role='button' class='hrefDetail' data-inline='true' >"+title+"</a></td></tr></table>"
+     				 		"</td><td><strong>"+ member.firstName+" "+ member.lastName +"</strong></td>"+
+     				 		"<td><a href='#"+link+"' data-role='button' class='hrefDetail' data-inline='true' >"+title+"</a></td><td><input onchange='updateRelationship(event)' type='checkbox' "+checkStr+" id='chkbox-"+member.screenName+"' class='custom chkContactName' data-mini='true' data-username='"+member.screenName+"'/><label for='chkbox-"+member.screenName+"'>Family</label></td></tr></table>"
+           				 
      				 	)
      				 ); 
         		 }
@@ -112,12 +118,21 @@ define(function(require){
         	 $("#ulContactsList").listview().listview().listview('refresh');
         	 $(".hrefCall").button();
         	 $(".hrefDetail").button();
+        	 $( "input[type=checkbox]" ).checkboxradio().checkboxradio( "refresh" );
  		}
-         
     });
-    
-    
-    
     return ContactsView;
    
-} );
+});
+
+function updateRelationship(event){
+	$.ajax({
+		  url: ( window.hostURL?window.hostURL:'/') +  'api/relationship',
+		  type: 'PUT',
+		  data: "u="+event.target.getAttribute("data-username")+"&is_family="+$(event.target).is(":checked"),
+		  success: function(data) {
+		    //alert('Load was performed.');
+		  }
+		});
+	
+}

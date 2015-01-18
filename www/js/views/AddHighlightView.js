@@ -22,6 +22,7 @@ define(function(require){
         	this.template = _.template( add_highlights_tpl );
         	_this = this;
         	this.highlight = new HighlightModel.Highlight();
+        	this.highlight.reset();
         	
         	if(id){
         		this.highlightId = id;

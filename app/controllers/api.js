@@ -9,6 +9,7 @@ var swig = require('swig');
 var mongoose = require('mongoose');
 var Client = mongoose.model('Client');
 var highlight_service = require('../services/highlight');
+var relationship_service = require('../services/relationship');
 
 exports.countries = function(req, res){
 	country_service.getAll(req, res);
@@ -149,13 +150,25 @@ exports.search = function(req, res){
 	}
 }
 
+
 exports.invite = function(req, res){
 	var inviteeId = req.params.id;
 	var msg = req.body.message;
 	var roomId = req.body.roomId;
-
+	var is_family = req.body.is_family;
+	
 	invitation_service.invite(req.user, inviteeId, msg, roomId, function(data){
-		res.jsonp(data);
+		if(data.status=='success'){
+			relationship_service.upsertRelationship(data.content.from, data.content.to, is_family, function(err, doc){
+				if(err){
+					res.jsonp({ status:"failed", err: err  });
+				} else {
+					res.jsonp(data);
+				}
+			});
+		} else {
+			res.jsonp(data);
+		}
 	});
 }
 
@@ -168,18 +181,45 @@ exports.received_pending_invitations = function(req, res){
 
 exports.invitationDetail = function(req, res){
 	invitation_service.findInvitationById(req.params.id, function(inv){
-		res.jsonp(inv);
+		if(inv){
+			relationship_service.findRelationship(inv.from, inv.to, function(err, doc){
+				if(doc){
+					inv['is_family'] = doc.is_family;
+				} else {
+					inv['is_family'] = false;
+				}
+				res.jsonp( inv );
+			});
+		}else{
+			res.jsonp(inv);
+		}
 	});
 }
 
-exports.invitationReply = function(req, res){
-	invitation_service.replyInvitation(req.user, 
+exports.invitationReply = function(req, res){ 
+	invitation_service.replyInvitation(
+			req.user, 
 			req.body.invitation_id,
 			req.body.action, 
 			req.body.msg, 
 			function(data){
-				res.jsonp(data);
-			}
+				console.log(data)
+				if(data.status=='success'){
+					var inv = data.invitation;
+					if(req.body.action=='accept'){
+						relationship_service.upsertRelationship( inv.to, inv.from, req.body.is_family, function(err, doc){
+							res.jsonp(data);
+						});
+					} else {
+						relationship_service.removeRelationship(inv.from, inv.to, function(data){
+							res.jsonp(data);
+						});
+					}
+				} else {
+					res.jsonp(data);
+				}
+			},
+			false
 	);
 }
 
@@ -204,7 +244,7 @@ exports.addChatMessage = function(req, res){
 }
 
 exports.getContacts = function(req, res){
-	user_service.get_contacts(req.user.screenName, function(data){
+	user_service.get_contacts(req.user.screenName, function(err, data){
 		res.jsonp(data);
 	});
 }
@@ -308,7 +348,7 @@ exports.removeChatMessage = function(req, res, next){
 
 exports.highlights = function(req, res){
 	
-	highlight_service.retrieveHighlights(req.user, req.params.owner, null, function(err, data){
+	highlight_service.retrieveHighlights(req.user, req.params.owner, null, req.params.period_from, req.params.period_to, function(err, data){
 		if(err){
 			res.jsonp({status: 'failed', err: err});
 		}else{
@@ -318,7 +358,7 @@ exports.highlights = function(req, res){
 };
 
 exports.highlightsbefore = function(req, res){
-	highlight_service.retrieveHighlights(req.user, req.params.owner, req.params.ts, function(err, data){
+	highlight_service.retrieveHighlights(req.user, req.params.owner, req.params.ts, req.params.period_from, req.params.period_to, function(err, data){
 		if(err){
 			res.jsonp({status: 'failed', err: err});
 		}else{
@@ -393,5 +433,15 @@ exports.delete_highlight = function(req, res){
 			}else{
 					res.jsonp({status: 'success', content: doc});
 			}
+	});
+};
+
+exports.updateRelationship = function(req, res){
+	relationship_service.updateRelationship(req.user,req.body.u,req.body.is_family, function(err, doc){
+		if(err){
+			res.jsonp({status: 'failed', err: err});
+		}else{
+			res.jsonp({status: 'success', content: doc});
+		}
 	});
 };

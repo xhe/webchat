@@ -25,8 +25,21 @@ define(function (require) {
 		
 	});
 	
+	getContacts = function(level, cb){
+		
+			util.ajax_get(config.serverUrl+'contacts',
+					function(data){
+						cb( _.filter(data, function(c){ 
+							return level==1?c.is_family==true:c.is_family==false;
+						}));
+					}, 
+					true);
+	
+	};
+	
 	return {
 		Contact: Contact,
 		ContactCollection: ContactCollection,
+		getContacts: getContacts
 		   }
 });

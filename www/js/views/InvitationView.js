@@ -31,11 +31,11 @@ define(function(require){
        	},
        	
        	acceptInvitation: function(){
-       		this.invitationCollection.handleInvitation(this.id, 'accept', $("#friendRequestReplyMsg").val() );
+       		this.invitationCollection.handleInvitation(this.id, 'accept', $("#friendRequestReplyMsg").val(), $("#radRelationship-reply-family").is(':checked') );
        	},
        	
        	rejectInvitation: function(){
-       		this.invitationCollection.handleInvitation(this.id, 'refuse', $("#friendRequestReplyMsg").val());
+       		this.invitationCollection.handleInvitation(this.id, 'refuse', $("#friendRequestReplyMsg").val(), $("#radRelationship-reply-family").is(':checked') );
        	},	
         
         setId: function(id){
@@ -55,21 +55,20 @@ define(function(require){
         }
     } );
     
-    var InvitationDetailDetailView = Backbone.View.extend( {
+    var InvitationDetailDetailView = Backbone.View.extend({
+    	
     	 initialize: function() {
          	 this.model.on('reset', this.render);
          },
-        
-         
          
          render: function(){
         	 this.template = _.template( invitation_detail_detail_tpl );
         	 $("#divInvDetail").html( this.template({ invitation: this.result ,  'serverUrl': (window.hostURL?window.hostURL:"") }) );
-         
-        	 $("#friendRequestReplyMsg").textinput().textinput("refresh");
+         	 $("#friendRequestReplyMsg").textinput().textinput("refresh");
     		 $( "#btnFriendRequestAccept" ).button().button( "refresh" );
     		 $( "#btnFriendRequestReject" ).button().button( "refresh" );
-         	
+    		 $("#radRelationship-reply-family").checkboxradio().checkboxradio( "refresh" );
+			 $("#radRelationship-reply-friend").checkboxradio().checkboxradio( "refresh" );
          }
     });
     

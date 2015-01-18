@@ -27,13 +27,14 @@ define(function (require) {
 			_self.reset();
 		},
 		
-		handleInvitation: function(invitation_id, action, msg){
+		handleInvitation: function(invitation_id, action, msg, is_family){
 			var _this = this;
 			$.post( config.serverUrl+'invitation', 
 					{
 						invitation_id: invitation_id,
 						action: action,
-						msg: msg
+						msg: msg,
+						is_family: is_family
 					},
 					function(result){
 						_this.trigger('action_done');

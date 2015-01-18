@@ -163,6 +163,29 @@ ReferSchema.statics.findByEmail = function(email, cb){
 	});
 };
 
+var RelationshipSchema = new Schema({
+	from: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Client'
+	},
+	to: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Client'
+	},
+	is_family: {
+		type: Boolean, 
+		default: true
+	},
+	created: {
+		type: Date,
+		default: Date.now
+	},
+	updated: {
+    	type: Date,
+		default: Date.now
+    }
+});
+
 var InvitationSchema = new Schema({
 	from: {
 				type: mongoose.Schema.Types.ObjectId,
@@ -201,7 +224,11 @@ var InvitationSchema = new Schema({
     seen: {
     	type: Boolean,
     	default: false
-    }
+    },
+    is_family: {
+		type: Boolean, 
+		default: true
+	},
 });
 
 mongoose.model('ChatRoom', ChatRoomSchema);
@@ -211,3 +238,4 @@ mongoose.model('ChatRoomVisitLog', ChatRoomVisitLogSchema);
 mongoose.model('Audio', AudioSchema);
 mongoose.model('Video', VideoSchema);
 mongoose.model('Refer', ReferSchema);
+mongoose.model('Relationship', RelationshipSchema);
