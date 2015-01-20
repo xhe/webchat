@@ -174,3 +174,6 @@ adding this to init.d/mongod
 	make distclean
 	hash -r
 	
+	Next step:
+	minimize the js library / connect WeChat
+	
