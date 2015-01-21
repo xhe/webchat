@@ -358,20 +358,40 @@ define(function(require){
 		showMemberHeadImgForChatRoom: function(members){
 			
 			var output = "";
-			var height = members.length==2?50:25;
-			var width = 25;
+			var height = width = 0;
+			var height_n = width_n=0;
+			var fn = 20;
+			switch(members.length){
+				case 1:
+					width=height=50;
+					width_n=height_n=50;
+					fn = 45;
+					break;
+				case 2:
+					width=25;
+					height=50;
+					width_n=25;
+					height_n=50;
+					fn=30;
+					break;
+				default:
+					width=height=25;
+					width_n=height_n=23;
+					fn = 20;
+			}
+			
 			_.each(members, function(member){
 				if( member.headImg ){
 					if( member.isOnline ){
-						output+= "<div style='float: left;'><img src='"+ member.headImg +"' width="+width+"px height=" + height + "px></div>";
+						output+= "<div style='float: left; height:"+height+"px; width:"+width+"px'><img src='"+ member.headImg +"' width="+width+"px height=" + height + "px></div>";
 					}else{
-						output+= "<div style='float: left;'><img src='"+ member.headImg +"' width="+width+"px height=" + height + "px></div>";
+						output+= "<div style='float: left; height:"+height+"px; width:"+width+"px'><img src='"+ member.headImg +"' width="+width+"px height=" + height + "px></div>";
 					}
 				}else{
 					if( member.isOnline ){
-						output+= "<div style='float: left; text-align: center; font-size: 20px; width: 25px; border: 1px #cccccc solid'>"+ member.screenName.substr(0,1).toUpperCase() +"</div>";
+						output+= "<div style='float: left; text-align: center; font-size: "+fn+"px; width: "+width_n+"px; height:"+height_n+"px; border: 1px #cccccc solid'>"+ member.screenName.substr(0,1).toUpperCase() +"</div>";
 					}else{
-						output+= "<div style='float: left; text-align: center; font-size: 20px; width: 25px; border: 1px #cccccc solid'>"+ member.screenName.substr(0,1).toUpperCase() +"</div>";
+						output+= "<div style='float: left; text-align: center; font-size: "+fn+"px; width: "+width_n+"px; height: "+height_n+"px; border: 1px #cccccc solid'>"+ member.screenName.substr(0,1).toUpperCase() +"</div>";
 					}
 				}
 			});

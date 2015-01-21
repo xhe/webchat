@@ -97,24 +97,32 @@ define(function(require){
 			_.each(this.model.result.own_rooms, function(room){
 				room.creator.headImg = util.retrieveThumbNailPath( room.creator, 50);
 				room.creator.isOnline = window.socketEventService.isUserOnline(room.creator);
-				room.membersToRender = [room.creator];
+				if(room.creator.screenName!==util.getLoggedInUser().screenName)
+					room.membersToRender = [room.creator];
+				else
+					room.membersToRender = [];
 				_.each(room.members, function(member){
 					member.headImg = util.retrieveThumbNailPath( member, 50);
 					member.isOnline = window.socketEventService.isUserOnline(member);
 					if(room.membersToRender.length<5)
-						room.membersToRender.push(member);
+						if(member.screenName!==util.getLoggedInUser().screenName)
+							room.membersToRender.push(member);
 				});
 			});
 			
 			_.each(this.model.result.join_rooms, function(room){
 				room.creator.headImg = util.retrieveThumbNailPath( room.creator, 50);
 				room.creator.isOnline = window.socketEventService.isUserOnline(room.creator);
-				room.membersToRender = [room.creator];
+				if(room.creator.screenName!==util.getLoggedInUser().screenName)
+					room.membersToRender = [room.creator];
+				else
+					room.membersToRender = [];
 				_.each(room.members, function(member){
 					member.headImg = util.retrieveThumbNailPath( member, 50);
 					member.isOnline = window.socketEventService.isUserOnline(member);
 					if(room.membersToRender.length<5 /*&& member._id!== util.getLoggedInUser()._id*/)
-						room.membersToRender.push(member);
+						if(member.screenName!==util.getLoggedInUser().screenName)
+							room.membersToRender.push(member);
 				});
 			});
 			
