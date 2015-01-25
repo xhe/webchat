@@ -89,27 +89,25 @@ define(function (require) {
 			 formData.append('content', this.content);
 			 formData.append('shared', this.shared);
 			 formData.append('id', this.id);
-			 
+			 var media_index = 0;
 			 _.each(this.medias, function(media){
 					 if(media.type==='photo'){
 						 if(media.id){
 							 formData.append('original_photos', media.id);
 						 }else{
-							 formData.append('photos', media.file, media.file.name);
+							 formData.append('photos', media.file, util.getLoggedInUser()._id+"_"+ media_index++ +"_"+ media.file.name);
 						 }
 					 }
 					 if(media.type==='audio'){
 						 if(media.id){
 							 formData.append('original_audios', media.id);
 						 }else{
-							 formData.append('audios', media.data, media.fileName);
+							 formData.append('audios', media.data, util.getLoggedInUser()._id+"_"+media_index++ +"_"+ media.fileName);
 						 }
 					 }
 			 });
 			 return  formData ;
 		},
-		
-		
 		
 		saveData: function(cb){
 			
@@ -146,15 +144,15 @@ define(function (require) {
 								if(result.status=='success'){
 									var _id = result.content._id;
 								   
-									var uploadFile = function( media ){
+									var uploadFile = function( media, media_index ){
 										
 										 var options = new FileUploadOptions();
 								         options.fileKey = media.type +'s';
 								         if(media.type=='photo'){
-								        	 options.fileName = media.fileName +".JPG";
+								        	 options.fileName = util.getLoggedInUser()._id+"_"+media_index+"_"+ media.fileName +".JPG";
 								        	 options.mimeType = "image/jpg";
 								         }else{
-								        	 options.fileName = media.fileName;
+								        	 options.fileName = util.getLoggedInUser()._id+"_"+media_index+"_"+ media.fileName;
 								         }
 								         options.httpMethod = 'POST';
 								         
@@ -179,12 +177,12 @@ define(function (require) {
 								   };
 									
 									
-									
+								   var media_index = 0;	
 								   window.medias = new_medias;
 								   var t = setInterval(function(){
 									   var m = window.medias.pop();
 									   if(m)
-										   uploadFile(m);
+										   uploadFile(m, media_index++);
 									   else {
 										   clearInterval(t);
 										   cb();
@@ -210,15 +208,15 @@ define(function (require) {
 								if(result.status=='success'){
 									var _id = result.content._id;
 								   
-									var uploadFile = function( media ){
+									var uploadFile = function( media, upload_index ){
 										
 										 var options = new FileUploadOptions();
 								         options.fileKey = media.type +'s';
 								         if(media.type=='photo'){
-								        	 options.fileName = media.fileName +".JPG";
+								        	 options.fileName = util.getLoggedInUser()._id+"_"+upload_index+"_"+ media.fileName +".JPG";
 								        	 options.mimeType = "image/jpg";
 								         }else{
-								        	 options.fileName = media.fileName;
+								        	 options.fileName = util.getLoggedInUser()._id+"_"+upload_index+"_"+ media.fileName;
 								         }
 								         options.httpMethod = 'POST';
 								         
@@ -232,7 +230,6 @@ define(function (require) {
 								        	    console.log("Response = " + r.response);
 								        	    console.log("Sent = " + r.bytesSent);
 								        	};
-								         
 								         var ft = new FileTransfer();
 										 ft.upload(media.path, window.hostURL + '/api/highlights/'+_id, 
 										         	win, 
@@ -242,13 +239,13 @@ define(function (require) {
 										         	options, true);
 								   };
 									
-									
+								   var upload_index=0;
 									
 								   window.medias = _self.medias;
 								   var t = setInterval(function(){
 									   var m = window.medias.pop();
 									   if(m)
-										   uploadFile(m);
+										   uploadFile(m, upload_index++);
 									   else {
 										   clearInterval(t);
 										   cb();

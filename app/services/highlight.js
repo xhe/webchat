@@ -291,7 +291,7 @@ exports.updateHighlightContent = function(id, creator, content, shared, original
 };
 
 exports.createHighlight = function(id, creator, content, shared, originalPhotoIds, originalAudioIds, files, cb ){
-	
+//console.log( files )	
 	var createHighlightRecord = function(creator, contents, shared, cb){
 		var highlight = new Highlight({
 			contents: contents,
