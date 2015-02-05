@@ -52,8 +52,11 @@
 		    			</td>
 		    		</tr>
 		     	</table>
-		     	
-				<ul id="messages">
+		     	<% if(mobileOS=='ios'){%>
+		     	<ul id="messages" style="top: 196px;">
+		     	<%}else{%>
+		     	<ul id="messages">
+		     	<%}%>
 				</ul>
 			
 			</div>

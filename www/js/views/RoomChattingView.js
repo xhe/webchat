@@ -491,7 +491,7 @@ define(function(require){
         
         render: function() {  
         	
-          	$(this.el).html(this.template({ user: util.getLoggedInUser(), roomId: current_roomId,  mobile: window.platform?true:false }));
+          	$(this.el).html(this.template({ user: util.getLoggedInUser(), roomId: current_roomId,  mobile: window.platform?true:false, mobileOS:window.platform }));
           	new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Chatting").render();
           	this.footerView = new FooterView({ el: $(".footerContent", this.el)}).render();
           	
