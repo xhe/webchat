@@ -1,6 +1,9 @@
 
+		<% if(platform==='ios'){%>
+		<div data-role="header" class="headerIos">
+		<%} else {%>
 		<div data-role="header">
-		
+		<%}%>
 			<% if (homeHeader ){%>
 				<div style="position: absolute;left=0px;padding-top: 0px; cursor: pointer;" class="home">
 							<table>

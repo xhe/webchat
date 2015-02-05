@@ -26,6 +26,8 @@ define(function (require) {
 		this.EVENT_RTC_CALL_REQUEST_ACCEPT_CONFIRM="rtc_call_request_accept_confirm";
 		this.EVENT_UPDATE_ROOMS_INFO = "update_rooms_info";
 		this.EVENT_RESUME_UPDATE_CHATROOMS = "EVENT_RESUME_UPDATE_CHATROOMS";
+		this.EVENT_TYPE_RESUME_ROOMS="EVENT_TYPE_RESUME_ROOMS";
+		this.EVENT_TYPE_RESUME_ROOM="EVENT_TYPE_RESUME_ROOM";
 		
 		var socket = null;
 		this.screenName = ""; 

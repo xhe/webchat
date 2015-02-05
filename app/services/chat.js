@@ -103,7 +103,7 @@ var populateNewMsgsForRooms = function(chatrooms, user, cb){
 	}
 }
 
-exports.retrieveChatMessages = function(user, roomId, before_ts, cb){
+exports.retrieveChatMessages = function(user, roomId, before_ts, before, cb){
 	//1. get last visit dt for this room
 	ChatRoomVisitLog
 		.findOneAndUpdate(
@@ -134,7 +134,10 @@ exports.retrieveChatMessages = function(user, roomId, before_ts, cb){
 					q.populate('audio');
 					q.populate('video');
 					if(before_ts){
-						q.where('created').lt(before_ts);
+						if(before===true)
+							q.where('created').lt(before_ts);
+						else if(before===false)
+							q.where('created').gt(before_ts);
 					}
 					
 					q.exec(function(err, docs){

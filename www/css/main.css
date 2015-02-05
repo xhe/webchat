@@ -547,6 +547,10 @@ img.offline{
     width: 100px;
 }
 
+.headerIos{
+	margin-top:25px;	
+}
+
 .cfx{
 	clear: both;
 }

@@ -1,10 +1,93 @@
 var config = require('../../config/config'),
 	_=require("lodash"),
 	gcm = require('node-gcm'),
-	apn = require("apn");
+	apn = require("apn"),
+	mongoose = require('mongoose'),
+	Client = mongoose.model('Client'),
+	async = require('async');
 
 exports.updateRegistrationId = function(user, reg_id, type, cb){
-	user.updateRegistrationId( reg_id, type, cb );
+	
+	var findAndResetIOS = function(user, reg_id, cb){
+		var resetIOSRegId = function(user, reg_id, client, cb){
+			if(user.screenName===client.screenName
+				&&
+				user.ios_registration_id===reg_id){
+				cb(null);
+			}else{
+				client.ios_registration_id = "";
+				client.save(function(err, doc){
+					cb(err, doc)
+				});
+			}
+		};
+		Client.find({
+			ios_registration_id: reg_id,
+		})
+		.exec(function(err, clients){
+			if(err){
+				cb(err);
+			}else{
+				async.map( clients, async.apply(resetIOSRegId, user, reg_id),  function(err){
+					cb(err);
+				})
+			}
+		});
+	};
+	
+	var findAndResetAndroid = function(user, reg_id, cb){
+		var resetAndroidRegId = function(user, reg_id, client, cb){
+			if(user.screenName===client.screenName
+					&&
+					user.gcm_registration_id===reg_id
+					){
+				cb(null);
+			}else{
+				client.gcm_registration_id = "";
+				client.save(function(err, doc){
+					cb(err, doc)
+				});
+			}
+		};
+		
+		Client.find({
+			gcm_registration_id: reg_id,
+		})
+		.exec(function(err, clients){
+			if(err){
+				cb(err);
+			}else{
+				async.map( clients, async.apply(resetAndroidRegId, user, reg_id ),  function(err){
+					cb(err);
+				})
+			}
+		});
+	};
+	
+	if( type=='ios'){
+		async.waterfall([
+		                 	async.apply( findAndResetIOS, user, reg_id),
+		                 	function(){
+		                 		user.updateRegistrationId( reg_id, 'ios', cb );	
+		                 	}
+		                 ], 
+		                 function(err, doc){
+							cb(err, doc);
+						}
+		)
+	}else{
+		async.waterfall([
+		                 	async.apply( findAndResetAndroid, user, reg_id),
+		                 	function(){
+		                 		user.updateRegistrationId( reg_id, 'android', cb );	
+		                 	}
+		                 ], 
+		                 function(err, doc){
+							cb(err, doc);
+						}
+		)
+	}
+	
 };
 
 exports.sendInvitation = function(invitation){
@@ -83,9 +166,9 @@ var sendNotificationMsg = function(receipients, msg, cb){
 			}
 	});
 	
-	//console.log( ios_registrationIds )
+	//console.log('ios==>' +  ios_registrationIds )
 	//console.log("======")
-	//console.log( gcm_registrationIds )
+	//console.log('abdroid==>' + gcm_registrationIds )
 	
 	if(ios_registrationIds.length>0 
 			&& config.push_notification.supported_platform_ios){
@@ -96,6 +179,7 @@ var sendNotificationMsg = function(receipients, msg, cb){
 				key: config.push_notification_ios_files.keyFile,
 				passphrase: config.push_notification_ios_files.passphrase
 				};
+		
 		if(!apnConnection)
 			apnConnection =  new apn.Connection(options); 
 		

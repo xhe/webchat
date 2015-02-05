@@ -11,6 +11,7 @@ define(function (require) {
 		model: ChatMessage,
 		url: config.serverUrl + 'chatmessages',
 		roomId: null,
+		latestTime: null,
 		
 		removeMsg: function(msgId, cb){
 			
@@ -64,7 +65,20 @@ define(function (require) {
 			cb([])
 		},
 		
+		fetchNew: function(cb){
+			if(this.latestTime){
+				_self = this;
+				util.ajax_get(config.serverUrl+'chatmessages_after/'+this.roomId +'/'+this.latestTime, 
+						function(data){
+							_self.latestTime = data[0].created;
+							cb(data);
+						}, 
+						true);
+			}
+		},
+		
 		callback: function(data){
+			_self.latestTime = data[0].created;
 			_self.result = data;
 			_self.reset();
 		},

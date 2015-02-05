@@ -53,7 +53,8 @@ define(function(require){
     					{ user: util.getLoggedInUser(), 
     						title: this.title, 
     						serverUrl: (window.hostURL?window.hostURL:""),
-    						homeHeader: this.homeHeader
+    						homeHeader: this.homeHeader,
+    						platform: window.platform
     						}));
 		}
     });

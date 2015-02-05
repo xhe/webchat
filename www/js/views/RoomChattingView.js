@@ -152,11 +152,16 @@ define(function(require){
 				        					appendChatMsg( msg);
         						}
             		);
-        		 /*
-        		 document.addEventListener("resume", function(){
-        			 this.chatMessageCollection.getChatMessages(current_roomId);
-         		 }, false);
-         		*/
+        		 
+        		  window.socketEventService.on(window.socketEventService.EVENT_TYPE_RESUME_ROOM, function(){
+        			  _self.chatMessageCollection.fetchNew(function(messages){
+        				  	var tmpResults = JSON.parse(JSON.stringify(messages));
+        		        	 while(tmpResults.length>0){
+        		        		 appendChatMsg(tmpResults.pop());
+        		        	 } 
+        			  }); 
+         		 }); 
+         		 
         		  
         		 chat_message_event_initialized = true;
         	  };
