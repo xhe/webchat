@@ -79,6 +79,8 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 				document.addEventListener("resume", onResume, false);
 				//This is an event that fires when a Cordova application is retrieved from the background.
 				function onResume() {
+					if(window.user && window.user!=null)
+						window.socketEventService.connect(window.user.screenName);
 					
 					if( location.hash.indexOf('#chatrooms')>-1 
 							|| location.hash.indexOf('#chatroom')>-1

@@ -26,9 +26,13 @@ module.exports =  function(){
 		
 		io.on("connection", function(socket){ 
 				socket.on(EVENT_LOGIN, function(name){
-				sockets_username_socket[name] = socket.id;
-				sockets_socketid_username[socket.id] = name;
-				allSockets[socket.id] = socket;
+				if(name!==null){
+					sockets_username_socket[name] = socket.id;
+					sockets_socketid_username[socket.id] = name;
+					allSockets[socket.id] = socket;
+					//console.log(name +" logging ")
+					console.log( sockets_socketid_username )
+				}
 				//sendUserOnLineMsg(name);
 			});
 			

@@ -12,7 +12,7 @@ define(function (require) {
 		this.EVENT_NOTIFY_ON_LINE_MEMBER = "on_line_members";
 		this.EVENT_NOTIFY_MEMBER_ON_LINE = "member_on_line";
 		this.EVENT_NOTIFY_MEMBER_OFF_LINE = "member_off_line";
-		this.EVENT_DISCONNECT = "disconnect-fffkkk";
+		this.EVENT_DISCONNECT = "disconnect";
 		
 		this.EVENT_TYPE_INVITED_FOOTER = "invited_FOOTER";
 		this.EVENT_TYPE_REPLIED_FOOTER = "replied_FOOTER";
@@ -84,9 +84,10 @@ define(function (require) {
 				return;
 			
 			socket.on(window.socketEventService.EVENT_DISCONNECT, function () {
-				if(confirm("Please reload the page to establish connection with server. We apologize for the inconvenience.")){
-					location.reload();
-				}
+				//if(confirm("Please reload the page to establish connection with server. We apologize for the inconvenience.")){
+				//	location.reload();
+				//}
+				window.socketEventService.logout();
 			}); 
 			  
 			socket.on(window.socketEventService.EVENT_TYPE_INVITED, 
