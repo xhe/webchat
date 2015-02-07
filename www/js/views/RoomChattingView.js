@@ -154,6 +154,7 @@ define(function(require){
             		);
         		 
         		  window.socketEventService.on(window.socketEventService.EVENT_TYPE_RESUME_ROOM, function(){
+        			  if( window.location.href.indexOf('chatroom/')>0)
         			  _self.chatMessageCollection.fetchNew(function(messages){
         				  	var tmpResults = JSON.parse(JSON.stringify(messages));
         		        	 while(tmpResults.length>0){

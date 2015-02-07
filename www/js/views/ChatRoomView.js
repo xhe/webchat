@@ -40,7 +40,8 @@ define(function(require){
         		 });
         		 
         		 window.socketEventService.on(window.socketEventService.EVENT_TYPE_RESUME_ROOMS, function(){
-        			 chatroomCollection.getChatrooms();
+        			 if( window.location.href.indexOf('chatrooms')>0)
+        				 chatroomCollection.getChatrooms();
         		 }); 
         		 
         		 

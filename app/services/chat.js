@@ -29,6 +29,7 @@ exports.chatRoomNewChatMsg = function(user, room, cb ){
 		if(doc){
 			lastVisit = doc.visited;
 		}
+		//console.log('last visited is ' + doc.visited)
 		var query = { room: room }
 		if(lastVisit){
 			query['created'] =  { $gte: lastVisit };
@@ -217,7 +218,6 @@ exports.addPhotoForChatMessage = function(filePath, user, roomId, cb){
 						.exec(function(err, message){
 							message.creator = utils.simplifyUser(message.creator, true);
 							cb(message);
-							
 							broadcastMessage( message); 
 							ChatRoomVisitLog.findOneAndUpdate(
 								{
@@ -318,7 +318,6 @@ exports.addVideoForChatMessage = function(audioPath, videoPath, user, roomId, cb
 					
 					message.creator = utils.simplifyUser(message.creator, true);
 					cb(null, message);
-					
 					broadcastMessage( message); 
 					ChatRoomVisitLog.findOneAndUpdate(
 						{
@@ -437,7 +436,6 @@ exports.addAudioForChatMessage = function(audioPath, user, roomId, cb){
 								
 								message.creator = utils.simplifyUser(message.creator, true);
 								cb(message);
-								
 								broadcastMessage( message); 
 								ChatRoomVisitLog.findOneAndUpdate(
 									{
