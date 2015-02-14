@@ -176,3 +176,6 @@ adding this to init.d/mongod
 	
 	
 	minimize:  r.js -o build.js
+	
+	http://www.chat4each.com:81/webmail/src/login.php
+	

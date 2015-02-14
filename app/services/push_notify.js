@@ -172,7 +172,8 @@ var sendNotificationMsg = function(receipients, msg, cb){
 	
 	if(ios_registrationIds.length>0 
 			&& config.push_notification.supported_platform_ios){
-		
+		console.log("sending ios");
+		console.log( ios_registrationIds )
 		options = {
 				gateway:config.push_notification_ios_files.gateway,
 				cert: config.push_notification_ios_files.certFile,
@@ -234,9 +235,16 @@ var sendNotificationMsg = function(receipients, msg, cb){
 				    	message: msg 
 				    }
 			}); 
+			//console.log("sending android");
+			//console.log( gcm_registrationIds )
 			var sender = new gcm.Sender(config.push_notification.gcm_api_key);
 			try{
 				sender.send(message, gcm_registrationIds, 4, function (err, result) {
+					
+					//console.log("err for android: ");
+					//console.log(err)
+					//console.log(result)
+					
 					if(cb)
 						if(err){
 							cb(err);
