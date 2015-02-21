@@ -5,55 +5,61 @@
 		<div style="margin:0px; padding:0px" data-role="content" > 
 				
 				<div style='text-align: center; '>
-					<a data-icon="plus" data-role="button" data-inline="true" href="#invite/<%= roomId%>">Members</a>
-					<a  data-icon="arrow-u" data-role="button" id="btnMorePrev" data-inline="true">More</a>
+					<a style="font-size: 70%" data-icon="plus" data-role="button" data-inline="true" data-mini="true" href="#invite/<%= roomId%>">User</a>
+					<a id='hrefShowAttController' style="font-size: 70%"  data-icon="plus" data-role="button" data-inline="true" data-mini="true" >Msg</a>
+					<a style="font-size: 70%"  data-icon="arrow-u" data-role="button" id="btnMorePrev" data-mini="true" data-inline="true">More</a>
 					
 				</div>
-				<div style='text-align: center; display:none' id='ctrAttach'>
-					<% if(mobile){%>
-						<a  data-role="button"  id="recordAudioMobile" class="recordAudio" data-inline="true"></a>
-						<a  data-role="button"  id="recordVideoMobile" data-inline="true" ></a>
-						<button id='btnAttPhotos' data-inline="true" ></button>
-						<button id="btnAttCamera" data-inline="true" ></button>
-						<button id="btnChattingRoomBack_phone" data-inline="true"></button>
-					<%}else{%>
-						
-						<div style="display: none;width: 0px; height: 0px">
-								<form id="file-form-chat" method="POST" >
-											<input style="display: none;" type="file" id="file-select-chat" name="photos_chat[]" accept="image/*" >
-								</form>
-							  			
-							  	<form id="file-form-chat-video" method="POST" enctype="multipart/form-data">
-											<input style="display: none;" type="file" id="file-select-chat-video" name="videos_chat[]" accept="video/*" capture >
-								</form>
-						</div>
-						
-						
-											<button type="button" id="upload-button-chat" data-inline="true" class="attachImage"></button> 
-										
-											<a  data-role="button"  id="recordAudio" class="recordAudio" data-inline="true"></a>
-										
-											<a  data-role="button"  id="recordVideo" class="recordVideo" data-inline="true" ></a>
-										
-											<a  data-role="button"  id="btnChattingRoomBack_web" data-inline="true" data-icon="arrow-l"  ></a>
-																
-					<%}%>
-				</div>
 				
-				<table style="width:100%" id='ctrInputMsg'>
-		     		<tr>
-		     			<td><input id="txtMsg" autocomplete="off" />
-		    			</td>
-		    			<td style="width:50px">
-		    				<a data-role="button" data-icon="check" data-mini="true"  id='btnSubmit'>Send</a> 	
-		    			</td>
-		    			<td style="width:50px">
-		    				<a data-role="button"  data-mini="true"  id='btnAttach'>Attach</a> 	
-		    			</td>
-		    		</tr>
-		     	</table>
+				<div id='divAttachController' style="display: none;">
+					<div style='text-align: center; display:none' id='ctrAttach'>
+						<% if(mobile){%>
+							<a  data-role="button"  id="recordAudioMobile" class="recordAudio" data-inline="true"></a>
+							<a  data-role="button"  id="recordVideoMobile" data-inline="true" ></a>
+							<button id='btnAttPhotos' data-inline="true" ></button>
+							<button id="btnAttCamera" data-inline="true" ></button>
+							<button id="btnChattingRoomBack_phone" data-inline="true"></button>
+						<%}else{%>
+							
+							<div style="display: none;width: 0px; height: 0px">
+									<form id="file-form-chat" method="POST" >
+												<input style="display: none;" type="file" id="file-select-chat" name="photos_chat[]" accept="image/*" >
+									</form>
+								  			
+								  	<form id="file-form-chat-video" method="POST" enctype="multipart/form-data">
+												<input style="display: none;" type="file" id="file-select-chat-video" name="videos_chat[]" accept="video/*" capture >
+									</form>
+							</div>
+							
+							
+												<button type="button" id="upload-button-chat" data-inline="true" class="attachImage"></button> 
+											
+												<a  data-role="button"  id="recordAudio" class="recordAudio" data-inline="true"></a>
+											
+												<a  data-role="button"  id="recordVideo" class="recordVideo" data-inline="true" ></a>
+											
+												<a  data-role="button"  id="btnChattingRoomBack_web" data-inline="true" data-icon="arrow-l"  ></a>
+																	
+						<%}%>
+					</div>
+					
+					<table style="width:100%" id='ctrInputMsg'>
+			     		<tr>
+			     			<td><input id="txtMsg" autocomplete="off" />
+			    			</td>
+			    			<td style="width:50px">
+			    				<a data-role="button" data-icon="check" data-mini="true"  id='btnSubmit'>Send</a> 	
+			    			</td>
+			    			<td style="width:50px">
+			    				<a data-role="button"  data-mini="true"  id='btnAttach'>Attach</a> 	
+			    			</td>
+			    		</tr>
+			     	</table>
+				
+				</div>
+		     	
 		     	<% if(mobileOS=='ios'){%>
-		     	<ul id="messages" style="top: 196px;">
+		     	<ul id="messages" style="top: 110px;">
 		     	<%}else{%>
 		     	<ul id="messages">
 		     	<%}%>
@@ -62,6 +68,21 @@
 			</div>
 	<div class="footerContent">
 				
+	</div>
+		
+		
+	<div id="divChatImgWrapper">
+		<div id="chatImgContainer">
+		<table style="height: 100%;width: 100%">
+		<tr>
+		<td valign="middle">
+		<div id='divChatImg'>
+			<img id="imgChatMsgBig"/>
+		</div>
+		</td>
+		</tr>
+		</table>
+		</div>
 	</div>
 		
 </section>

@@ -91,7 +91,7 @@ float: none;
     padding: 0;
     position: absolute;
     right: 0;
-    top: 176px;
+    top: 95px;
 	   
 	   }
        
@@ -488,7 +488,10 @@ img.offline{
     overflow: auto;
     position: fixed;
     right: 0;
-    padding-top: 20px;
+   
+   display: table-cell;
+   vertical-align: middle;
+   
 }
 
 .divHighlightItems{
@@ -503,12 +506,12 @@ img.offline{
     left: 0;
     position: absolute;
     width: 100%;
+   /* display: table-cell;
+    vertical-align: middle;
+    */
 }
 
-#divHighlightItemPhotos{
-	overflow: auto;
-    width: 100%;
-}
+
 .tdEditHighlight a:link{
 	cursor: pointer;  font-size: 30px;color: gray;
 }
@@ -549,6 +552,71 @@ img.offline{
 
 .headerIos{
 	margin-top:25px;	
+}
+
+#divHighlightItemPhotos{
+	overflow-x: auto;
+    width: 100%;
+}
+
+ul.ulHighlightMedias {
+	  margin: 0;
+	  padding: 0;
+	  white-space: nowrap;
+	  width: 100%;
+}
+
+ul.ulHighlightMedias li{
+	display: inline-block;
+	display:inline;
+	list-style-type: none;
+	padding-right: 1px;
+}
+
+ul.ulHighlightMedias li img{
+	width: 100%;
+	max-width: 100%;
+	}
+.bigImageOuter{
+	  position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left:0px;
+    right: 0px;
+    background-color: black;
+}
+
+
+
+#divChatImgWrapper {
+	background: none repeat scroll 0 0 black;
+    bottom: 0;
+    display: none;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    width: 100%;
+}
+#chatImgContainer {
+	color: white;
+    height: 100%;
+    left: 0;
+    margin: 0 auto;
+    overflow: auto;
+    position: fixed;
+    right: 0;
+   
+   display: table-cell;
+   vertical-align: middle;
+   
+}
+#divChatImg{
+	width: 100%;
+}
+
+#divChatImg img{
+	width: 100%;
+	max-width: 100%;
 }
 
 .cfx{

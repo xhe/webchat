@@ -36,7 +36,8 @@ var HighlightSchema = new Schema({
 	created: {
 			type: Date,
 			default: Date.now
-		}
+		},
+	date_str:String
 });
 
 HighlightSchema.methods.removePhotos = function(photoIds, callback){ 

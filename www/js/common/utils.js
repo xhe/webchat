@@ -92,9 +92,9 @@ define(function(require){
 			$.cookie('token', JSON.stringify(user));
 			
 			//now let's set into  localStorage for mobile app user
-			if( window.platform ){
+			//if( window.platform ){
 				localStorage.user = JSON.stringify(user);
-			}
+			//}
 			//set socket here
 			window.socketEventService.connect(user.screenName);
 			
@@ -154,9 +154,8 @@ define(function(require){
 			window.socketEventService.logout();
 			window.user = new User.User();
 			$.removeCookie('token');
-			if( window.platform ){
-				localStorage.removeItem('user');
-			}
+			localStorage.removeItem('user');
+			
 			return false;
 		},
 		
@@ -193,6 +192,9 @@ define(function(require){
 		},
 		
 		showBusy: function(){ 
+			if(window.noshowbusy){
+				window.noshowbusy=false;
+			}else
 			$.mobile.loading( 'show', {
 				text: 'Loading...',
 				textVisible: true,
@@ -256,7 +258,8 @@ define(function(require){
 		},	
 		
 		ajax_get_loading: function(){
-			this.showBusy();
+			if(util.urlRequest_url.indexOf('/accumulated_info')===-1)
+				this.showBusy();
 			$.ajax({
 					  url: util.urlRequest_url,
 					  success: 

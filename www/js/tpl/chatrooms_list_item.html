@@ -21,9 +21,7 @@
 								<a href="<%=audioPath%>" target="_blank"><div class='recordAudioMsg'></div></a>
 							<%}%>
 						<%}else if(msgPhotoPath!==""){%>
-							<a href="#larget_photo/<%= encodeURIComponent(msgPhotoLargePath) %>">
-								<img src="<%= msgPhotoPath %>" />
-							</a>
+							<img src="<%= msgPhotoPath %>" class="imgChatItem" data-smallimgurl="<%= msgPhotoPath%>" data-bigimgurl="<%= msgPhotoLargePath %>"/>
 						<%}else{%>
 							<%= chat.message %>
 						<%}%>
@@ -72,9 +70,12 @@
 								<a href="<%=audioPath%>" target="_blank"><div class='recordAudioMsg'></div></a>
 							<%}%>
 						<%}else if(msgPhotoPath!==""){%>
+							<!-- 
 							<a href="#larget_photo/<%= encodeURIComponent(msgPhotoLargePath) %>">
 								<img src="<%= msgPhotoPath %>" />
 							</a>
+							 -->
+							<img src="<%= msgPhotoPath %>" class="imgChatItem" data-smallimgurl="<%= msgPhotoPath%>" data-bigimgurl="<%= msgPhotoLargePath %>" />
 						<%}else{%>
 							<%= chat.message %>
 						<%}%>
@@ -82,6 +83,17 @@
 			</td>
 		<tr>
 	<%}%>
-	
+	<tr>
+	<% if( user.screenName === chat.creator.screenName ){%>
+	<td colspan="3" style="padding: 0px; text-align: center;font-size: 70%">
+			<%= chat.date_str%>
+		</td>
+	<%}else{%>
+	<td colspan="2" style="padding: 0px; text-align: center;font-size: 70%">
+			<%= chat.date_str%>
+		</td>
+	<%}%>
+		
+	</tr>
 	
 </table>

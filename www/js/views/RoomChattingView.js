@@ -222,6 +222,37 @@ define(function(require){
         	"click .btnRemoveMsg": "removeMsg",
         	"click #btnStartUpload": "upload",
         	"click #recordVideo": "recordVideo",
+        	"click #hrefShowAttController": "toggleAttController",
+        	"click .imgChatItem": "showChatImgBig",
+        	"click #divChatImgWrapper":"backToChatList"
+        },
+        
+        backToChatList: function(){
+        	$("#divChatImgWrapper").hide("fast",function(){
+        		$(".footerContent").show();
+        	});
+        },
+        
+        showChatImgBig: function(event){
+        	$("#imgChatMsgBig").attr("src",event.target.getAttribute("data-smallimgurl"));
+        	$(".footerContent").hide("fast", function(){
+		        		$("#divChatImgWrapper").show('slow', function(){ 
+		        			$("#imgChatMsgBig").attr("src",event.target.getAttribute("data-bigimgurl"));
+		        				});
+		    });
+       },
+        
+        toggleAttController: function(){
+        	
+        	if($("#divAttachController").is(':hidden') ){
+        		$("#divAttachController").slideDown();
+        		$("#messages").css({top: parseInt( $("#messages").css("top").replace("px", "")) +60 });
+        		$("#hrefShowAttController").removeClass("ui-icon-plus").addClass("ui-icon-minus");
+        	} else {
+        		$("#divAttachController").slideUp();
+        		$("#messages").css({top: parseInt( $("#messages").css("top").replace("px", "")) - 60 });
+        		$("#hrefShowAttController").removeClass("ui-icon-minus").addClass("ui-icon-plus");
+        	}
         	
         },
         

@@ -28,6 +28,7 @@ define(function (require) {
 		this.EVENT_RESUME_UPDATE_CHATROOMS = "EVENT_RESUME_UPDATE_CHATROOMS";
 		this.EVENT_TYPE_RESUME_ROOMS="EVENT_TYPE_RESUME_ROOMS";
 		this.EVENT_TYPE_RESUME_ROOM="EVENT_TYPE_RESUME_ROOM";
+		this.EVENT_TYPE_RESUME_HOME="EVENT_TYPE_RESUME_HOME";
 		
 		var socket = null;
 		this.screenName = ""; 
@@ -108,7 +109,7 @@ define(function (require) {
 					function(msg){
 				
 							window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_CHATMESSAGE, msg);
-							
+							window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_RESUME_HOME);
 							if(JSON.parse(msg).creator.screenName!==util.getLoggedInUser().screenName){
 								util.vibrate();
 							};

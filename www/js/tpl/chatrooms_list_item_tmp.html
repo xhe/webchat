@@ -20,9 +20,7 @@
 								<a href="<%=audioPath%>" target="_blank"><div class='recordAudioMsg'></div></a>
 							<%}%>
 						<%}else{%>
-							<a href="#larget_photo/<%= encodeURIComponent(msgPhotoLargePath) %>">
-								<img src="<%= msgPhotoPath %>"  height="60px"/>
-							</a>
+							<img src="<%= msgPhotoPath %>" class="imgChatItem" data-smallimgurl="<%= msgPhotoPath%>" data-bigimgurl="<%= msgPhotoLargePath %>"  height="60px"/>
 						<%}%>
 				</div>		
 				<div class='spanUploadPercentage'>

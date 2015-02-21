@@ -79,6 +79,7 @@ exports.retrieveHighlights = function(user, owner, before_ts, period_from, perio
 			q.exec(function(err, docs){
 				var results = [];
 				_.each(docs, function(doc){ 
+					
 					var toAdd = false;
 					if(doc.shared == 0) { //only self
 						if(doc.creator.screenName == currentUser.screenName )
@@ -93,8 +94,11 @@ exports.retrieveHighlights = function(user, owner, before_ts, period_from, perio
 						toAdd = true;
 					}
 					
-					if(toAdd)
+					if(toAdd) {
+						doc.date_str =  utils.generateDateStr(doc.created);
 						results.push(doc);
+					}
+						
 				});
 				
 				cb(err, results);

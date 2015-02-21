@@ -4,6 +4,7 @@ var config = require('../../config/config'),
 	apn = require("apn"),
 	mongoose = require('mongoose'),
 	Client = mongoose.model('Client'),
+	//chat_service = require('./chat'),
 	async = require('async');
 
 exports.updateRegistrationId = function(user, reg_id, type, cb){
@@ -133,8 +134,6 @@ exports.broadcastChatMessage = function(message, room){
 	
 	var msg =  message.creator.firstName+" "+ message.creator.lastName+": "+ msg;
 	
-	
-	
 	sendNotificationMsg(receipients, msg, function(err, result){
 		if(err){
 			console.log("Error: ");
@@ -155,6 +154,7 @@ var sendNotificationMsg = function(receipients, msg, cb){
 	
 	var gcm_registrationIds = []; 
 	var ios_registrationIds = [];
+	var ios_id_to_user = {};
 	
 	_.each(receipients, function(receipient){
 			//console.log( receipient.screenName +" gcm:"+receipient.gcm_registration_id +" ios:"+receipient.ios_registration_id)
@@ -163,17 +163,12 @@ var sendNotificationMsg = function(receipients, msg, cb){
 			}
 			if(receipient.ios_registration_id){
 				ios_registrationIds.push( receipient.ios_registration_id );
+				ios_id_to_user[receipient.ios_registration_id] = receipient;
 			}
 	});
 	
-	//console.log('ios==>' +  ios_registrationIds )
-	//console.log("======")
-	//console.log('abdroid==>' + gcm_registrationIds )
-	
 	if(ios_registrationIds.length>0 
 			&& config.push_notification.supported_platform_ios){
-		console.log("sending ios");
-		console.log( ios_registrationIds )
 		options = {
 				gateway:config.push_notification_ios_files.gateway,
 				cert: config.push_notification_ios_files.certFile,
@@ -214,14 +209,19 @@ var sendNotificationMsg = function(receipients, msg, cb){
 				}
 			);
 		}
-			
 		
 		var notification = new apn.Notification();
-		//console.log('pushigng to ' ); console.log( ios_registrationIds)
-		//notification.alert = msg;
-		notification.badge = 1;
 		notification.sound = "ping.aiff";
-		apnConnection.pushNotification(notification, ios_registrationIds);
+		async.map(ios_registrationIds, function(ios){
+			var receipient = _.find(receipients, function(receipient){
+				return receipient.ios_registration_id==ios;
+			});
+			if(receipient)
+				notification.badge = receipient.newMessages;
+			else
+				notification.badge = 1;
+			apnConnection.pushNotification(notification, ios);
+		});
 		
 	}
 	
@@ -235,8 +235,6 @@ var sendNotificationMsg = function(receipients, msg, cb){
 				    	message: msg 
 				    }
 			}); 
-			//console.log("sending android");
-			//console.log( gcm_registrationIds )
 			var sender = new gcm.Sender(config.push_notification.gcm_api_key);
 			try{
 				sender.send(message, gcm_registrationIds, 4, function (err, result) {

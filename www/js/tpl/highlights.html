@@ -71,9 +71,12 @@
 			</div>
 		</div>
 
-
-		<ul id="highlights">
-		</ul>
+	<% if(mobileOS=='ios'){%>
+			<ul id="highlights" style="top:128px">
+	<%}else{%>
+			<ul id="highlights">
+	<%}%>
+	</ul>
 
 	</div>
 
@@ -83,8 +86,13 @@
 
 	<div id="divHighlightItemsWrapper">
 		<div id="highlightContainer">
-			<div id='divHighlightItemPhotos' />
-			<button id='btnBackToItemList'>Back</button>
+		<table style="height: 100%;width: 100%">
+		<tr>
+		<td valign="middle">
+		<div id='divHighlightItemPhotos' />
+		</td>
+		</tr>
+		</table>
 		</div>
 	</div>
 

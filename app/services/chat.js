@@ -40,8 +40,64 @@ exports.chatRoomNewChatMsg = function(user, room, cb ){
 	});
 };
 
+exports.getUserRooms = function(user, cb){
+	async.parallel(
+			{
+				own_rooms: async.apply(findUserCreatedRooms, user),
+				join_rooms:async.apply(findUserParticipatedRooms, user),
+			},
+			cb
+	);
+};
 
-exports.findUserCreatedRooms = function(user, cb){
+exports.fetchUserTotalNewMsgs = function(user, cb){
+	var count = function(chatrooms, cb){
+		var total = 0;
+		_.forEach(chatrooms, function(r){
+			total+=r.new_messages;
+		});
+		//populate new messages to be used in sending push/notifications
+		user.newMessages = total;
+		cb(null, total);
+	}
+	async.waterfall([
+	                  async.apply( findAllRoomsForUserNonSeperate, user),
+	                  async.apply( count)
+	                 ], cb);
+};
+
+var findAllRoomsForUserNonSeperate = function(user, cb){
+	ChatRoom
+		.find({ $or:[
+		            {
+		            	creator: user
+		            },
+		            {
+		            	members: user, 
+		            	creator: { '$ne': user }
+		            }
+		            ]})
+		.populate('creator')
+		.populate('members')
+		.sort('-created')
+		.exec(function(err, chatrooms){
+			_.forEach(chatrooms, function(r){
+				r.creator =  utils.simplifyUser(r.creator, true);
+				_.forEach(r.members, function(m){
+					m = utils.simplifyUser(m, true);
+				});
+			});
+			if( chatrooms.length>0 ){
+				populateNewMsgsForRooms(chatrooms, user, function(rooms){
+					cb(null,rooms);
+				});
+			}else{
+				cb(null, []);
+			}
+		});
+};
+
+var findUserCreatedRooms = function(user, cb){
 	ChatRoom
 		.find({ creator: user })
 		.populate('creator')
@@ -56,15 +112,15 @@ exports.findUserCreatedRooms = function(user, cb){
 			});
 			if( chatrooms.length>0 ){
 				populateNewMsgsForRooms(chatrooms, user, function(rooms){
-					cb(rooms);
+					cb(null,rooms);
 				});
 			}else{
-				cb([]);
+				cb(null, []);
 			}
 		});
-}
+};
 
-exports.findUserParticipatedRooms = function(user, cb){
+var findUserParticipatedRooms = function(user, cb){
 	ChatRoom
 		.find({ members: user, creator: { '$ne': user } })
 		.populate('creator')
@@ -79,29 +135,25 @@ exports.findUserParticipatedRooms = function(user, cb){
 			});
 			if( chatrooms.length>0 ){
 				populateNewMsgsForRooms(chatrooms, user, function(rooms){
-					cb(rooms);
+					cb(null, rooms);
 				});
 			}else{
-				cb([]);
+				cb(null, []);
 			}
 	});
-}
+};
 
 //needs to show if new msg
 var populateNewMsgsForRooms = function(chatrooms, user, cb){
-	var totalRooms = chatrooms.length;
-	var finalRooms = [];
-	while(chatrooms.length>0){
-		var room = chatrooms.shift();
-		(function(room){
-			chat_service.chatRoomNewChatMsg( user, room, function(count){
-				room.new_messages = count;
-				finalRooms.push(room);
-				if(finalRooms.length == totalRooms)
-					cb(finalRooms);
-			})
-		})(room)
-	}
+	var populateNewMsgsForRoom = function( user, room, cb){
+		chat_service.chatRoomNewChatMsg(user, room, function(count){
+			room.new_messages = count;
+			cb(null);
+		});
+	};
+	async.map( chatrooms, async.apply( populateNewMsgsForRoom, user ), function(err){
+		cb(chatrooms);
+	})
 }
 
 exports.retrieveChatMessages = function(user, roomId, before_ts, before, cb){
@@ -144,6 +196,7 @@ exports.retrieveChatMessages = function(user, roomId, before_ts, before, cb){
 					q.exec(function(err, docs){
 						for(var i=0; i<docs.length; i++){
 							docs[i].creator = utils.simplifyUser(docs[i].creator, true);
+							docs[i].date_str= utils.generateDateStr(docs[i].created);
 						}
 						cb(docs);
 					});
@@ -481,6 +534,23 @@ var broadcastMessage = function(message){
 		.populate('members')
 		.populate('creator')
 		.exec(function(err, room){
-			socket_serivce['broadcastChatMessage'](message, room);
+			
+		var users = [];
+		_.forEach( room.members, function(member){
+				if(member.ios_registration_id){
+					users.push(member);
+				}
+		});
+		if(room.creator.ios_registration_id)
+				users.push(room.creator);
+			
+			//need to populate new messages for each member in this room
+			async.map(	users, 
+					async.apply(chat_service.fetchUserTotalNewMsgs),
+					function(err, data){
+						chat_service.fetchUserTotalNewMsgs( room.creator, function(err, data){
+								socket_serivce['broadcastChatMessage'](message, room);
+						});
+					});
 		});
 }

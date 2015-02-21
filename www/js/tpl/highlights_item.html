@@ -36,14 +36,23 @@
 				<% }) %>
 			</div>
 		</td>
-		
+		<td style="padding-right: 20px;" class="tdEditHighlight">
 		<% if( user.screenName === highlight.creator.screenName ){%>
-			<td style="padding-right: 20px;" class="tdEditHighlight">
 				<a href="#update_highlight/<%= highlight._id%>"><i class="fa fa-edit" ></i></a> 
-			</td>
-		<% } %>		
-				
+		<%}%>		
+		</td>		
 	</tr>
-	
+	<tr>
+	 <% if( user.screenName === highlight.creator.screenName ){%>
+	 	<td colspan="3" style="padding: 0px; text-align: center;font-size: 70%">
+			<%= highlight.date_str%>
+		</td>
+	 <%}else{%>
+	 	<td colspan="2" style="padding: 0px; text-align: center;font-size: 70%">
+			<%= highlight.date_str%>
+		</td>
+	 <%}%>
+		
+	</tr>
 	
 </table>

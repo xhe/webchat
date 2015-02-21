@@ -178,4 +178,5 @@ adding this to init.d/mongod
 	minimize:  r.js -o build.js
 	
 	http://www.chat4each.com:81/webmail/src/login.php
+	http://www.raywenderlich.com/32960/apple-push-notification-services-in-ios-6-tutorial-part-1
 	

@@ -27,6 +27,12 @@ define(function (require) {
 			_self.reset();
 		},
 		
+		
+		getMyGeneralInfo: function(){
+			_self = this;
+			util.ajax_get(config.serverUrl+'accumulated_info', this.callback, true);
+		},
+		
 		handleInvitation: function(invitation_id, action, msg, is_family){
 			var _this = this;
 			$.post( config.serverUrl+'invitation', 

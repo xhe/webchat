@@ -14,7 +14,7 @@ module.exports = {
 		keyFile: __dirname+'/../ios/release/pushchatkey.pem',
 		certFile: __dirname+'/../ios/release/pushchatcert.pem',
 		passphrase: 'chat4each',
-		gateway: 'gateway.sandbox.push.apple.com',
+		gateway: 'gateway.push.apple.com',
 		debug: true
 	},
 };

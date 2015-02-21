@@ -23,7 +23,7 @@ exports.getMyInvitation = function(invitee, status, cb){
 					for(var i=0; i<docs.length; i++){
 						docs[i].from = utils.simplifyUser(docs[i].from, true);
 					}
-					cb(docs);
+					cb(err, docs);
 				});
 };
 

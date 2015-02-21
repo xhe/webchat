@@ -63,7 +63,8 @@ var ChatMessageSchema = new Schema({
 	created: {
 			type: Date,
 			default: Date.now
-		}
+		},
+	date_str:String
 });
 
 var ChatRoomVisitLogSchema =  new Schema({

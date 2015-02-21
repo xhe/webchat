@@ -2,6 +2,57 @@ var http = require('http'), https = require('https');
 var config = require('../../config/config');
 var request = require("request");
 
+exports.generateDateStr = function(dt){
+	var date = new Date(dt);
+	var t1 = date.getTime()/1000;
+	var now = Math.floor(Date.now()/1000);
+	var timeDiff = now-t1;
+	var months = Math.floor( timeDiff/3600/24/30 );
+	var days =   Math.floor( (timeDiff - months*3600*24*30) / 3600 / 24 );
+	var hours = Math.floor( (timeDiff - months*3600*24*30 - days*3600*24) / 3600 );
+	var minutes = Math.floor((timeDiff - months*3600*24*30 - days*3600*24 - hours*3600)/60);
+	
+	var dtStr = "";
+	if(months>0){
+		if( months==1 )
+			dtStr = "More than 1 month";
+		else
+			dtStr = "More than "+months+" months";
+	} else if(days>0){
+		if( days==1 )
+			dtStr = days+" day" ;
+		else
+			dtStr = days+" days" ;
+		if(hours>0)
+			if(hours==1)
+				dtStr += " 1 hour";
+			else
+				dtStr += " " +hours +" hours";
+		if(minutes>0)
+			if(minutes==1)
+				dtStr+=" 1 minute";
+			else
+				dtStr+=" "+minutes+" minutes";
+		
+	} else if (hours>0){
+		if(hours==1)
+			dtStr = "1 hour";
+		else
+			dtStr = hours +" hours";
+		if(minutes>0)
+			if(minutes==1)
+				dtStr+=" 1 minute";
+			else
+				dtStr+=" "+minutes+" minutes";
+	} 
+	if( dtStr == ""){
+		dtStr = "Just Now";
+	} else {
+		dtStr +=" ago";
+	}
+	return dtStr;
+}
+
 exports.simplifyUser = function(client, noToken) {
 	client.password = undefined;
 	client.password_salt = undefined;

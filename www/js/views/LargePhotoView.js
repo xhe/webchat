@@ -11,6 +11,15 @@ define(function(require){
         	this.imgPath = imgPath;
         	this.template = _.template( photo_tpl );
         },
+       
+        events:{
+        	"click .bigImageOuter": "back"
+        },
+        
+        back: function(){
+        	window.noshowbusy=true;
+        	window.history.back()
+        },
         
         render: function() { 
         	$(this.el).html(this.template({ imgPath: this.imgPath }) );

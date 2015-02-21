@@ -111,12 +111,14 @@ exports.delete_myphotos = function(req, res){
 }
 
 exports.chatrooms = function(req, res){
-	chat_service.findUserCreatedRooms(req.user, function(rooms){
-		var ownRooms = rooms;
-		chat_service.findUserParticipatedRooms(req.user, function(rooms){
-			res.jsonp({own_rooms: ownRooms, join_rooms: rooms});
-		})
-	})
+	
+	chat_service.getUserRooms(req.user, function(err, result){
+		if(err){
+			res.jsonp({status:"failed"});
+		} else {
+			res.jsonp(result);
+		}
+	});
 }
 
 
@@ -172,12 +174,21 @@ exports.invite = function(req, res){
 	});
 }
 
-
-exports.received_pending_invitations = function(req, res){
-	invitation_service.getMyInvitation(req.user, invitation_service.STATUS_PENDING, function(data){
-		res.jsonp(data);
-	});
-}
+exports.accumulated_info = function(req, res){
+	async.parallel(
+			{
+				pending_invitations: async.apply( invitation_service.getMyInvitation, req.user, invitation_service.STATUS_PENDING),
+				total_new_msg: async.apply( chat_service.fetchUserTotalNewMsgs, req.user )
+			},
+			function(err, result){
+				if(err){
+					res.jsonp({status: 'failed'});
+				} else {
+					res.jsonp({status: 'success', payload: result})
+				}
+			}
+	);
+};
 
 exports.invitationDetail = function(req, res){
 	invitation_service.findInvitationById(req.params.id, function(inv){

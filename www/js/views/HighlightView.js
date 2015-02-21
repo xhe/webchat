@@ -15,6 +15,8 @@ define(function(require){
 	
 	
 	var  appendHighlight = function(highlight){ 
+		 
+		 
       		if(  $('#highlights')[0] ){
 	      				 var oldscrollHeight = $('#highlights')[0].scrollHeight;
 				        	 $('#highlights')
@@ -36,10 +38,28 @@ define(function(require){
 				       		 if(newscrollHeight > oldscrollHeight){ //COMPARES
 				       		        $("#highlights").scrollTop($("#highlights")[0].scrollHeight); //Scrolls
 				       		  }
-	      			}
+	      	} else {
+	      		$('#highlights')
+     		 	.append( 
+ 		 				$('<li>').html(
+ 		 						 _.template( highlights_item_view_tpl,
+     		 								  { 
+ 		 							 			photoPath: util.retrieveThumbNailPath(highlight.creator, 50), 
+ 		 							 			photoLargePath: util.retrieveThumbNailPath(highlight.creator, 10000), 
+ 		 							 			highlight: highlight,
+ 		 							 			util: util,
+ 		 							 			user: util.getLoggedInUser(),
+ 		 							 			mobile: window.platform?true:false
+     		 								  }
+ 		 								  )		
+ 		 				)		
+ 		 		);
+	      	}
       };
       
       var  appendHighlightTmp = function(highlight){ 
+    	  
+    	  
     		if(  $('#highlights')[0] ){
 	      				 var oldscrollHeight = $('#highlights')[0].scrollHeight;
 				        	 $('#highlights')
@@ -61,6 +81,22 @@ define(function(require){
 				       		 if(newscrollHeight > oldscrollHeight){ //COMPARES
 				       		        $("#highlights").scrollTop($("#highlights")[0].scrollHeight); //Scrolls
 				       		  }
+	      			} else {
+	      				 $('#highlights')
+			     		 	.append( 
+			 		 				$('<li>').html(
+			 		 						 _.template( highlights_item_view_tmp_tpl,
+			     		 								  { 
+			 		 							 			photoPath: util.retrieveThumbNailPath(util.getLoggedInUser(), 50), 
+			 		 							 			photoLargePath: util.retrieveThumbNailPath(util.getLoggedInUser(), 10000), 
+			 		 							 			highlight: highlight,
+			 		 							 			util: util,
+			 		 							 			user: util.getLoggedInUser(),
+			 		 							 			mobile: window.platform?true:false
+			     		 								  }
+			 		 								  )		
+			 		 				)		
+			 		 		);
 	      			}
     };
       
@@ -84,7 +120,8 @@ define(function(require){
         	"click #hrefCancel":"closeFilter",
         	"click #hrefSubmit": "submit",
         	"change #chkFilterPeriod":"updateFilterPeriod",
-        	"change #showHightlightType":"updateShowHightlightType"
+        	"change #showHightlightType":"updateShowHightlightType",
+        	"click #divHighlightItemsWrapper":"backToItemList"
         },
         
         submit: function(){
@@ -217,6 +254,7 @@ define(function(require){
         
         backToItemList: function(){
         	$("#divHighlightItemsWrapper").fadeOut('slow');
+        	$(".footerContent").show();
         },
         clickHighlightItems: function(event){
         	
@@ -224,26 +262,21 @@ define(function(require){
         		return;
         	
         	var highlightPhotoRenders = this.highlightCollection.getHighlightPhotos( event.currentTarget.getAttribute("data-id"), 1000 );
-        	
-        	var max_height = $(window).height() - 140;
-        	var max_width =  $(window).width();
-        	
-        	
         	if( highlightPhotoRenders.length>0) {
-        		var photoString = "<table><tr>";
+        		var photoString = "<ul class='ulHighlightMedias'>";
         		_.each( highlightPhotoRenders, function(render){
-        			photoString+="<td><img src='"+ util.convertToHostPath('/uploads/thumb_highlight/'+render.filename)  +"' style='max-width:"+max_width+"px; max-height: "+max_height+"px'   /></td>"
-        		});
-        		photoString+="</tr></table>";
+        			photoString+="<li><img src='"+ util.convertToHostPath('/uploads/thumb_highlight/'+render.filename)  +"'/></li>";
+        			
+            	});
+        		photoString+="</ul>";
         		$("#divHighlightItemPhotos").html(photoString);
         	}
-        	$("#divHighlightItemsWrapper").fadeIn('slow', function(){
-        	   //$("#highlightContainer").css({ 'padding-top':   ( $(window).height()-70- $("#divHighlightItemPhotos").height() )/2+'px' })
-        	});
+        	$("#divHighlightItemsWrapper").fadeIn('slow');
+        	$(".footerContent").hide();
         },
         
         render: function() {           
-            $(this.el).html(this.template());
+            $(this.el).html(this.template({ mobileOS:window.platform }));
             var title = "My Highlights"
             if(this.creator){
             	if(this.creator=="all_families"){

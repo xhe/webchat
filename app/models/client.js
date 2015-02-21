@@ -166,7 +166,11 @@ var UserSchema = new Schema({
 	is_family: {
 		type: Boolean, 
 		default: false
-	}	
+	}	,
+	newMessages:{
+		type: Number,
+		default: 0
+	}
 });
 
 UserSchema.statics.findByUsername = function(screenName, cb){

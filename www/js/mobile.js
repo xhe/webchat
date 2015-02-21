@@ -84,10 +84,12 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 					
 					if( location.hash.indexOf('#chatrooms')>-1 
 							|| location.hash.indexOf('#chatroom')>-1
+							|| location.hash===""
 						){
 						//location.reload();
 						window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_RESUME_ROOM);
 						window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_RESUME_ROOMS);
+						window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_RESUME_HOME);
 					}
 						 
 			    }
