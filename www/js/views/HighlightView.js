@@ -121,7 +121,11 @@ define(function(require){
         	"click #hrefSubmit": "submit",
         	"change #chkFilterPeriod":"updateFilterPeriod",
         	"change #showHightlightType":"updateShowHightlightType",
-        	"click #divHighlightItemsWrapper":"backToItemList"
+        	"click #divHighlightItemsWrapper":"backToItemList",
+        	"swipeleft #divHighlightItemsWrapper":"prev",
+        	"swiperight #divHighlightItemsWrapper":"next",
+        	"click #btnHighligtPrev":"prev",
+        	"click #btnHighligtNext":"next",
         },
         
         submit: function(){
@@ -251,33 +255,69 @@ define(function(require){
         	  
         },
         
+        highlightPhotoRenders_s: [],
+        highlightPhotoRenders_l: [],
+        currentIndex: 0,
+        prev: function(event){
+        	event.stopPropagation();
+        	currentIndex--;
+        	this.changeBigImage();
+        },
+        next: function(event){
+        	event.stopPropagation();
+        	currentIndex++;
+        	this.changeBigImage();
+        },
         
         backToItemList: function(){
         	$("#divHighlightItemsWrapper").fadeOut('slow');
         	$(".footerContent").show();
+        	$("#imgHighlightItemBig").attr("src","");
         },
         clickHighlightItems: function(event){
         	
         	if( $(event.target).hasClass('recordAudioMsg') )
         		return;
         	
-        	$(".ulHighlightMedias").empty();
-        	var highlightPhotoRenders = this.highlightCollection.getHighlightPhotos( event.currentTarget.getAttribute("data-id"), 50 );
-        	if( highlightPhotoRenders.length>0) {
-        		_.each(highlightPhotoRenders, function(render){
-        			$(".ulHighlightMedias").append("<li><img id='bigImage_"+render._id+"' src='"+ util.convertToHostPath('/uploads/thumb_highlight/'+render.filename) +"'/></li>");
-        		});
-        		highlightPhotoRenders = this.highlightCollection.getHighlightPhotos( event.currentTarget.getAttribute("data-id"), 1000 );
-	            		
-        		$(".footerContent").hide("fast", function(){
-	        		$("#divHighlightItemsWrapper").show('slow', function(){ 
-	        			_.each(highlightPhotoRenders, function(render){
-	            			$("#bigImage_"+render._id).attr("src",util.convertToHostPath('/uploads/thumb_highlight/'+render.filename));
-	            		});
-	        		});
-        		});
-        	}
+        	currentIndex = 0;
+        	highlightPhotoRenders_s = this.highlightCollection.getHighlightPhotos( event.currentTarget.getAttribute("data-id"), 50 );
+        	highlightPhotoRenders_l = this.highlightCollection.getHighlightPhotos( event.currentTarget.getAttribute("data-id"), 1000 );
+            
+        	$("#imgHighlightItemBig").attr("src",util.convertToHostPath('/uploads/thumb_highlight/'+highlightPhotoRenders_s[currentIndex].filename));
+        	$(".footerContent").hide("fast", function(){
+		        		$("#divHighlightItemsWrapper").show('slow', function(){ 
+		        			$("#imgHighlightItemBig").attr("src",util.convertToHostPath('/uploads/thumb_highlight/'+highlightPhotoRenders_l[currentIndex].filename));
+		        				});
+		    });
+        	this.hideNavigateButton();
         },
+        changeBigImage: function(){
+        	$("#imgHighlightItemBig").hide('slow', function(){
+        		$("#imgHighlightItemBig").attr("src",util.convertToHostPath('/uploads/thumb_highlight/'+highlightPhotoRenders_s[currentIndex].filename));
+        		$("#imgHighlightItemBig").show('fast',function(){
+        			$("#imgHighlightItemBig").attr("src",util.convertToHostPath('/uploads/thumb_highlight/'+highlightPhotoRenders_l[currentIndex].filename));
+        		})
+        	});
+        	this.hideNavigateButton();
+        },
+        
+        hideNavigateButton: function(){
+        	if(highlightPhotoRenders_s.length==1){
+        		$("#btnHighligtPrev").hide();
+        		$("#btnHighligtNext").hide();
+        	} else if(currentIndex==0){
+        		$("#btnHighligtPrev").hide();
+        		$("#btnHighligtNext").show();
+        	} else if(currentIndex==highlightPhotoRenders_s.length-1){
+        		$("#btnHighligtNext").hide();
+        		$("#btnHighligtPrev").show();
+        	} else {
+        		$("#btnHighligtNext").show();
+        		$("#btnHighligtPrev").show();
+        	}
+        	
+        },
+        
         
         render: function() {           
             $(this.el).html(this.template({ mobileOS:window.platform }));

@@ -571,12 +571,33 @@ ul.ulHighlightMedias li{
 	display:inline;
 	list-style-type: none;
 	padding-right: 1px;
+	
 }
 
 ul.ulHighlightMedias li img{
-	width: 100%;
 	max-width: 100%;
+    max-height: 100%;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    overflow: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
 	}
+
+#imgHighlightItemBig{
+	max-width: 100%;
+    max-height: 100%;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    overflow: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+
 .bigImageOuter{
 	  position: absolute;
     top: 0px;
