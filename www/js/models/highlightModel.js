@@ -378,9 +378,12 @@ define(function (require) {
 			var results = [];
 			_.each( highlight.photos, function(photo){
 				var result = _.find( photo.renders, function(render){
-					return render.dimention==size;
-				})
-				results.push( result || photo.renders[ photo.renders.length-1]) ;
+					return render.dimension==size;
+				});
+				var tmp =  result || photo.renders[ photo.renders.length-1];
+				//we need to have same _id so as to update same image in highlight big image view
+				tmp._id = photo._id;
+				results.push(tmp) ;
 			});
 			return results;
 		},

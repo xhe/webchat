@@ -261,18 +261,22 @@ define(function(require){
         	if( $(event.target).hasClass('recordAudioMsg') )
         		return;
         	
-        	var highlightPhotoRenders = this.highlightCollection.getHighlightPhotos( event.currentTarget.getAttribute("data-id"), 1000 );
+        	$(".ulHighlightMedias").empty();
+        	var highlightPhotoRenders = this.highlightCollection.getHighlightPhotos( event.currentTarget.getAttribute("data-id"), 50 );
         	if( highlightPhotoRenders.length>0) {
-        		var photoString = "<ul class='ulHighlightMedias'>";
-        		_.each( highlightPhotoRenders, function(render){
-        			photoString+="<li><img src='"+ util.convertToHostPath('/uploads/thumb_highlight/'+render.filename)  +"'/></li>";
-        			
-            	});
-        		photoString+="</ul>";
-        		$("#divHighlightItemPhotos").html(photoString);
+        		_.each(highlightPhotoRenders, function(render){
+        			$(".ulHighlightMedias").append("<li><img id='bigImage_"+render._id+"' src='"+ util.convertToHostPath('/uploads/thumb_highlight/'+render.filename) +"'/></li>");
+        		});
+        		highlightPhotoRenders = this.highlightCollection.getHighlightPhotos( event.currentTarget.getAttribute("data-id"), 1000 );
+	            		
+        		$(".footerContent").hide("fast", function(){
+	        		$("#divHighlightItemsWrapper").show('slow', function(){ 
+	        			_.each(highlightPhotoRenders, function(render){
+	            			$("#bigImage_"+render._id).attr("src",util.convertToHostPath('/uploads/thumb_highlight/'+render.filename));
+	            		});
+	        		});
+        		});
         	}
-        	$("#divHighlightItemsWrapper").fadeIn('slow');
-        	$(".footerContent").hide();
         },
         
         render: function() {           
