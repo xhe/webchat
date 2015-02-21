@@ -597,6 +597,16 @@ ul.ulHighlightMedias li img{
     right: 0;
     top: 0;
 }
+#imgHighlightItemBig .bigImgloading{
+	width: 100%;
+	height: 100%;	
+}
+#imgHighlightItemBig .bigImgHorizontal{
+	width: 100%;
+}
+#imgHighlightItemBig .bigImgVertical{
+	height: 100%;
+}
 
 .bigImageOuter{
 	  position: absolute;

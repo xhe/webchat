@@ -126,6 +126,7 @@ define(function(require){
         	"swiperight #divHighlightItemsWrapper":"prev",
         	"click #btnHighligtPrev":"prev",
         	"click #btnHighligtNext":"next",
+        	"click #btnHighlightBack": "backToItemList"
         },
         
         submit: function(){
@@ -288,18 +289,46 @@ define(function(require){
         	highlightPhotoRenders_l = this.highlightCollection.getHighlightPhotos( event.currentTarget.getAttribute("data-id"), 1000 );
             
         	$("#imgHighlightItemBig").attr("src",util.convertToHostPath('/uploads/thumb_highlight/'+highlightPhotoRenders_s[currentIndex].filename));
+        	
         	$(".footerContent").hide("fast", function(){
 		        		$("#divHighlightItemsWrapper").show('slow', function(){ 
+		        			$("#imgHighlightItemBig").addClass("bigImgloading");
 		        			$("#imgHighlightItemBig").attr("src",util.convertToHostPath('/uploads/thumb_highlight/'+highlightPhotoRenders_l[currentIndex].filename));
-		        				});
+		        			var img = document.getElementById('imgHighlightItemBig'); 
+		        			//or however you get a handle to the IMG
+		        			var width = img.clientWidth;
+		        			var height = img.clientHeight;
+		        			$("#imgHighlightItemBig").removeClass("bigImgloading");
+		        			if(width>height){
+		        				$("#imgHighlightItemBig").addClass('bigImgHorizontal');
+		        				$("#imgHighlightItemBig").removeClass('bigImgVertical');
+		        			} else {
+		        				$("#imgHighlightItemBig").removeClass('bigImgHorizontal');
+		        				$("#imgHighlightItemBig").addClass('bigImgVertical');
+		        			}
+		        		});
 		    });
         	this.hideNavigateButton();
         },
         changeBigImage: function(){
-        	$("#imgHighlightItemBig").hide('slow', function(){
+        	$("#divHighlightItemPhotos").hide('slow', function(){
         		$("#imgHighlightItemBig").attr("src",util.convertToHostPath('/uploads/thumb_highlight/'+highlightPhotoRenders_s[currentIndex].filename));
-        		$("#imgHighlightItemBig").show('fast',function(){
+        		$("#imgHighlightItemBig").addClass("bigImgloading");
+        		$("#divHighlightItemPhotos").show('fast',function(){
         			$("#imgHighlightItemBig").attr("src",util.convertToHostPath('/uploads/thumb_highlight/'+highlightPhotoRenders_l[currentIndex].filename));
+        			var img = document.getElementById('imgHighlightItemBig'); 
+        			//or however you get a handle to the IMG
+        			$("#imgHighlightItemBig").removeClass("bigImgloading");
+        			var width = img.clientWidth;
+        			var height = img.clientHeight;
+        			if(width>height){
+        				$("#imgHighlightItemBig").addClass('bigImgHorizontal');
+        				$("#imgHighlightItemBig").removeClass('bigImgVertical');
+        			} else {
+        				$("#imgHighlightItemBig").removeClass('bigImgHorizontal');
+        				$("#imgHighlightItemBig").addClass('bigImgVertical');
+        			}
+        			
         		})
         	});
         	this.hideNavigateButton();
