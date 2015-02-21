@@ -260,13 +260,17 @@ define(function(require){
         currentIndex: 0,
         prev: function(event){
         	event.stopPropagation();
-        	currentIndex--;
-        	this.changeBigImage();
+        	if(currentIndex>1){
+        		currentIndex--;
+            	this.changeBigImage();
+        	}
         },
         next: function(event){
         	event.stopPropagation();
-        	currentIndex++;
-        	this.changeBigImage();
+        	if(currentIndex<highlightPhotoRenders_s.length-1){
+        		currentIndex++;
+            	this.changeBigImage();
+        	}
         },
         
         backToItemList: function(){
