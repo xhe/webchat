@@ -260,7 +260,7 @@ define(function(require){
         currentIndex: 0,
         prev: function(event){
         	event.stopPropagation();
-        	if(currentIndex>1){
+        	if(currentIndex>0){
         		currentIndex--;
             	this.changeBigImage();
         	}
