@@ -23,17 +23,18 @@ exports.generateDateStr = function(dt){
 			dtStr = days+" day" ;
 		else
 			dtStr = days+" days" ;
+		
 		if(hours>0)
 			if(hours==1)
 				dtStr += " 1 hour";
 			else
 				dtStr += " " +hours +" hours";
-		if(minutes>0)
+		/*	if(minutes>0)
 			if(minutes==1)
 				dtStr+=" 1 minute";
 			else
 				dtStr+=" "+minutes+" minutes";
-		
+		*/
 	} else if (hours>0){
 		if(hours==1)
 			dtStr = "1 hour";
@@ -50,7 +51,12 @@ exports.generateDateStr = function(dt){
 	} else {
 		dtStr +=" ago";
 	}
-	return dtStr;
+	
+	var dateStr = (date.getMonth()<10?"0":"")+date.getMonth();
+	dateStr += "/";
+	dateStr += (date.getDate()<10?"0":"") + date.getDate();
+	
+	return dateStr + " ("+dtStr +")";
 }
 
 exports.simplifyUser = function(client, noToken) {
