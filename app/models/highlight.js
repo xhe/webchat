@@ -7,6 +7,17 @@ var fs = require('fs'),
 	_=require('lodash')
 ;
 
+var HighlightVisitLogSchema =  new Schema({
+	visitor: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Client'
+	},
+	
+	visited:{
+		type: Date,
+		default: Date.now
+	}
+});
 
 var HighlightSchema = new Schema({
 	
@@ -88,3 +99,4 @@ HighlightSchema.statics.findByCreator = function(creator, cb){
 };
 
 mongoose.model('Highlight', HighlightSchema);
+mongoose.model('HighlightVisitLog', HighlightVisitLogSchema);

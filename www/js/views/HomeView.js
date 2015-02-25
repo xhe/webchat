@@ -4,6 +4,7 @@ define(function(require){
 		home_tpl		= require('text!tpl/home-page.html'),
 		home_totalInv_tpl = require('text!tpl/totalInvitationBtn.html'),
 		homt_totalMsg_tpl =	require( 'text!tpl/totalNewMessagesBtn.html'),
+		home_totalHihglight_tpl =	require( 'text!tpl/totalNewHighlightsBtn.html'),
 		util = require('common/utils'),
 		HeaderView = require('views/HeaderView'),
 		FooterView = require('views/FooterView')
@@ -57,10 +58,13 @@ define(function(require){
     	render: function(){
     		this.template = _.template(home_totalInv_tpl);
     		this.template_msg = _.template( homt_totalMsg_tpl );
+    		this.template_highlight = _.template( home_totalHihglight_tpl );
     		if(this.result){
     			$("#divTotalInvitations").html(this.template({total: this.result.payload.pending_invitations.length}));
     			$("#divTotalNewMsgs").html(this.template_msg({total: this.result.payload.total_new_msg}))
-        	}else{
+    			$("#divTotalNewHighlights").html(this.template_highlight({total: this.result.payload.total_new_highlights}))
+    			
+    		}else{
         		$(this.el).html( this.template({total: 0}) );
         	}
     	}

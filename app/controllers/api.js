@@ -178,10 +178,12 @@ exports.accumulated_info = function(req, res){
 	async.parallel(
 			{
 				pending_invitations: async.apply( invitation_service.getMyInvitation, req.user, invitation_service.STATUS_PENDING),
-				total_new_msg: async.apply( chat_service.fetchUserTotalNewMsgs, req.user )
+				total_new_msg: async.apply( chat_service.fetchUserTotalNewMsgs, req.user ),
+				total_new_highlights: async.apply( highlight_service.retrieveTotalNewHighlights, req.user )
 			},
 			function(err, result){
 				if(err){
+					console.log( err )
 					res.jsonp({status: 'failed'});
 				} else {
 					res.jsonp({status: 'success', payload: result})

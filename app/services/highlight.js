@@ -10,7 +10,8 @@ var mongoose = require('mongoose'),
 	async = require('async'),
 	fs = require('fs'),
 	Highlight = mongoose.model('Highlight'),
-	relationship_service = require('./relationship')
+	relationship_service = require('./relationship'),
+	HighlightVisitLog = mongoose.model('HighlightVisitLog')
 	;
 
 exports.findById = function(id, cb){
@@ -22,28 +23,28 @@ exports.findById = function(id, cb){
 		})
 };
 
-exports.retrieveHighlights = function(user, owner, before_ts, period_from, period_to, cb){
+var generateHighlightCreators = function(currentUser,  owner,  cb ){
 	
-	var generateHighlightCreators = function(currentUser,  owner,  cb ){
-		
-		if(owner=='all_families'){
-			relationship_service.retrieveRelatedUsers(currentUser, 1, cb );
-			//find all familits
-		} else if(owner=='all_friends') {
-			relationship_service.retrieveRelatedUsers(currentUser, 2, cb );
-			//find all friends
-		} else if(owner=='all'){
-			relationship_service.retrieveRelatedUsers(currentUser, 3, cb );
-			//find all
+	if(owner=='all_families'){
+		relationship_service.retrieveRelatedUsers(currentUser, 1, cb );
+		//find all familits
+	} else if(owner=='all_friends') {
+		relationship_service.retrieveRelatedUsers(currentUser, 2, cb );
+		//find all friends
+	} else if(owner=='all'){
+		relationship_service.retrieveRelatedUsers(currentUser, 3, cb );
+		//find all
+	} else {
+		if(owner!==user.screenName){
+			//checking authority here
+			relationship_service.detectRelationship( currentUser, owner, cb  );
 		} else {
-			if(owner!==user.screenName){
-				//checking authority here
-				relationship_service.detectRelationship( currentUser, owner, cb  );
-			} else {
-				cb ( null, [user] );
-			}
+			cb ( null, [user] );
 		}
-	};
+	}
+};
+
+exports.retrieveHighlights = function(user, owner, before_ts, period_from, period_to, cb){
 	
 	var obtainRelationshipLevels = function( currentUser, creators, cb ){
 		var levelArray = {};
@@ -105,49 +106,57 @@ exports.retrieveHighlights = function(user, owner, before_ts, period_from, perio
 			});
 	};
 	
-
-	async.waterfall(
-			[
-			 	async.apply( generateHighlightCreators, user, owner),
-			 	async.apply( obtainRelationshipLevels, user),
-			 	async.apply( findMsgByUsers, before_ts, period_from, period_to,  user)
-			 ],
-			 cb
-	);
-	
-	/*
-	Client.findByUsername( owner, function(err, doc){
-		findMsgByUser(before_ts, doc, function(err, docs){
-			cb(err, docs);
-		});
-	});
-	
-	var findMsgByUser = function(before_ts, creator, cb){
-		if(creator==null){
-			console.log( 'none creator ')
-			cb(null, []);
-		} else {
-			var q= Highlight.find({
-				creator:	creator
-			});
-			
-			q.sort('-created');
-			q.limit(20);
-			q.populate('creator');
-			q.populate('photos');
-			q.populate('audios');
-			if(before_ts){
-				q.where('created').lt(before_ts);
+	async.parallel(
+			{
+				updateLog: function(cb){
+					var query = {visitor: user};
+					var update = {visited: new Date() };
+					var options = { upsert: true };
+					HighlightVisitLog.findOneAndUpdate(query, update, options, cb);
+				},
+				retrieveHighlights: function(cb){
+					async.waterfall(
+							[
+							 	async.apply( generateHighlightCreators, user, owner),
+							 	async.apply( obtainRelationshipLevels, user),
+							 	async.apply( findMsgByUsers, before_ts, period_from, period_to,  user)
+							 ],
+							 cb
+					);
+				}
+			},
+			function(err, result){
+				cb(err, result["retrieveHighlights"] );
 			}
-			q.exec(function(err, docs){ 
-				_.each(docs, function(doc){
-					doc.creator = utils.simplifyUser(doc.creator, true);
+	);
+};
+
+exports.retrieveTotalNewHighlights = function(user, cb){
+	
+	var findTotalNewHighlights = function(user, creators, cb){
+		HighlightVisitLog.findOne({visitor: user}, function(err, highlightVisitLog){
+			if(err){
+				cb(err);
+			} else {
+				var q= Highlight.find({
+					creator:	
+						{
+							$in: creators
+						}	
 				});
-				cb(err, docs);
-			});
-		}
+				if(highlightVisitLog){
+					q.where('created').gt(highlightVisitLog.visited);
+				}
+				q.count(function(err, total){
+					cb(err, total);
+				})
+			}
+		});
 	};
-	*/
+	async.waterfall([
+	                 	async.apply( generateHighlightCreators, user, "all"),
+	                 	async.apply( findTotalNewHighlights, user )
+	                 ], cb);
 };
 
 exports.deleteHighlight = function(id, deletor, cb){
