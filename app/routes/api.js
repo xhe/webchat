@@ -22,7 +22,7 @@ module.exports = function(app){
 	app.route('/api/invite/:id').post(user_service.requiresLogin,  api.invite);
 	
 	app.route('/api/accumulated_info').get(user_service.requiresLogin,  api.accumulated_info);
-	
+	app.route('/api/received_pending_invitations').get(user_service.requiresLogin, api.received_pending_invitations);
 	app.route('/api/invitation/:id').get(user_service.requiresLogin,  api.invitationDetail);
 	
 	app.route('/api/invitation').post(user_service.requiresLogin,  api.invitationReply);
