@@ -251,7 +251,6 @@ define(function(require){
 		urlRequest_url: null,
 		//this method is used for retrieving remotely, caching and saving to localDB
 		ajax_get: function(url,callback,forceUrlRequest){
-			this.detectServerStatus();
 			if(forceUrlRequest == null){
 				forceUrlRequest = false;
 			}
@@ -287,6 +286,15 @@ define(function(require){
 							 }
 						},
 					  dataType: "json",
+					  timeout:5000,
+					  statusCode: {
+				            400: function (response) {
+				                util.alert('Server is not reachable, please try later.');
+				            },
+				            0: function (response) {
+				            	util.alert('Server is not reachable, please try later.');
+				            }              
+				        },
 					  async: false,
 			});
 		},	
