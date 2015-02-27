@@ -22,7 +22,7 @@ define(function(require){
         },
         
         login: function(){
-        	util.detectServerStatus();
+        	//util.detectServerStatus();
         	var username = $("#userName").val();
         	var password = $("#passWord").val(); 
         	$.post(appConfig.serverUrl + 'login', 

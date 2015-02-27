@@ -251,7 +251,7 @@ define(function(require){
 		urlRequest_url: null,
 		//this method is used for retrieving remotely, caching and saving to localDB
 		ajax_get: function(url,callback,forceUrlRequest){
-			detectServerStatus();
+			//detectServerStatus();
 			if(forceUrlRequest == null){
 				forceUrlRequest = false;
 			}
