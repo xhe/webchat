@@ -190,8 +190,15 @@ exports.invite = function(req, res) {
 
 exports.received_pending_invitations = function(req, res) {
 	invitation_service.getMyInvitation(req.user,
-			invitation_service.STATUS_PENDING, function(data) {
-				res.jsonp(data);
+			invitation_service.STATUS_PENDING, function(err,data) {
+				if (err) {
+					res.jsonp({
+						status : "failed",
+						err : err
+					});
+				} else {
+					res.jsonp(data);
+				}
 			});
 }
 

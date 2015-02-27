@@ -218,6 +218,7 @@ define(function(require){
 			
 			//var atributes =  data.model.models[0].attributes;
 			var status = "success";
+			
 			if(data.status != undefined){
 				status = data.status;
 			}
