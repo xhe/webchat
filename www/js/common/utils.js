@@ -230,12 +230,28 @@ define(function(require){
 			return true;
 		},
 		
+		detectServerStatus: function(){
+			$.ajax({url: window.hostURL?  window.hostURL:"http://localhost:3000",
+			        type: "HEAD",
+			        timeout:1000,
+			        statusCode: {
+			            400: function (response) {
+			                util.alert('Server is not reachable, please try later.');
+			            },
+			            0: function (response) {
+			            	util.alert('Server is not reachable, please try later.');
+			            }              
+			        }
+				});
+		},
+		
 		//used to save static url request
 		urlRequstCache: [],
 		urlRequest_callback: null,
 		urlRequest_url: null,
 		//this method is used for retrieving remotely, caching and saving to localDB
 		ajax_get: function(url,callback,forceUrlRequest){
+			detectServerStatus();
 			if(forceUrlRequest == null){
 				forceUrlRequest = false;
 			}
