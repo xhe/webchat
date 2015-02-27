@@ -231,7 +231,7 @@ define(function(require){
 		},
 		
 		detectServerStatus: function(){
-			$.ajax({url: window.hostURL?  window.hostURL:"http://localhost:3000",
+			$.ajax({url: window.hostURL?  window.hostURL:"/",
 			        type: "HEAD",
 			        timeout:1000,
 			        statusCode: {
@@ -251,7 +251,7 @@ define(function(require){
 		urlRequest_url: null,
 		//this method is used for retrieving remotely, caching and saving to localDB
 		ajax_get: function(url,callback,forceUrlRequest){
-			//detectServerStatus();
+			this.detectServerStatus();
 			if(forceUrlRequest == null){
 				forceUrlRequest = false;
 			}

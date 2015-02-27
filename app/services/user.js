@@ -9,7 +9,8 @@ var mongoose = require('mongoose'),
 	user_service = require('./user'),
 	Refer = mongoose.model('Refer'),
 	invitation_service = require('./invitation'),
-	Relationship = mongoose.model("Relationship")
+	Relationship = mongoose.model("Relationship"),
+	config = require('../../config/config')
 	;
 var async = require('async');
 
