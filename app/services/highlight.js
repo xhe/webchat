@@ -138,12 +138,24 @@ exports.retrieveTotalNewHighlights = function(user, cb){
 			if(err){
 				cb(err);
 			} else {
-				var q= Highlight.find({
-					creator:	
-						{
-							$in: creators
-						}	
-				});
+				var q= Highlight.find(
+						{	$and: [
+									{
+										creator:	
+										{
+											$in: creators
+										}	
+									},
+									{
+										creator:	
+										{
+											$ne: user
+										}	
+									}
+						       
+						       ]
+						}
+						);
 				if(highlightVisitLog){
 					q.where('created').gt(highlightVisitLog.visited);
 				}
