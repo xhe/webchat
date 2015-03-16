@@ -11,15 +11,23 @@ define(function(require){
 	
 	var user_on_off_line_event_initialized = false;
 	var chatroomCollection = null;
-		
+	var _self;	
 
 	// Extends Backbone.View
     var chatRoomsView = Backbone.View.extend( {
 
         // The View Constructor
-        initialize: function() {
+        initialize: function(link_id) {
         	 this.template = _.template( chatroom_tpl );
         	 chatroomCollection = new Chatroom.ChatroomCollection();
+        	 
+        	 if(link_id!=null && link_id.length>0){
+        		 this.link_to_share = link_id;
+        	 }else{
+        		 this.link_to_share = "";
+        	 }
+        	 
+        	 this._self = this;
         	 
         	 if(!user_on_off_line_event_initialized){
         		 _self = this;
@@ -43,16 +51,20 @@ define(function(require){
         			 if( window.location.href.indexOf('chatrooms')>0)
         				 chatroomCollection.getChatrooms();
         		 }); 
-        		 
-        		 
         		 user_on_off_line_event_initialized = true;
         	 }
-        	 
-        	 
         },
         events:{
         	"click #btnNewChatRoom": "newChatRoom",
-        	"click .hrefDeleteRoom": "deleteChatRoom"
+        	"click .hrefDeleteRoom": "deleteChatRoom",
+        	"click .hrefFavoriteToRoom": "favoriteToRoom"
+        },
+        
+        favoriteToRoom: function(event){
+        	chatroomCollection.shareLinkToRoom( event.target.getAttribute("data-roomid"), this.link_to_share, function(data){
+        		util.alert("You have successfully shared the link.");
+        		window.location = "#chatroom/"+event.target.getAttribute("data-roomid");
+        	});
         },
         
         deleteChatRoom: function(event){
@@ -77,11 +89,11 @@ define(function(require){
         },
        
         render: function() {           
-          	$(this.el).html(this.template({ user: util.getLoggedInUser() }));
-          	new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Chat Rooms").render();
+          	$(this.el).html(this.template({ user: util.getLoggedInUser(), link_to_share: this.link_to_share }));
+          	new HeaderView({ el: $(".headerContent", this.el)}).setTitle( this.link_to_share==""?"Chat Rooms":"Share highlight to...").render();
           	new FooterView({ el: $(".footerContent", this.el)}).render();
             
-          	this.chatRoomListView = new ChatRoomListView({ el: $("#divChatRoomList", this.el), model: chatroomCollection });
+          	this.chatRoomListView = new ChatRoomListView({ el: $("#divChatRoomList", this.el), model: chatroomCollection }).setSharedLink(this.link_to_share);
             chatroomCollection.getChatrooms();
           	return this;
         }
@@ -92,6 +104,12 @@ define(function(require){
     	initialize:function () {
 			this.model.bind("reset", this.render, this);
 		},
+		
+		setSharedLink: function(link){
+			this.link_to_share = link;
+			return this;
+		},
+		
 		
 		render: function(){
 			
@@ -133,7 +151,8 @@ define(function(require){
     				join_rooms: this.model.result.join_rooms, 
     				user: util.getLoggedInUser(),
     				showMemberHeadImg: util.showMemberHeadImg,
-    				showMemberHeadImgForChatRoom: util.showMemberHeadImgForChatRoom
+    				showMemberHeadImgForChatRoom: util.showMemberHeadImgForChatRoom,
+    				link_to_share: this.link_to_share
     				}));
     		$( ".listview" ).listview().listview( "refresh" );
     		

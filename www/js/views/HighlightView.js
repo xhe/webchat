@@ -15,8 +15,10 @@ define(function(require){
 	
 	
 	var  appendHighlight = function(highlight){ 
-		 
-		 
+		
+			if(highlight.contents!=null)
+				highlight.contents= util.linkify(highlight.contents, window.platform?true:false); 
+			
       		if(  $('#highlights')[0] ){
 	      				 var oldscrollHeight = $('#highlights')[0].scrollHeight;
 				        	 $('#highlights')
@@ -58,7 +60,8 @@ define(function(require){
       };
       
       var  appendHighlightTmp = function(highlight){ 
-    	  
+    	  if(highlight.content!=null)
+				highlight.content= util.linkify(highlight.content, window.platform?true:false); 
     	  
     		if(  $('#highlights')[0] ){
 	      				 var oldscrollHeight = $('#highlights')[0].scrollHeight;
@@ -103,11 +106,12 @@ define(function(require){
 	// Extends Backbone.View
     var HighlightsView = Backbone.View.extend( {
     	
-        initialize: function(name, period_from, period_to) {
+        initialize: function(name, period_from, period_to, favorite) {
         	this.highlightCollection = new HighlightModel.HighlightCollection();
         	this.creator = name?name:"";
         	this.period_from = period_from?period_from:"";
         	this.period_to = period_to?period_to:"";
+        	this.favorite = favorite?true:false;
         	this.template = _.template( highlights_tpl );
         },
         
@@ -126,8 +130,25 @@ define(function(require){
         	"swiperight #divHighlightItemsWrapper":"prev",
         	"click #btnHighligtPrev":"prev",
         	"click #btnHighligtNext":"next",
-        	"click #btnHighlightBack": "backToItemList"
+        	"click #btnHighlightBack": "backToItemList",
+        	"click .divHighlighSharedLink":"clkItemLink",
+        	"click .hrefFavorite": "toggleFavorite"
         },
+        
+        toggleFavorite: function(event){
+        	$(event.currentTarget).toggleClass("favorited");
+        	this.highlightCollection.favoriteHighlight(event.currentTarget.getAttribute("data-id"), function(result){
+       		});
+        },
+        
+        clkItemLink: function(event){ 
+        	event.preventDefault();
+        	if(event.target.getAttribute("data-id")!=='0' ){
+        		HighlightModel.setCurrentHighlight( this.highlightCollection.getHighlight( event.target.getAttribute("data-id")));
+        	}
+        	window.location = "#highlight/"+ event.target.getAttribute("data-id")+"/link";
+        },
+        
         
         submit: function(){
         	//  highlights/:name/:period_from/:period_to
@@ -355,6 +376,11 @@ define(function(require){
         render: function() {           
             $(this.el).html(this.template({ mobileOS:window.platform }));
             var title = "My Highlights"
+            
+            if(this.favorite){
+            	title = 'Hightlights | Favorite';
+            }
+            	
             if(this.creator){
             	if(this.creator=="all_families"){
             		title = 'Hightlights | Families';
@@ -367,7 +393,7 @@ define(function(require){
             new FooterView({ el: $(".footerContent", this.el)}).render();
             
             new HighlightListView({ model: this.highlightCollection });
-            this.highlightCollection.fetchHighlights(this.creator, this.period_from, this.period_to);
+            this.highlightCollection.fetchHighlights(this.creator, this.period_from, this.period_to, this.favorite);
             return this;
         }
     } );
@@ -393,11 +419,12 @@ define(function(require){
         			 }
         		 }
         		 if(window.unsavedHighlight){
-             		appendHighlightTmp (window.unsavedHighlight);
  	            	window.unsavedHighlight.saveData(function(){
  	            			window.unsavedHighlight = null;
  	            			$(".spanUploadingIndicator").html("Updated!")
  	            	});
+ 	            	HighlightModel.setCurrentHighlight(window.unsavedHighlight);
+ 	            	appendHighlightTmp (window.unsavedHighlight);
              	} 
         	 }, 500);
         }

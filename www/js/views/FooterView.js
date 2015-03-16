@@ -14,19 +14,19 @@ define(function(require){
         initialize: function() {
         	var _this = this;
         	if(!eventInitialized){
-        		
+        	/*	
         		window.socketEventService.on( window.socketEventService.EVENT_TYPE_INVITED, 
         				function(invitation){
         					_this.notify('hrefFooterInvitation');
         				}
         		);
-        		
+        	
         		window.socketEventService.on( window.socketEventService.EVENT_TYPE_REPLIED, 
         				function(invitation){
         					_this.notify('hrefFooterInvitation');
         				}
-        		);
-        		
+        			);
+        	*/	
         		window.socketEventService.on( window.socketEventService.EVENT_TYPE_CHATMESSAGE, 
         				function(msg){  	
         			 		var chat = JSON.parse(msg);
@@ -37,7 +37,7 @@ define(function(require){
         			 		}
         				}
         		);
-        		
+        	/*	
         		 window.socketEventService.on(window.socketEventService.EVENT_NOTIFY_MEMBER_ON_LINE,
          				function(){
         			 		_this.notify('hrefFooterContact');
@@ -49,7 +49,7 @@ define(function(require){
          			 		_this.notify('hrefFooterContact', true);
       		 			}
          		 );
-         		 
+         	*/	 
          		 window.socketEventService.on(window.socketEventService.EVENT_RTC_CALL_REQUEST,
        				 	function(screenName, fullName, roomName){
           			 		if(confirm("You have got phone call request from " + fullName +", do yo want to accept?")){

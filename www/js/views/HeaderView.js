@@ -27,6 +27,14 @@ define(function(require){
     		return this;
     	},
     	
+    	
+    	sharedLinkView: false,
+    	
+    	setSharedLinkView: function(){
+    		this.sharedLinkView = true;
+    		return this;
+    	},
+    	
     	events:{
          	"click .home": "home",
          	"click #lnkRefresh": "refresh"
@@ -54,7 +62,8 @@ define(function(require){
     						title: this.title, 
     						serverUrl: (window.hostURL?window.hostURL:""),
     						homeHeader: this.homeHeader,
-    						platform: window.platform
+    						platform: window.platform,
+    						sharedLinkView: this.sharedLinkView
     						}));
 		}
     });

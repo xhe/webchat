@@ -246,7 +246,7 @@ exports.invitationDetail = function(req, res) {
 exports.invitationReply = function(req, res) {
 	invitation_service.replyInvitation(req.user, req.body.invitation_id,
 			req.body.action, req.body.msg, function(data) {
-				console.log(data)
+				//console.log(data)
 				if (data.status == 'success') {
 					var inv = data.invitation;
 					if (req.body.action == 'accept') {
@@ -289,7 +289,7 @@ exports.chatmessagesbefore = function(req, res) {
 }
 
 exports.addChatMessage = function(req, res) {
-	chat_service.addChatMessage(req.user, req.body.roomId, req.body.message,
+	chat_service.addChatMessage(req.user, req.body.roomId, null, req.body.message,
 			function(data) {
 				res.jsonp(data);
 			});
@@ -426,6 +426,25 @@ exports.removeChatMessage = function(req, res, next) {
 	});
 };
 
+exports.favorites = function(req, res) {
+
+	highlight_service.retrieveFavorites(req.user, null,
+			req.params.period_from, req.params.period_to, function(err, data) {
+		
+		if (err) {
+					res.jsonp({
+						status : 'failed',
+						err : err
+					});
+				} else {
+					res.jsonp({
+						status : 'success',
+						contents : data
+					});
+				}
+			});
+};
+
 exports.highlights = function(req, res) {
 
 	highlight_service.retrieveHighlights(req.user, req.params.owner, null,
@@ -473,7 +492,7 @@ exports.save_highlight = function(req, res) {
 
 	var id = req.body.id ? (req.body.id == "null" ? null : req.body.id) : null;
 
-	highlight_service.createHighlight(id, req.user, req.body.content,
+	highlight_service.createHighlight(id, req.user, req.body.content, req.body.shared_link,
 			req.body.shared, originalPhotoIds, originalAudioIds, req.files,
 			function(err, data) {
 				if (err) {
@@ -491,7 +510,7 @@ exports.save_highlight = function(req, res) {
 };
 
 exports.save_highlightmedia = function(req, res) {
-	highlight_service.createHighlight(req.params.id, req.user, null, null, "",
+	highlight_service.createHighlight(req.params.id, req.user, null, null, null, "",
 			"", req.files, function(err, data) {
 				if (err) {
 					res.jsonp({
@@ -503,6 +522,8 @@ exports.save_highlightmedia = function(req, res) {
 						status : 'success',
 						content : data
 					});
+					
+					
 				}
 			});
 };
@@ -531,9 +552,8 @@ exports.updateHighlight = function(req, res) {
 			: [ originalPhotoIds ];
 	originalAudioIds = originalAudioIds instanceof Array ? originalAudioIds
 			: [ originalAudioIds ];
-
 	highlight_service.updateHighlightContent(req.params.id, req.user,
-			req.body.content, req.body.shared, originalPhotoIds,
+			req.body.content, req.body.shared_link, req.body.shared, originalPhotoIds,
 			originalAudioIds, function(err, data) {
 				if (err) {
 					res.jsonp({
@@ -544,6 +564,10 @@ exports.updateHighlight = function(req, res) {
 					res.jsonp({
 						status : 'success',
 						content : data
+					});
+					
+					//let's pull contents for link here
+					highlight_service.retrieveHighlightLinkMedia(data, function(err, data){
 					});
 				}
 			});
@@ -582,3 +606,59 @@ exports.updateRelationship = function(req, res) {
 				}
 			});
 };
+
+exports.share_highlight_link = function(req, res){
+	highlight_service.createHighlightWithLink(req.user, req.user.firstName+" "+req.user.lastName+" shared a link", req.params.link_id, function(err, doc){
+		if (err) {
+			res.jsonp({
+				status : 'failed',
+				err : err
+			});
+		} else {
+			res.jsonp({
+				status : 'success',
+				content : doc
+			});
+		}
+	});
+};
+
+exports.sharelinktoroom = function(req, res){
+	chat_service.addChatMessage(req.user, req.body.room_id, req.body.link_id,  req.user.firstName+" "+req.user.lastName+" shared a link", 
+			function(data) {
+				res.jsonp(data);
+			}
+	);
+};
+
+exports.favorite_highlight = function(req, res){
+	highlight_service.toggleFavorite(req.params.highlight_id, req.user, function(err, doc){
+		if (err) {
+			res.jsonp({
+				status : 'failed',
+				err : err
+			});
+		} else {
+			res.jsonp({
+				status : 'success',
+				result : doc
+			});
+		}
+	});
+};
+
+exports.findHighlightFromLink = function(req, res){
+	highlight_service.findHighlightFromLink(req.body.link_id, function(err, docs){
+		if (err) {
+			res.jsonp({
+				status : 'failed',
+				err : err
+			});
+		} else {
+			res.jsonp({
+				status : 'success',
+				result : docs[0]
+			});
+		}
+	});
+}

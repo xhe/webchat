@@ -113,3 +113,92 @@ exports.isEmail = function(s){
 	var isEmail_re       = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
 	return String(s).search (isEmail_re) != -1;
 };	
+
+
+var _ = require('lodash');
+var URL = require("url");
+var request = function(options, url, cb) {
+	var haveRequestBody = !_.isUndefined(options.requestBody);
+	if (haveRequestBody) {
+		var requestBody = options.requestBody;
+	}
+	
+	var parseResult = URL.parse( url );
+	var option = {
+		method: options.method,
+		host: parseResult.hostname,
+		path: parseResult.path,
+		port: parseResult.port,
+	};
+
+	if (haveRequestBody) {
+		option.headers['Content-Length'] = requestBody.length;
+	}
+
+	if (options.contentType) {
+		option.headers['Content-type'] = options.contentType;
+	}
+
+	if (options.accept) {
+		option.headers['Accept'] = options.accept;
+	}
+
+	var client = http;
+	if (url.indexOf("https") > -1) {
+		_.assign(option, {
+			rejectUnauthorized: false,
+			requestCert: true,
+			agent: false
+		});
+		client = https;
+	}
+
+	var req = client.request(option, function(res) {
+		var body = [];
+		if (url.indexOf('.jpg') > 0) {
+			res.setEncoding('binary');
+		} else {
+			res.setEncoding('utf8');
+		}
+
+		res.on('data', function(data) { 
+			body.push(data);
+		});
+		res.on('end', function() { 
+			body = body.join('');
+			var statusCodeClass = 0|res.statusCode/100; 
+			if (statusCodeClass != 2) {
+				return cb(Error('Unsuccessful status code ' + res.statusCode
+					+ ' while requesting ' + option.method + ' ' + option.path
+					+ '\n' + body));
+			}
+			if (option.method === 'DELETE' && body.length === 0) {
+				return cb(null);
+			}
+			if (options.accept === 'application/json') {
+				try {
+					var obj = JSON.parse(body);
+					return cb(null, obj);
+				} catch (e) {
+					return cb(Error("Can't parse JSON " + body));
+				}
+			} else { 
+				cb(null, body);
+			}
+		});
+	});
+	req.on('error', function(err) {
+		cb(err);
+	});
+	if (haveRequestBody) {
+		req.write(requestBody);
+	}
+	req.end();
+};
+
+exports.get = function(url, cb) {
+	var options = {
+		method: 'GET'
+	};
+	request(options, url, cb);
+};

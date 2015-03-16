@@ -19,6 +19,42 @@ var HighlightVisitLogSchema =  new Schema({
 	}
 });
 
+var HighlightLinkSchema = new Schema(
+	{
+		link: String,
+		title: String,
+		msg: String,
+		by: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Client'
+		},
+		created:{
+			type: Date,
+			default: Date.now
+		}
+	}	
+);
+
+var FavoriteSchema = new Schema({
+	
+	
+	owner: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Client'
+	},
+	
+	highlight: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Highlight'
+	},
+	
+	created:{
+		type: Date,
+		default: Date.now
+	}
+	
+});
+
 var HighlightSchema = new Schema({
 	
 	creator: {
@@ -27,7 +63,6 @@ var HighlightSchema = new Schema({
 	},
 	
 	contents: String,
-	
 	photos: [{
 		type: mongoose.Schema.Types.ObjectId ,
 		ref: 'PhotoSchema' 
@@ -37,6 +72,11 @@ var HighlightSchema = new Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Audio' 
 	}],
+	
+	shared_link: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'HighlightLink' 
+	},
 	
 	shared: {
 		type: Number,
@@ -48,6 +88,9 @@ var HighlightSchema = new Schema({
 			type: Date,
 			default: Date.now
 		},
+	
+	favorited: {type: Boolean, default: true},
+	
 	date_str:String
 });
 
@@ -100,3 +143,5 @@ HighlightSchema.statics.findByCreator = function(creator, cb){
 
 mongoose.model('Highlight', HighlightSchema);
 mongoose.model('HighlightVisitLog', HighlightVisitLogSchema);
+mongoose.model('HighlightLink',HighlightLinkSchema);
+mongoose.model('Favorite', FavoriteSchema);

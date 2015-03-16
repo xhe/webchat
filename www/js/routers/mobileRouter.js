@@ -23,7 +23,8 @@ define(function(require){
 		SettingsView = require('views/SettingsView'),
 		io = require("socket.io"),
 		HighlightView = require('views/HighlightView'),
-		AddHighlightView = require('views/AddHighlightView')
+		AddHighlightView = require('views/AddHighlightView'),
+		HighlightLinkView = require('views/HighlightLinkView')
 		;
     // Extends Backbone.Router
 	return Backbone.Router.extend( {
@@ -61,9 +62,23 @@ define(function(require){
             "settings":"settings",
             "myhighlights": "myhighlights",
             "highlights/:name": "highlights",
+            "favorites": "favorites",
+            "favorites/:period_from/:period_to": "favorites_period",
             "highlights/:name/:period_from/:period_to": "highlights_period",
             "add_highlights": "add_highlights",
-            "update_highlight/:id": "update_highlight"
+            "update_highlight/:id": "update_highlight",
+            "highlight/:id/link":"showHighlightLink",
+            "sharetoroom/:link_id": "sharetoroom"
+        },
+        
+       
+        
+        showHighlightLink: function(id){
+        	if (this.login())
+        		return;
+        	highlightLinkView = new HighlightLinkView(id);
+        	this.changePage(highlightLinkView);
+        	return true;
         },
         
         update_highlight: function(id){
@@ -98,6 +113,23 @@ define(function(require){
         	return true;
         	
         },
+        
+        favorites_period: function( period_from, period_to ){
+        	if (this.login())
+        		return;
+        	highlightView = new HighlightView(null, period_from, period_to, true);
+        	this.changePage(highlightView);
+        	return true;
+        },
+        
+        favorites: function(){
+        	if (this.login())
+        		return;
+        	highlightView = new HighlightView(null, null, null, true);
+        	this.changePage(highlightView);
+        	return true;
+        },
+        
         
         myhighlights: function(){
         	if (this.login())
@@ -272,6 +304,13 @@ define(function(require){
         		return;
         	
         	chatRoomView = new ChatRoomView();
+        	this.changePage(chatRoomView);
+        },
+        
+        sharetoroom: function(link_id){
+        	if (this.login())
+        		return;
+        	chatRoomView = new ChatRoomView(link_id);
         	this.changePage(chatRoomView);
         },
         

@@ -8,6 +8,7 @@ define(function (require) {
 		urlRoot: config.serverUrl + 'highlight',
 		
 		content: null,
+		shared_link: null,
 		medias: [],
 		shared: 0,
 		id: null,
@@ -18,6 +19,13 @@ define(function (require) {
 		
 		setShared: function(s){
 			this.shared = s;
+		},
+		
+		setSharedLink: function(link){
+			if(link!="" && link.substr(0,4)!="http"){
+				link="http://"+link;
+			}
+			this.shared_link =  link;
 		},
 		
 		setContent: function(s){
@@ -39,6 +47,7 @@ define(function (require) {
 		reset: function(){
 			this.content = null;
 			this.medias = [];
+			this.shared_link = null;
 		},
 		
 		restoreContents: function(h){
@@ -47,6 +56,7 @@ define(function (require) {
 			if(h.medias.length>0)
 				this.medias = h.medias;
 			this.shared = h.shared;
+			this.shared_link = h.shared_link;
 		},
 		
 		remove: function(uuid){
@@ -60,10 +70,14 @@ define(function (require) {
 		},
 		
 		valid: function(){
-			if(this.content.length==0 && this.medias.length ==0 ){
-				return false;
-			}else{
-				return true;
+			if(this.shared_link!="" && !util.isURL(this.shared_link)){
+				return "Please enter valid link";
+			} else {
+				if( this.shared_link=="" &&  this.content.length==0 && this.medias.length ==0 ){
+					return "Please provide content or attache medias.";
+				}else{
+					return true;
+				}
 			}
 		},
 		
@@ -88,6 +102,7 @@ define(function (require) {
 			 var formData = new FormData();
 			 formData.append('content', this.content);
 			 formData.append('shared', this.shared);
+			 formData.append('shared_link', this.shared_link);
 			 formData.append('id', this.id);
 			 var media_index = 0;
 			 _.each(this.medias, function(media){
@@ -116,8 +131,8 @@ define(function (require) {
 				var original_photos = [];
 				var original_audios = [];
 				var new_medias = [];
-				
-				 _.each(this.medias, function(media){
+		
+				_.each(this.medias, function(media){
 					 if(media.type==='photo')
 						 if(media.id)
 							 original_photos.push( media.id );
@@ -131,12 +146,12 @@ define(function (require) {
 							 new_medias.push(media);
 				 });
 				
-				
 				if(this.id){
 					$.post( config.serverUrl+'updateHighlight/'+this.id,
 							{
 								content: this.content,
 								shared: this.shared,
+								shared_link: this.shared_link,
 								original_photos: original_photos,
 								original_audios: original_audios
 							},
@@ -202,7 +217,8 @@ define(function (require) {
 					$.post( config.serverUrl+'highlights', 
 							{
 								content: this.content,
-								shared: this.shared
+								shared: this.shared,
+								shared_link: this.shared_link
 							},
 							function(result){
 								if(result.status=='success'){
@@ -283,7 +299,8 @@ define(function (require) {
 			var arr= {
 					content: this.content,
 					medias: this.medias,
-					shared: this.shared
+					shared: this.shared,
+					shared_link: this.shared_link
 			}
 			return JSON.stringify( arr );
 		},
@@ -296,6 +313,7 @@ define(function (require) {
 							_this.shared = data.content.shared;
 							_this.content = data.content.contents;
 							_this.id = data.content._id;
+							_this.shared_link = data.content.shared_link;
 							
 							_this.medias = [];
 							_.each(data.content.photos, function(photo){
@@ -339,16 +357,34 @@ define(function (require) {
 		name: null,
 		period_from: null,
 		period_to: null,
+		favorite: false,
 		
-		fetchHighlights: function(name, period_from, period_to){
+		currentHighlight: null,
+		
+		fetch: function(id){
+			_self = this;
+			util.ajax_get(config.serverUrl+'highlight/'+id, 
+					this.callback, 
+					true);
+		},
+		
+		
+		fetchHighlights: function(name, period_from, period_to, favorite){
 			_self = this;
 			this.name = name?name:util.getLoggedInUser().screenName;
 			this.period_from = period_from?period_from:null;
 			this.period_to = period_to?period_to:null;
+			this.favorite = favorite;
 			
-			util.ajax_get(config.serverUrl+'highlights/'+this.name+"/"+this.period_from+"/"+this.period_to, 
-					this.callback, 
-					true);
+			if(favorite){
+				util.ajax_get(config.serverUrl+'favorites/'+this.period_from+"/"+this.period_to, 
+						this.callback, 
+						true);
+			}else{
+				util.ajax_get(config.serverUrl+'highlights/'+this.name+"/"+this.period_from+"/"+this.period_to, 
+						this.callback, 
+						true);
+			}
 		},
 		
 		fetchPrev: function(cb){
@@ -356,13 +392,41 @@ define(function (require) {
 			if(this.result.contents.length>0){
 				_self = this;
 				var oldestedTime = this.result.contents[ this.result.contents.length-1 ].created;
-				util.ajax_get(config.serverUrl+'highlights/'+this.name +"/"+this.period_from+"/"+this.period_to +'/'+oldestedTime, 
-				function(data){
-					_self.result = data;
-					cb(data);
-				}, 
-				true);
+				
+				if(this.favorite){
+					util.ajax_get(config.serverUrl+'favorites/'+this.period_from+"/"+this.period_to +'/'+oldestedTime, 
+							function(data){
+								_self.result = data;
+								cb(data);
+							}, 
+							true);
+				} else {
+					util.ajax_get(config.serverUrl+'highlights/'+this.name +"/"+this.period_from+"/"+this.period_to +'/'+oldestedTime, 
+							function(data){
+								_self.result = data;
+								cb(data);
+							}, 
+							true);
+				}
 			}
+		},
+		
+		createHighlightWithLink : function(linkId, cb){
+			$.post( config.serverUrl+'sharelink/'+linkId, {}, function(result){
+				cb(result);
+			});
+		},
+		
+		favoriteHighlight: function(highlightId, cb){
+			$.post( config.serverUrl+'favorite/'+highlightId, {}, function(result){
+				cb(result);
+			});
+		},
+		
+		findHighlightFromLink: function(link_id, cb){
+			$.post( config.serverUrl+'findHighlightFromLink', {link_id: link_id}, function(result){
+				cb(result);
+			});
 		},
 		
 		callback: function(data){
@@ -387,10 +451,29 @@ define(function (require) {
 			});
 			return results;
 		},
+		
+		getHighlight: function(id){
+			return _.find( this.result.contents, function(highlight){
+				return highlight._id==id;
+			});
+		},
+		
 	});
+	
+	var curretHighlight = null;
+	var setCurrentHighlight = function(h){
+		curretHighlight = h;
+	}
+	var getCurrentHighlight = function(){
+		return curretHighlight;
+	}
+	
+	
 	
 	return {
 		Highlight: Highlight,
-		HighlightCollection: HighlightCollection
+		HighlightCollection: HighlightCollection,
+		setCurrentHighlight: setCurrentHighlight,
+		getCurrentHighlight: getCurrentHighlight
 		   }
 });

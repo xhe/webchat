@@ -15,6 +15,17 @@ define(function (require) {
 		model: Chatroom,
 		url: config.serverUrl + 'chatrooms',
 		
+		shareLinkToRoom: function(room_id, link_id, cb){
+			$.post( config.serverUrl+'sharelinktoroom', 
+					{
+						link_id: link_id,
+						room_id: room_id
+					},
+					function(result){
+						cb(result);
+					}
+			);
+		},
 		
 		getChatrooms: function(){ 
 			_self = this;

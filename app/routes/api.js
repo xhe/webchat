@@ -57,6 +57,9 @@ module.exports = function(app){
 	app.route('/api/highlights/:owner').get(user_service.requiresLogin, api.highlights);
 	app.route('/api/highlights/:owner/:ts').get(user_service.requiresLogin, api.highlightsbefore);
 	app.route('/api/highlights/:owner/:period_from/:period_to').get(user_service.requiresLogin, api.highlights);
+	
+	
+	app.route('/api/favorites/:period_from/:period_to').get(user_service.requiresLogin, api.favorites);
 	app.route('/api/highlights/:owner/:period_from/:period_to/:ts').get(user_service.requiresLogin, api.highlightsbefore);
 	
 	
@@ -64,6 +67,13 @@ module.exports = function(app){
 	app.route('/api/highlights/:id').post(user_service.requiresLogin, api.save_highlightmedia);
 	app.route('/api/highlight/:id').get(user_service.requiresLogin, api.get_highlight);
 	app.route('/api/highlight/:id').delete(user_service.requiresLogin, api.delete_highlight);
+	
+	app.route('/api/sharelink/:link_id').post(user_service.requiresLogin, api.share_highlight_link);
+	app.route('/api/sharelinktoroom').post(user_service.requiresLogin, api.sharelinktoroom);
+	app.route('/api/findHighlightFromLink').post( user_service.requiresLogin, api.findHighlightFromLink );
+	
+	
+	app.route('/api/favorite/:highlight_id').post(user_service.requiresLogin, api.favorite_highlight);
 	
 	app.route('/api/updateHighlight/:id').post( user_service.requiresLogin, api.updateHighlight );
 	app.route('/api/relationship').put( user_service.requiresLogin, api.updateRelationship);

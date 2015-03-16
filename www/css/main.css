@@ -512,6 +512,7 @@ img.offline{
 }
 
 
+
 .tdEditHighlight a:link{
 	cursor: pointer;  font-size: 30px;color: gray;
 }
@@ -648,6 +649,32 @@ ul.ulHighlightMedias li img{
 #divChatImg img{
 	width: 100%;
 	max-width: 100%;
+}
+.divHighlighSharedLink{
+	
+	background-color: #c2c2b3;
+    cursor: pointer;
+    font-size: 70%;
+    padding-top: 5px;
+    padding-bottom:5px;
+    text-align: center;
+}
+.divHighlighSharedLinkChat{
+	
+	background-color: #c2c2b3;
+    cursor: pointer;
+    font-size: 70%;
+    padding-top: 5px;
+    padding-bottom:5px;
+    text-align: center;
+}
+
+span.hrefFavorite{
+	font-size: 30px;
+	cursor: pointer;
+}
+span.favorited{
+	color: red;
 }
 
 .cfx{

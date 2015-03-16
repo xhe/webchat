@@ -11,6 +11,7 @@ define(function(require){
 		util = require('common/utils'),
 		HeaderView = require('views/HeaderView'),
 		ChatMessageModel = require('models/chatMessageModel'),
+		HighlightModel = require('models/highlightModel'),
 		HeaderView = require('views/HeaderView'),
 		FooterView = require('views/FooterView')
 		;
@@ -53,10 +54,14 @@ define(function(require){
 	};
 	
 	var  appendChatMsg = function(chat){
+		
+		if(chat.message!=null)
+			chat.message = util.linkify(chat.message, window.platform?true:false);
+		
       	if(current_roomId === chat.room ){
       			
       		if(  $('#messages')[0] ){
-	      				
+	      				 
 	      				 var oldscrollHeight = $('#messages')[0].scrollHeight;
 				        	 $('#messages')
 			     		 	.append( 
@@ -129,6 +134,8 @@ define(function(require){
         initialize: function() {
         	 this.template = _.template( room_chatting_view_tpl );
         	 this.chatMessageCollection = new ChatMessageModel.ChatMessageCollection();
+        	 this.highlightCollection = new HighlightModel.HighlightCollection();
+         	
         	 var _self = this;
         	  if(!chat_message_event_initialized){
         		  window.socketEventService.on( window.socketEventService.EVENT_TYPE_CHATMESSAGE, 
@@ -224,7 +231,26 @@ define(function(require){
         	"click #recordVideo": "recordVideo",
         	"click #hrefShowAttController": "toggleAttController",
         	"click .imgChatItem": "showChatImgBig",
-        	"click #divChatImgWrapper":"backToChatList"
+        	"click #divChatImgWrapper":"backToChatList",
+        	"click .hreItemLinkTarget": "clkItemLink",
+        	"click .divHighlighSharedLinkChat":"clkSharedLink",
+        },
+        
+        clkSharedLink: function(event){ 
+        	event.preventDefault();
+        	this.highlightCollection.findHighlightFromLink(event.target.getAttribute("data-id"), function(data){
+        		HighlightModel.setCurrentHighlight( data.result);
+        		window.location = "#highlight/"+ data.result._id+"/link";
+        	});
+        },
+        
+        clkItemLink: function(event){
+        	event.preventDefault();
+        	if(window.platform){
+        		window.open(event.target.getAttribute("data-link"), '_system');
+        	}else{
+        		window.open(event.target.getAttribute("data-link"), '_blank');
+        	}
         },
         
         backToChatList: function(){

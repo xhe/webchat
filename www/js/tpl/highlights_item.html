@@ -17,7 +17,7 @@
 		<td width="100%">
 		
 			<% if( highlight.contents  ) {%>
-				<%= highlight.contents  %>
+				<%=  highlight.contents  %>
 			<%}%>
 			
 			<div class="divHighlightItems" data-id="<%= highlight._id%>">
@@ -35,11 +35,46 @@
 					</span>
 				<% }) %>
 			</div>
+			
+			<%if(highlight.shared_link && highlight.shared_link.link!=undefined && highlight.shared_link.link.length>0){%> 
+			
+			<div class="cfx divHighlighSharedLink" data-id="<%= highlight._id %>">
+					<% if(highlight.shared_link.msg!=undefined && highlight.shared_link.msg.trim()!="" ){%> 
+						<%= highlight.shared_link.msg %>
+					<%} else if(highlight.shared_link.title!=undefined && highlight.shared_link.title.trim()!="" ){%>
+						<%= highlight.shared_link.title %>
+					<%} else {%>
+						Shared Link
+					<%}%>
+			</div>
+			<%}%>
+			
 		</td>
-		<td style="padding-right: 20px;" class="tdEditHighlight">
-		<% if( user.screenName === highlight.creator.screenName ){%>
-				<a href="#update_highlight/<%= highlight._id%>"><i class="fa fa-edit" ></i></a> 
-		<%}%>		
+		<td style="padding-right: 0px;" class="tdEditHighlight">
+			<table>
+				<% if( user.screenName === highlight.creator.screenName ){%>
+					
+						<tr>
+							
+					
+							<td>
+								<a href="#update_highlight/<%= highlight._id%>"><i class="fa fa-edit" ></i></a>
+							</td>
+							<td >
+								<span data-id="<%= highlight._id%>" class="hrefFavorite <%= highlight.favorited?'favorited':'unfavorited'%>"><i class="fa fa-heart" ></i></span> 
+							</td>
+						</tr>
+				
+				<%} else {%>
+				
+					<tr>
+						<td>
+							<span data-id="<%= highlight._id%>" class="hrefFavorite <%= highlight.favorited?'favorited':'unfavorited'%>"><i class="fa fa-heart" ></i></span> 
+						</td>
+					</tr>
+				<%}%>	
+			</table>
+			
 		</td>		
 	</tr>
 	<tr>
@@ -52,7 +87,7 @@
 			<%= highlight.date_str%>
 		</td>
 	 <%}%>
-		
+	
 	</tr>
 	
 </table>

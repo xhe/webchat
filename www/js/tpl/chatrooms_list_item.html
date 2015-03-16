@@ -23,9 +23,26 @@
 						<%}else if(msgPhotoPath!==""){%>
 							<img src="<%= msgPhotoPath %>" class="imgChatItem" data-smallimgurl="<%= msgPhotoPath%>" data-bigimgurl="<%= msgPhotoLargePath %>"/>
 						<%}else{%>
-							<%= chat.message %>
+							<%=  chat.message %>
 						<%}%>
-				</div>				
+				</div>	
+				
+				
+				<%if(chat.shared_link && chat.shared_link.link!=undefined && chat.shared_link.link.length>0){%> 
+			
+					<div class="cfx divHighlighSharedLinkChat" data-id="<%= chat.shared_link._id %>">
+							<% if(chat.shared_link.msg!=undefined && chat.shared_link.msg.trim()!="" ){%> 
+								<%= chat.shared_link.msg %>
+							<%} else if(chat.shared_link.title!=undefined && chat.shared_link.title.trim()!="" ){%>
+								<%= chat.shared_link.title %>
+							<%} else {%>
+								Shared Link
+							<%}%>
+					</div>
+				<%}%>
+				
+				
+							
 			</td>
 			<td width="60px" align="center">
 			
@@ -80,6 +97,23 @@
 							<%= chat.message %>
 						<%}%>
 				</div>
+				
+				
+				<%if(chat.shared_link && chat.shared_link.link!=undefined && chat.shared_link.link.length>0){%> 
+			
+					<div class="cfx divHighlighSharedLinkChat" data-id="<%= chat.shared_link._id %>">
+							<% if(chat.shared_link.msg!=undefined && chat.shared_link.msg.trim()!="" ){%> 
+								<%= chat.shared_link.msg %>
+							<%} else if(chat.shared_link.title!=undefined && chat.shared_link.title.trim()!="" ){%>
+								<%= chat.shared_link.title %>
+							<%} else {%>
+								Shared Link
+							<%}%>
+					</div>
+				<%}%>
+				
+				
+				
 			</td>
 		<tr>
 	<%}%>

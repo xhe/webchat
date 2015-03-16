@@ -4,7 +4,7 @@
 	
 	<h4>Rooms created by you (<%= own_rooms.length%>) </h4>
 	
-	<ul data-role="listview" data-split-theme="a" data-split-icon="delete" class="listview" data-count-theme="c">
+	<ul data-role="listview" data-split-theme="a" data-split-icon="<%= link_to_share.length>0?'check':'delete' %>" class="listview" data-count-theme="c">
 	
 	<% _.each(own_rooms, function(room){%>
 		
@@ -34,9 +34,12 @@
 				</table>
 			
 			 </a>
-			
-			<a class="hrefDeleteRoom" data-roomid="<%= room._id%>" data-action='delete'>Delete</a>	 
-			
+		
+			<% if(link_to_share.length>0){%> 
+				<a data-roomid="<%= room._id%>" class="hrefFavoriteToRoom">Favorite</a>	 
+			<%}else{%>
+				<a class="hrefDeleteRoom" data-roomid="<%= room._id%>" data-action='delete'>Delete</a>	 
+			<%}%>
 		</li>
 	<%})%>
 	</ul>
@@ -49,7 +52,7 @@
 <% if (join_rooms.length>0){%>
 	
 	<h4>Rooms you have joined <%= join_rooms.length%></h4>
-	<ul data-role="listview" data-split-theme="a" data-split-icon="delete" class="listview" data-count-theme="c">
+	<ul data-role="listview" data-split-theme="a" data-split-icon="<%= link_to_share.length>0?'check':'delete' %>"class="listview" data-count-theme="c">
 	
 	<% _.each(join_rooms, function(room){%>
 		
@@ -76,7 +79,14 @@
 				
 				
 			 </a> 
-			<a class="hrefDeleteRoom" data-roomid="<%= room._id%>" data-action='leave'>Leave</a>	 
+			 
+			 <% if(link_to_share.length>0){%> 
+				<a data-roomid="<%= room._id%>" class="hrefFavoriteToRoom">Favorite</a>	 
+			<%}else{%>
+				<a class="hrefDeleteRoom" data-roomid="<%= room._id%>" data-action='leave'>Leave</a>	  
+			<%}%>
+			 
+			
 		</li>
 	<%})%>
 	</ul>

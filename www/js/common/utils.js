@@ -59,7 +59,12 @@ define(function(require){
 				    any: function() {
 				        return (Android() || BlackBerry() || iOS() || Opera() || Windows());
 				    },
-			
+		
+		linkify: function(content, mobile){
+			var exp = /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#%?=~_|!:,.;]*)([-A-Z0-9+&@#%?\/=~_|!:,.;]*)[-A-Z0-9+&@#\/%=~_|])/ig;
+			return content.replace(exp, "<a class='hreItemLinkTarget' data-link='$1' >shared link</a>");
+		},		    
+				    
 		isUserLoggedIn: function(){
 			if(window.user){
 				if( window.user && window.user.loggedIn){
@@ -304,6 +309,17 @@ define(function(require){
 			var isEmail_re       = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
 			return String(s).search (isEmail_re) != -1;
 		},	
+		
+		isURL: function(url){
+			if( (url.indexOf("http://")!==-1 || url.indexOf("https://")!==-1)
+					&& url.indexOf(".")>7
+				){
+				return true;
+			} else {
+				return false;
+			}
+		},
+		
 		
 		extractDigits: function(str){
 			return str.replace(/\D+/g,'')

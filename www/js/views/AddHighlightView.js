@@ -53,6 +53,7 @@ define(function(require){
         recordAudioMobile: function(){
         	this.highlight.setShared( $('input[name=radSharedWith]:checked').val() );
         	this.highlight.setContent($("#txtHightContent").val());
+        	this.highlight.setSharedLink($("#txtSharedLink").val());
         	if(!this.highlight.isEmpty())
         		sessionStorage.setItem('highlight', this.highlight.toString() );
         	window.open('mediaUploader.html#type=audio&host='+window.hostURL+"&roomId=0");
@@ -61,9 +62,8 @@ define(function(require){
         attPhotos: function(){
         	this.highlight.setShared( $('input[name=radSharedWith]:checked').val() );
         	this.highlight.setContent($("#txtHightContent").val());
+        	this.highlight.setSharedLink($("#txtSharedLink").val());
         	if(!this.highlight.isEmpty()){
-        		console.log("saving session ");
-        		console.log( this.highlight.toString() )
         		sessionStorage.setItem('highlight', this.highlight.toString() );
         	}
         		
@@ -73,6 +73,7 @@ define(function(require){
         attCamera: function(){
         	this.highlight.setShared( $('input[name=radSharedWith]:checked').val() );
         	this.highlight.setContent($("#txtHightContent").val());
+        	this.highlight.setSharedLink($("#txtSharedLink").val());
         	if(!this.highlight.isEmpty())
         		sessionStorage.setItem('highlight', this.highlight.toString() );
         	window.open('photoUploader.html#type=camera&host='+window.hostURL+"&roomId=0");
@@ -81,13 +82,13 @@ define(function(require){
         save: function(){
         	this.highlight.setShared( $('input[name=radSharedWith]:checked').val() );
         	this.highlight.setContent($("#txtHightContent").val());
-        	if(! this.highlight.valid() ){
-        		util.alert("Please enter content or select media first.");
+        	this.highlight.setSharedLink($("#txtSharedLink").val());
+        	
+        	if(this.highlight.valid()!==true){
+        		util.alert("Error happened: " + this.highlight.valid());
         	} else {
         		window.unsavedHighlight = this.highlight;
         		window.history.back();
-        		//this.highlight.saveData();
-        		
         	}
         },
         
@@ -203,6 +204,7 @@ define(function(require){
     				$("#radSharedWith-friend").attr("checked", false);
     				$("#radSharedWith-all").attr("checked", false);
     				$("#radSharedWith-none").attr("checked", false);
+    				$("#txtSharedLink").val(doc.shared_link);
     				
     				switch(doc.shared){
     				    case 1:

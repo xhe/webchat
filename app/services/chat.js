@@ -15,7 +15,8 @@ var mongoose = require('mongoose'),
 	_ = require('lodash'),
 	async = require('async'),
 	fs = require('fs'),
-	PhotoSchema = mongoose.model('PhotoSchema')
+	PhotoSchema = mongoose.model('PhotoSchema'),
+	Highlight = mongoose.model('Highlight')
 	;
 
 exports.chatRoomNewChatMsg = function(user, room, cb ){
@@ -186,6 +187,7 @@ exports.retrieveChatMessages = function(user, roomId, before_ts, before, cb){
 					q.populate('photo');
 					q.populate('audio');
 					q.populate('video');
+					q.populate('shared_link');
 					if(before_ts){
 						if(before===true)
 							q.where('created').lt(before_ts);
@@ -205,15 +207,18 @@ exports.retrieveChatMessages = function(user, roomId, before_ts, before, cb){
 		);
 };
 
-
-
-exports.addChatMessage = function(user, roomId, msg, cb){
+exports.addChatMessage = function(user, roomId, linkId, msg, cb){
+	
+	
 	var message = new ChatMessage({
 		creator: user,
 		room:	 new ObjectId(roomId),
 		message: msg,
 		created: Date.now()
 	});
+	if(linkId!=null){
+		message.shared_link = new ObjectId(linkId);
+	}
 	message.save( function(err) {
 		if(err){
 			console.log(err);
@@ -399,9 +404,17 @@ exports.addVideoForChatMessage = function(audioPath, videoPath, user, roomId, cb
 	                 ], cb);
 };
 
+var checkRefereCountForLink = function(link, cb){
+	Highlight.where({"shared_link": link}).count(function(err, cn1){
+		ChatMessage.where({"shared_link": link}).count(function(err, cn2){
+			cb(err, cn1+cn2);
+		});
+	});
+};
+
 exports.removeChatMsg = function(msgId, user, cb){
 	ChatMessage.findById(msgId)
-	.populate('creator photo audio video')
+	.populate('creator photo audio video shared_link')
 	.exec(function(err, chat){
 		if(err){
 			cb(err);
@@ -433,6 +446,17 @@ exports.removeChatMsg = function(msgId, user, cb){
 							var path =  __dirname+'/../../www'; 
 							fs.unlinkSync(   path+ chat.video.filename )
 							Video.findById(chat.video._id).remove().exec();
+						}
+						if(chat.shared_link){
+							checkRefereCountForLink(chat.shared_link, function(err, count){
+								if(err){
+								}else {
+									if( count==1 ){
+										chat.shared_link.remove(function(err, doc){
+										});
+									}
+								}	
+							});
 						}
 						cb(null, chat);
 					}

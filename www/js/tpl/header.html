@@ -23,7 +23,7 @@
 				<a data-rel="back" data-icon="back" class='btnBack'  data-role="button">Back</a>
 			<%}%>
 			
-			<h1>
+			<h1 id="headerTitle">
 				<%=title%>
 				
 			</h1>
@@ -39,6 +39,19 @@ onclick="$('#popupBasic').popup( { positionTo:'.profSettingLnk',dismissible: tru
 						    	<a href="#add_friend">Add Friend</a>
 						    </li>
 						    <li data-icon="false"><a href="#profiles">Update Profile</a></li>
+						    
+						    <li data-icon="false"><a href="#favorites">My Favorites</a></li>
+						    
+						    <% if(sharedLinkView){%>
+						    
+						      <li  data-icon="false"><a id="hrefSharedToFriend">Shared to room</a></li>
+						      <li  data-icon="false"><a id="hrefSharedToHighlight">Shared to highlight</a></li>
+						      <!-- 
+						         <li  data-icon="false"><a id="hrefAddToFavorite">Add to my favorite</a></li>
+						       -->
+						    <%}%>
+						    
+						    
 						    <% if (!homeHeader ){%>
 						    	<li data-icon="home"><a  href="#">Home</a></li>
 						    <%}%>

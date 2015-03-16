@@ -64,7 +64,12 @@ var ChatMessageSchema = new Schema({
 			type: Date,
 			default: Date.now
 		},
-	date_str:String
+	date_str:String,
+	
+	shared_link: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'HighlightLink' 
+	},
 });
 
 var ChatRoomVisitLogSchema =  new Schema({
