@@ -55,6 +55,18 @@ var FavoriteSchema = new Schema({
 	
 });
 
+var HighlightCommentSchema = new Schema({
+	creator: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Client'
+	},
+	comment: String,
+	created:{
+		type: Date,
+		default: Date.now
+	}
+});
+
 var HighlightSchema = new Schema({
 	
 	creator: {
@@ -91,8 +103,18 @@ var HighlightSchema = new Schema({
 	
 	favorited: {type: Boolean, default: true},
 	
-	date_str:String
+	date_str:String,
+	
+	comments:[
+		          {
+		        	  type: mongoose.Schema.Types.ObjectId,
+		        	  ref: 'HighlightComment'
+		          }
+	          ]
 });
+
+var deepPopulate = require('mongoose-deep-populate');
+HighlightSchema.plugin( deepPopulate  );
 
 HighlightSchema.methods.removePhotos = function(photoIds, callback){ 
 	
@@ -145,3 +167,4 @@ mongoose.model('Highlight', HighlightSchema);
 mongoose.model('HighlightVisitLog', HighlightVisitLogSchema);
 mongoose.model('HighlightLink',HighlightLinkSchema);
 mongoose.model('Favorite', FavoriteSchema);
+mongoose.model('HighlightComment',HighlightCommentSchema);

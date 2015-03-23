@@ -12,9 +12,7 @@ define(function(require){
 		ContactModel = require('models/contactModel')
 		;
 	
-	
-	
-	var  appendHighlight = function(highlight){ 
+	var  appendHighlight = function(highlight, lastVisited){ 
 		
 			if(highlight.contents!=null)
 				highlight.contents= util.linkify(highlight.contents, window.platform?true:false); 
@@ -31,7 +29,8 @@ define(function(require){
 			 		 							 			highlight: highlight,
 			 		 							 			util: util,
 			 		 							 			user: util.getLoggedInUser(),
-			 		 							 			mobile: window.platform?true:false
+			 		 							 			mobile: window.platform?true:false,
+			 		 							 			lastVisited: lastVisited
 			     		 								  }
 			 		 								  )		
 			 		 				)		
@@ -51,12 +50,15 @@ define(function(require){
  		 							 			highlight: highlight,
  		 							 			util: util,
  		 							 			user: util.getLoggedInUser(),
- 		 							 			mobile: window.platform?true:false
+ 		 							 			mobile: window.platform?true:false,
+		 		 							 	lastVisited: lastVisited
      		 								  }
  		 								  )		
  		 				)		
  		 		);
 	      	}
+      		
+      		$("#txtHighlightComment_"+highlight._id).textinput().textinput("refresh");
       };
       
       var  appendHighlightTmp = function(highlight){ 
@@ -105,7 +107,7 @@ define(function(require){
       
 	// Extends Backbone.View
     var HighlightsView = Backbone.View.extend( {
-    	
+    	self: null,
         initialize: function(name, period_from, period_to, favorite) {
         	this.highlightCollection = new HighlightModel.HighlightCollection();
         	this.creator = name?name:"";
@@ -113,6 +115,7 @@ define(function(require){
         	this.period_to = period_to?period_to:"";
         	this.favorite = favorite?true:false;
         	this.template = _.template( highlights_tpl );
+        	this.self = this;
         },
         
         events:{
@@ -132,7 +135,55 @@ define(function(require){
         	"click #btnHighligtNext":"next",
         	"click #btnHighlightBack": "backToItemList",
         	"click .divHighlighSharedLink":"clkItemLink",
-        	"click .hrefFavorite": "toggleFavorite"
+        	"click .hrefFavorite": "toggleFavorite",
+        	"click .spanHighlightAbstract": "showHighlightDetail",
+        	"click #divHighlightContentWrapper": "hideHighlightDetail",
+        	"click .spanAddCommentHighlight": "addCommentHighlight",
+        	"click .btnHighlightCommentCancel": "highlightCommentCancel",
+        	"click .btnHighlightCommentConfirm": "highlightCommentConfirm",
+        	"click .spanHighlightCommentAbstract": "showCommentOriginal"
+        },
+        
+        highlightCommentConfirm: function(event){
+        	var comment = $("#txtHighlightComment_"+ event.currentTarget.getAttribute("data-id")).val();
+        	window.highlgihtCommentHighlightId = event.currentTarget.getAttribute("data-id");
+        	this.highlightCollection.addComment(event.currentTarget.getAttribute("data-id"), comment, function(data){
+        		$("#divAddComment_"+window.highlgihtCommentHighlightId).slideUp();
+        		$("#txtHighlightComment_"+ window.highlgihtCommentHighlightId).val("");
+        		$("#ulHighlightComments_"+window.highlgihtCommentHighlightId).append("<li>"+comment+"</li>");
+        	});
+        },
+        
+        highlightCommentCancel: function(event){
+        	$("#divAddComment_"+event.currentTarget.getAttribute("data-id")).slideUp();
+        	$("#txtHighlightComment_"+ event.currentTarget.getAttribute("data-id")).val("");
+        },
+        
+        addCommentHighlight: function(event){
+        	$("#divAddComment_"+event.currentTarget.getAttribute("data-id")).slideDown()
+        },
+        
+        hideHighlightDetail: function(){
+        	$("#divHighlightContentWrapper").hide('slow', function(){ 
+        		$(".footerContent").show("fast", function(){});
+    		});
+        },
+        showCommentOriginal: function(event){
+        	event.preventDefault();
+        	$("#divHighlightContentInner").html( $("#comment_"+event.currentTarget.getAttribute("data-id")).html());
+        	$(".footerContent").hide("fast", function(){
+        		$("#divHighlightContentWrapper").show('slow', function(){ 
+        		});
+        	});
+        },
+        
+        showHighlightDetail: function(event){
+        	event.preventDefault();
+        	$("#divHighlightContentInner").html( this.highlightCollection.retrieveHighlight(event.target.getAttribute("data-id")).contents );
+        	$(".footerContent").hide("fast", function(){
+        		$("#divHighlightContentWrapper").show('slow', function(){ 
+        		});
+        	});
         },
         
         toggleFavorite: function(event){
@@ -177,11 +228,7 @@ define(function(require){
             	$("#divHighlightFilter").removeClass('divHighlightFilterVisible').addClass("divHighlightFilterHidden")
             	
             	window.location =  "#highlights/"+name+"/"+period_from+"/"+period_to ;
-            	
-            	//$.mobile.navigate("#highlights/"+name+"/"+period_from+"/"+period_to);
-           
-        	}
-        	
+            }
         },
         
         updateShowHightlightType: function(){
@@ -398,6 +445,14 @@ define(function(require){
         }
     } );
    
+    var getUnseenNumForHighlight = function(highlight, dt){
+    	var total = 0;
+    	_.each(highlight.comments, function(comment){
+    		total+= util.datecompare( comment.created, dt ) && comment.creator._id!=util.getLoggedInUser()._id ?1:0;
+    	});
+    	 return total;
+    };
+    
     var HighlightListView = Backbone.View.extend({
     	
     	initialize: function() {
@@ -409,15 +464,19 @@ define(function(require){
         	 var _self = this;
         	 setTimeout(function(){
         		 var tmpResults = _self.result.contents;
+        		 var totalUnseen = 0;
         		 for(var i=tmpResults.length-1 ; i>=0; i--){
         			 if(window.unsavedHighlight){
         				 if( window.unsavedHighlight.id!==tmpResults[i]._id ){
-        					  appendHighlight(tmpResults[i]);
+        					  appendHighlight(tmpResults[i], _self.result.lastVisited);
+        					  totalUnseen+=getUnseenNumForHighlight(tmpResults[i], _self.result.lastVisited);
         				 } 
         			 }else{
-        				  appendHighlight(tmpResults[i]);
+        				  appendHighlight(tmpResults[i], _self.result.lastVisited);
+        				  totalUnseen+=getUnseenNumForHighlight(tmpResults[i], _self.result.lastVisited);
         			 }
         		 }
+        		 
         		 if(window.unsavedHighlight){
  	            	window.unsavedHighlight.saveData(function(){
  	            			window.unsavedHighlight = null;
@@ -426,6 +485,15 @@ define(function(require){
  	            	HighlightModel.setCurrentHighlight(window.unsavedHighlight);
  	            	appendHighlightTmp (window.unsavedHighlight);
              	} 
+        		
+        		if(totalUnseen>0){
+        			$("#highlights").append($("<li class='highlightUnseenNum'>").html(  totalUnseen+ " new comments") );
+        			 var newscrollHeight = $('#highlights')[0].scrollHeight;
+		       		 if(newscrollHeight > oldscrollHeight){ //COMPARES
+		       		        $("#highlights").scrollTop($("#highlights")[0].scrollHeight); //Scrolls
+		       		  }
+           		} 
+        		 
         	 }, 500);
         }
     });

@@ -1,5 +1,5 @@
 
-<table>
+<table style="width: 100%">
 
 	<tr>
 		<td width="60px" align="center" valign="middle">
@@ -17,7 +17,13 @@
 		<td width="100%">
 		
 			<% if( highlight.contents  ) {%>
-				<%=  highlight.contents  %>
+				<% if( highlight.contents.length>50 ){%>
+					<span class="spanHighlightAbstract" data-id="<%= highlight._id%>">
+						<%=  highlight.contents.substr(0, 50)  %>... (<span class="spanAbstractlink">more</span>)
+					</span>
+				<%} else {%>
+					<%=  highlight.contents %>
+				<%}%>
 			<%}%>
 			
 			<div class="divHighlightItems" data-id="<%= highlight._id%>">
@@ -51,43 +57,60 @@
 			
 		</td>
 		<td style="padding-right: 0px;" class="tdEditHighlight">
-			<table>
-				<% if( user.screenName === highlight.creator.screenName ){%>
-					
-						<tr>
-							
-					
-							<td>
-								<a href="#update_highlight/<%= highlight._id%>"><i class="fa fa-edit" ></i></a>
-							</td>
-							<td >
-								<span data-id="<%= highlight._id%>" class="hrefFavorite <%= highlight.favorited?'favorited':'unfavorited'%>"><i class="fa fa-heart" ></i></span> 
-							</td>
-						</tr>
-				
-				<%} else {%>
-				
-					<tr>
-						<td>
-							<span data-id="<%= highlight._id%>" class="hrefFavorite <%= highlight.favorited?'favorited':'unfavorited'%>"><i class="fa fa-heart" ></i></span> 
-						</td>
-					</tr>
-				<%}%>	
-			</table>
 			
+				<% if( user.screenName === highlight.creator.screenName ){%>
+						<a href="#update_highlight/<%= highlight._id%>"><i class="fa fa-edit" ></i></a>
+						<span data-id="<%= highlight._id%>" class="hrefFavorite <%= highlight.favorited?'favorited':'unfavorited'%>"><i class="fa fa-heart" ></i></span> 
+				<%} else {%>
+						<span data-id="<%= highlight._id%>" class="hrefFavorite <%= highlight.favorited?'favorited':'unfavorited'%>"><i class="fa fa-heart" ></i></span> 
+				<%}%>	
 		</td>		
 	</tr>
-	<tr>
-	 <% if( user.screenName === highlight.creator.screenName ){%>
-	 	<td colspan="3" style="padding: 0px; text-align: center;font-size: 70%">
-			<%= highlight.date_str%>
-		</td>
-	 <%}else{%>
-	 	<td colspan="2" style="padding: 0px; text-align: center;font-size: 70%">
-			<%= highlight.date_str%>
-		</td>
-	 <%}%>
 	
+	<tr>
+	 	<td colspan="3" style="padding: 0px; text-align: center;font-size: 70%">
+	 
+		<div>
+			<%= highlight.date_str%>
+	 		<span class='spanAddCommentHighlight' data-id="<%= highlight._id%>"/>
+		</div>
+		
+		<div class="divHighlightComments">
+			<ul id="ulHighlightComments_<%= highlight._id%>">
+				<% if(highlight.comments.length>0){%>
+							<%_.each( highlight.comments, function(comment){%>
+								<li class="<%= util.datecompare(comment.created, lastVisited) && comment.creator._id!=user._id ?'unseen':''  %>">
+										<%=comment.creator.firstName%> <%=comment.creator.lastName%>:
+										<% if(comment.comment.length>50 ){%>
+											<span class="spanHighlightCommentAbstract" data-id="<%= comment._id%>">
+											 	<%= comment.comment.substr(0,50) %>...(<span class="spanAbstractlink">more</span>)
+											</span> <span id="comment_<%=comment._id%>" style="display:none"><%= comment.comment%></span>
+										<%}else{%>
+											<%= comment.comment%>
+										<%}%>
+										( <%= comment.created.substr(5,2)+' / '+comment.created.substr(8,2) %> ) 
+								</li>
+							<%});%>
+				<%}%>
+			</ul>
+		</div>
+		<div class='cfx'></div>
+		
+		<div class="divAddComment" id="divAddComment_<%= highlight._id%>">
+			<input type="text" id="txtHighlightComment_<%= highlight._id%>">
+			<button class="btnHighlightCommentConfirm" data-id="<%= highlight._id%>">
+				<span class='spanHighlightCommentConfirm' ></span>
+			</button>
+			<button class="btnHighlightCommentCancel"  data-id="<%= highlight._id%>">
+				<span class="spanHighlightCommentCancel"></span>
+			</button>
+			
+			
+		</div>
+		
+		
+		</td>
 	</tr>
+	
 	
 </table>

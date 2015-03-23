@@ -457,6 +457,7 @@ img.offline{
     position: absolute;
     right: 0;
     top: 98px;
+    padding-right: 10px;
 }
 
 #highlights li{
@@ -506,11 +507,35 @@ img.offline{
     left: 0;
     position: absolute;
     width: 100%;
+    padding: 0px;
    /* display: table-cell;
     vertical-align: middle;
     */
 }
 
+#divHighlightContentInner{
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 30px;
+	height: 70%;
+	overflow: auto;
+}
+
+#divHighlightContentWrapper {
+	background: none repeat scroll 0 0 white;
+    bottom: 0;
+    top: 0;
+    right: 0;
+    display: none;
+    left: 0;
+    position: absolute;
+    color: black;
+    
+   /* display: table-cell;
+    vertical-align: middle;
+    */
+}
 
 
 .tdEditHighlight a:link{
@@ -675,6 +700,77 @@ span.hrefFavorite{
 }
 span.favorited{
 	color: red;
+}
+.spanAddCommentHighlight::before {
+    content: "\f0e5";
+    font-family: FontAwesome;
+    font-size: 30px;
+}
+.spanAddCommentHighlight {
+    float: right;
+    margin-right: 4px;
+    margin-top: -4px;
+    cursor: pointer;
+}
+
+.spanHighlightCommentCancel{
+	float: right;
+	cursor: pointer;
+}
+.spanHighlightCommentCancel:before{
+	color: red;
+    content: "\f00d";
+    font-family: FontAwesome;
+    font-size: 30px;
+    
+}
+.spanHighlightCommentConfirm{
+	float: right;
+	cursor: pointer;
+}
+
+.spanHighlightCommentConfirm:before{
+	color: green;
+    content: "\f00c";
+    font-family: FontAwesome;
+    font-size: 30px;
+}
+
+
+.divAddComment{
+	width: 100%;text-align: right;
+	margin-top: 10px;
+	display: none;
+}
+
+.divHighlightComments{
+	width: 80%;
+	float: right;
+	margin-right: 20px;
+}
+.divHighlightComments ul{
+	list-style: none;
+	
+}
+
+.divHighlightComments ul li{
+	text-align: left; 
+}
+li.unseen{
+	color: red;
+}
+.spanHighlightCommentAbstract{
+	cursor: pointer;
+}
+.spanAbstractlink{
+	color: 	blue;
+}
+
+li.highlightUnseenNum{
+	 width: 90%;
+	 text-align: center;
+	 color: red;
+	 		
 }
 
 .cfx{

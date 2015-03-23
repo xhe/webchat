@@ -59,7 +59,7 @@ define(function(require){
 				    any: function() {
 				        return (Android() || BlackBerry() || iOS() || Opera() || Windows());
 				    },
-		
+				    
 		linkify: function(content, mobile){
 			var exp = /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#%?=~_|!:,.;]*)([-A-Z0-9+&@#%?\/=~_|!:,.;]*)[-A-Z0-9+&@#\/%=~_|])/ig;
 			return content.replace(exp, "<a class='hreItemLinkTarget' data-link='$1' >shared link</a>");
@@ -249,6 +249,7 @@ define(function(require){
 			            }              
 			        }
 				});
+			
 		},
 		
 		//used to save static url request
@@ -522,6 +523,11 @@ define(function(require){
 		    return uuid;
 		},
 		
+		datecompare: function(date1, date2){
+			var dt1 = new Date(date1.substr(0,4), date1.substr(5,2), date1.substr(8,2),  date1.substr(11,2), date1.substr(14,2), date1.substr(17,2));
+			var dt2 = new Date(date2.substr(0,4), date2.substr(5,2), date2.substr(8,2),  date2.substr(11,2), date2.substr(14,2), date2.substr(17,2));
+			return dt1.getTime()>dt2.getTime();
+		},
 	};
 
 	return util;

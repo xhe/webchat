@@ -59,7 +59,7 @@ exports.generateDateStr = function(dt){
 	return dateStr + " ("+dtStr +")";
 }
 
-exports.simplifyUser = function(client, noToken) {
+exports.simplifyUser = function(client, noToken, noMedias) {
 	client.password = undefined;
 	client.password_salt = undefined;
 	client.token_date = undefined;
@@ -80,9 +80,19 @@ exports.simplifyUser = function(client, noToken) {
 		client.token = undefined;
 	client.phoneNumber = undefined;
 	client.countryCode = undefined;
-
+	
+	if(noMedias){
+		client.newMessages = undefined;
+		client.is_family = undefined;
+		client.thumbFileName = undefined;
+		client.photos = undefined;
+	}
+	
+	
 	return client;
 }
+
+
 
 exports.getXirSysInfo = function(room,cb) {
 

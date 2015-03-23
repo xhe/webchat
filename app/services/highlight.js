@@ -16,7 +16,8 @@ var mongoose = require('mongoose'),
 	Favorite =  mongoose.model('Favorite'),
 	PhotoSchema = mongoose.model('PhotoSchema'),
 	Audio = mongoose.model('Audio'),
-	ChatMessage=mongoose.model('ChatMessage')
+	ChatMessage=mongoose.model('ChatMessage'),
+	HighlightComment=mongoose.model('HighlightComment')
 	;
 
 exports.findById = function(id, cb){
@@ -50,87 +51,73 @@ var generateHighlightCreators = function(currentUser,  owner,  cb ){
 	}
 };
 
-exports.retrieveFavorites = function(user, before_ts, period_from, period_to, cb){
+var executeRetrieHighlighQueue = function(q, cb){
+	q.sort('-created');
+	q.limit(20);
+	q.populate('creator');
+	q.populate('photos');
+	q.populate('audios');
+	q.populate('shared_link');
+	q.deepPopulate('comments.creator');
+		
+	q.exec(function(err, docs){
 	
-		
-		var q = Favorite.find({
-			owner: user
-		});
-		q.sort('-created');
-		q.limit(20);
-		q.populate("highlight");
-		if(before_ts){
-			q.where('created').lt(before_ts);
-		}
-		
-		if( period_from!=="null" && period_to!=="null") 
-			q.where("created").gte(period_from).lt(period_to);
-		
-		q.exec(function(err, docs){
-			/*
-			var populate = function(path, model, cb){
-				HighlightLink.populate(docs,{
-					path: path,
-					model:model 
-				}, 
-				cb);
-			}
-			
-			async.waterfall([
-			                async.apply( HighlightLink.populate, docs, { path: 'highlight.shared_link', model:HighlightLink }),
-			                async.apply( HighlightLink.populate, docs, { path: 'highlight.creator', model: Client}),
-			                async.apply( HighlightLink.populate, docs, { path: 'highlight.photos', model:PhotoSchema }),
-			                async.apply( HighlightLink.populate, docs, { path: 'highlight.audios', model:Audio }),
-			                ], 
-			                function(err, data){
-								var results = [];
-								_.each(docs, function(doc){
-									doc.date_str =  utils.generateDateStr(doc.created);
-									results.push(doc.highlight);
-								});
-								cb(err, results);
-							}
-			);
-			*/
-		
-			
-			HighlightLink.populate(docs,{
-				path: 'highlight.shared_link',
-				model:HighlightLink 
-			}, 
-				function(err, data){
+			var results = [];
+			_.each(docs, function(doc){ 
 				
-					HighlightLink.populate(docs,{
-						path: 'highlight.creator',
-						model:Client 
-					}, function(err, data){
-						
-						HighlightLink.populate(docs,{
-							path: 'highlight.photos',
-							model:PhotoSchema 
-						}, function(err, data){
-							HighlightLink.populate(docs,{
-								path: 'highlight.audios',
-								model:Audio 
-							}, function(err, data){
-								var results = [];
-								_.each(docs, function(doc){
-									doc.date_str =  utils.generateDateStr(doc.created);
-									results.push(doc.highlight);
-								});
-								cb(err, results);
-							});
-						});
-					});
+				utils.simplifyUser(doc.creator, true);
+				_.each(doc.comments, function(comment){
+					utils.simplifyUser(comment.creator, true, true);
+				});
+				
+				var toAdd = false;
+				if(doc.shared == 0) { //only self
+					if(doc.creator.screenName == currentUser.screenName )
+						toAdd = true;
+				} else if(doc.shared==1) { //family
+					if( levelsArray[doc.creator.screenName] || doc.creator.screenName == currentUser.screenName)
+						toAdd = true;
+				} else if(doc.shared==2 ){ //friend
+					if( !levelsArray[doc.creator.screenName] || doc.creator.screenName == currentUser.screenName)
+						toAdd = true;
+				}else { //all
+					toAdd = true;
 				}
-			);
-			
-			
+				
+				if(toAdd) {
+					doc.date_str =  utils.generateDateStr(doc.created);
+					results.push(doc);
+				}
+					
+			});
+			cb(err, results);
+	});
+}
+
+exports.retrieveFavorites = function(user, before_ts, period_from, period_to, cb){
+	var q = Favorite.find({
+		owner: user
+	});
+	q.sort('-created');
+	q.limit(20);
+	if(before_ts){
+		q.where('created').lt(before_ts);
+	}
+	
+	if( period_from!=="null" && period_to!=="null") 
+		q.where("created").gte(period_from).lt(period_to);
+	
+	q.exec(function(err, docs){
+		var q= Highlight.find({
+			_id:	
+				{
+					$in:  _.pluck(docs, function(doc){return new ObjectId(doc.highlight) })
+				}	
 		});
-	
-	
-	
+		executeRetrieHighlighQueue(q, cb);
+	});
 };
+
 
 exports.retrieveHighlights = function(user, owner, before_ts, period_from, period_to, cb){
 	
@@ -153,47 +140,14 @@ exports.retrieveHighlights = function(user, owner, before_ts, period_from, perio
 						$in: creators
 					}	
 			});
-			
-			q.sort('-created');
-			q.limit(20);
-			q.populate('creator');
-			q.populate('photos');
-			q.populate('audios');
-			q.populate('shared_link');
 			if(before_ts){
 				q.where('created').lt(before_ts);
 			}
 			
 			if( period_from!=="null" && period_to!=="null") 
 				q.where("created").gte(period_from).lt(period_to);
-				
-			q.exec(function(err, docs){
-				var results = [];
-				_.each(docs, function(doc){ 
-					
-					var toAdd = false;
-					if(doc.shared == 0) { //only self
-						if(doc.creator.screenName == currentUser.screenName )
-							toAdd = true;
-					} else if(doc.shared==1) { //family
-						if( levelsArray[doc.creator.screenName] || doc.creator.screenName == currentUser.screenName)
-							toAdd = true;
-					} else if(doc.shared==2 ){ //friend
-						if( !levelsArray[doc.creator.screenName] || doc.creator.screenName == currentUser.screenName)
-							toAdd = true;
-					}else { //all
-						toAdd = true;
-					}
-					
-					if(toAdd) {
-						doc.date_str =  utils.generateDateStr(doc.created);
-						results.push(doc);
-					}
-						
-				});
-				
-				cb(err, results);
-			});
+			
+			executeRetrieHighlighQueue(q, cb);
 	};
 	
 	var populateFavorite = function(user, highlights, cb){
@@ -244,6 +198,10 @@ exports.retrieveHighlights = function(user, owner, before_ts, period_from, perio
 				cb(err, result["retrieveHighlights"] );
 			}
 	);
+};
+
+exports.retrieveHighlightLog = function(user, cb){
+	HighlightVisitLog.findOne({ visitor: user}, cb);
 };
 
 exports.retrieveTotalNewHighlights = function(user, cb){
@@ -367,25 +325,7 @@ exports.deleteHighlight = function(id, deletor, cb){
 
 
 var updateHightContent = function(id, creator, content, shared_link, shared, originalPhotoIds, originalAudioIds, cb ){
-	
-	var findHighlight = function(id, cb){
-		_self = this;
-		Highlight.findOne({ _id: id})
-		.populate("photos audios creator")
-		.populate("shared_link")
-		.exec(function(err, doc){
-			cb(err, doc);
-		});
-	};
-	
-	var checkAutheticate = function(creator, highlight, cb){
-		if(creator.screenName==highlight.creator.screenName){
-			cb(null, highlight);
-		}else{
-			cb("Unauthorized User");
-		}
-	};
-	
+
 	var _updateSharedlink = function(shared_link_link, creator,  highlight, cb){
 		
 		if(highlight.shared_link){
@@ -430,6 +370,7 @@ var updateHightContent = function(id, creator, content, shared_link, shared, ori
 	
 	
 	var _updateHighlightContent = function(content,shared, highlight, cb ){
+
 		if( content && content.length>0 && shared!=null){
 			highlight.contents = content;
 			highlight.shared = shared;
@@ -572,79 +513,13 @@ exports.createHighlight = function(id, creator, content, shared_link, shared, or
 					cb(err, h);
 				});
 		}
-		
-		
 	};
 	
-	
-	var processImage = function(highlight, file, cb){
-		
-		imagePath = file.path;
-		core_service.processChatImages( imagePath, creator, '_highlight', function(photo){
-			highlight.photos.push(photo);
-			highlight.save(function(err, doc){
-				cb(null, doc);
-			});
-		});
-	};
-	
-	var processAudio = function( highlight, file, cb){
-		audioPath = file.path;
-		pos = audioPath.indexOf('uploads');
-		fileName = audioPath.substr(pos+8);
-		filePath = audioPath.substr(0,pos+8 );	
-		ts = new Date().getTime();
-		
-		wr = fs.createWriteStream( filePath+'audio_highlight/'+creator._id+"_"+ts+"_"+fileName);
-		wr.on('close', function(ex){
-			fs.unlink(audioPath);
-		});
-		fs.createReadStream(audioPath).pipe(wr);
-		
-		var audio = new Audio({
-			filename: '/uploads/audio_highlight/'+creator._id+"_"+ts+"_"+fileName
-		});
-		
-		audio.save(function(err, doc){
-			highlight.audios.push( doc );
-			highlight.save(function(err, doc){
-				cb(null, doc);
-			});
-		});
-	};
-	
-	var processMedias = function( files, highlight, cb ){
-	
-		files.photos = files.photos?files.photos:[];
-		files.audios = files.audios?files.audios:[];
-		
-		if( !( files.photos instanceof Array ) ){
-			files.photos = [files.photos];
-		}
-		if( !( files.audios instanceof Array ) ){
-			files.audios = [files.audios];
-		}
-		
-		
-		
-		async.mapSeries( files.photos, async.apply( processImage, highlight), function(err){
-			if(err)
-				cb(err);
-			else{
-				async.mapSeries( files.audios, async.apply(processAudio, highlight) , function(err, data){
-					cb(err, highlight);	
-				});
-			}
-				
-		});
-	};
-
 	if(id){
 		async.waterfall(
 				[
                   async.apply( updateHightContent, id, creator, content, shared_link, shared, originalPhotoIds, originalAudioIds),
-                  async.apply( processMedias, files ),
-                  async.apply( retrieveHighlightLinkMedia)
+                  async.apply( processMedias, files, creator )
                 ],
                 cb
 			);
@@ -652,33 +527,129 @@ exports.createHighlight = function(id, creator, content, shared_link, shared, or
 		async.waterfall(
 				[
                   async.apply( createHighlightRecord, creator, content, shared_link, shared),
-                  async.apply( processMedias, files ),
-                  async.apply( retrieveHighlightLinkMedia)
+                  async.apply( processMedias, files, creator )
                 ],
                 cb
 			);
 	}
-}
+};
 
-var retrieveHighlightLinkMedia = function(highlight, cb){
+exports.save_highlightmedia = function(id, creator,files, cb ){
+	async.waterfall(
+			[
+              async.apply( findHighlight, id),
+              async.apply( checkAutheticate, creator),
+              async.apply( processMedias, files, creator )
+            ], 
+            cb
+		);
+};
+
+var findHighlight = function(id, cb){
+	
+	
+	Highlight.findOne({ _id: id})
+	.populate("photos audios creator")
+	.populate("shared_link")
+	.exec(function(err, doc){
+		cb(err, doc);
+	});
+};
+
+var checkAutheticate = function(creator, highlight, cb){
+
+	if(creator.screenName==highlight.creator.screenName){
+		cb(null, highlight);
+	}else{
+		cb("Unauthorized User");
+	}
+};
+
+var processImage = function(creator,highlight, file, cb){
+	imagePath = file.path;
+	core_service.processChatImages( imagePath, creator, '_highlight', function(photo){
+		highlight.photos.push(photo);
+		highlight.save(cb);
+	});
+};
+
+var processAudio = function(creator, highlight, file, cb){
+	audioPath = file.path;
+	pos = audioPath.indexOf('uploads');
+	fileName = audioPath.substr(pos+8);
+	filePath = audioPath.substr(0,pos+8 );	
+	ts = new Date().getTime();
+	
+	wr = fs.createWriteStream( filePath+'audio_highlight/'+creator._id+"_"+ts+"_"+fileName);
+	wr.on('close', function(ex){
+		fs.unlink(audioPath);
+	});
+	fs.createReadStream(audioPath).pipe(wr);
+	
+	var audio = new Audio({
+		filename: '/uploads/audio_highlight/'+creator._id+"_"+ts+"_"+fileName
+	});
+	
+	audio.save(function(err, doc){
+		highlight.audios.push(doc);
+		highlight.save(cb);
+		
+	});
+};
+
+var processMedias = function( files,  creator, highlight, cb ){
+
+	files.photos = files.photos?files.photos:[];
+	files.audios = files.audios?files.audios:[];
+	
+	if( !( files.photos instanceof Array ) ){
+		files.photos = [files.photos];
+	}
+	if( !( files.audios instanceof Array ) ){
+		files.audios = [files.audios];
+	}
+	async.mapSeries( files.photos, async.apply( processImage, creator, highlight), function(err){
+		if(err)
+			cb(err);
+		else{
+			async.mapSeries( files.audios, async.apply(processAudio, creator, highlight) , function(err, data){
+					cb(err, highlight);	
+			});
+		}	
+	});
+};
+
+exports.retrieveHighlightLinkMedia = function(highlight, cb){
 	
 		if(highlight.shared_link!=null){
-			Highlight.findOne({_id: highlight._id}).populate('shared_link').exec(function(err, highlight){
-				utils.get(highlight.shared_link.link, function(err, data){
-					var title, subTitle;
-					if(highlight.shared_link.link.indexOf("weixin.qq.com")>0){
-						title=data.match(/<title>([^<]+)<\/title>/)[1];
-						subTitle = data.match(/<h2.*>(.*)<\/h2>/)[1];
-					}
-					if( title.trim() != "")
-						highlight.shared_link.title = title;
-					if( subTitle.trim() != "")
-							highlight.shared_link.msg = subTitle.trim();
-		
-					highlight.shared_link.save(function(err, doc){
-						cb(err, highlight);
+			Highlight.findOne({_id: highlight._id}).exec(function(err, highlight){
+				
+				HighlightLink.findOne({_id: highlight.shared_link}).exec(function(err, link){
+					utils.get(link.link, function(err, data){
+						var title="", subTitle="";
+						if( data ){
+							if(link.link.indexOf("weixin.qq.com")>0){
+								title=data.match(/<title>([^<]+)<\/title>/)[1];
+								subTitle = data.match(/<h2.*>(.*)<\/h2>/)[1];
+							} else if( data.indexOf("charset=utf-8")>0 ) {
+								title=data.match(/<title>([^<]+)<\/title>/)[1];
+								subTitle = title;
+							}
+						}
+						if( title.trim() != "")
+							link.title = title;
+						if( subTitle.trim() != "")
+							link.msg = subTitle.trim();
+						
+						link.save(function(err, doc){
+							cb(err, highlight);
+						});
 					});
+					
 				});
+				
+				
+				
 			});
 		} else {
 			cb( null, highlight );
@@ -710,13 +681,8 @@ exports.addFavorite = function(highlight_id, user, cb){
 	                 	async.apply(createFavorite, user)
 	                 ], cb);
 };
-
-
-exports.toggleFavorite = function(highlight_id, user, cb){
 	
-	var findHighlight = function(id, cb){
-		Highlight.findOne({_id: id}).exec(cb);
-	}
+exports.toggleFavorite = function(highlight_id, user, cb){
 	
 	var findFavorite = function(user, highlight, cb){
 		Favorite.find({
@@ -769,4 +735,22 @@ exports.findHighlightFromLink = function(link_id, cb){
 	Highlight.find({shared_link: new ObjectId(link_id)}).populate("shared_link").limit(1).exec(function(err, docs){
 		cb(err, docs);
 	});
+};
+
+exports.addHighlightComment = function(user, highlight_id, comment, cb){
+		var comment = new HighlightComment({
+			creator: user,
+			comment: comment
+		});
+		comment.save(function(err, comment){
+			
+			Highlight.findOne({_id: highlight_id}).exec(function(err, highlight){
+				if(err){
+					cb(err);
+				}else{
+					highlight.comments.push( new ObjectId(comment._id) );
+					highlight.save(cb)
+				}
+			});
+		});	
 };

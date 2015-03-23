@@ -20,6 +20,7 @@ exports.addUser = function(req, res) {
 };
 
 exports.login = function(req, res) {
+	//console.log(" login... ")
 	user_service.login(req, res);
 };
 
@@ -427,59 +428,71 @@ exports.removeChatMessage = function(req, res, next) {
 };
 
 exports.favorites = function(req, res) {
-
-	highlight_service.retrieveFavorites(req.user, null,
-			req.params.period_from, req.params.period_to, function(err, data) {
+	highlight_service.retrieveHighlightLog( req.user, function(err, log){
 		
-		if (err) {
-					res.jsonp({
-						status : 'failed',
-						err : err
-					});
-				} else {
-					res.jsonp({
-						status : 'success',
-						contents : data
-					});
-				}
-			});
+		highlight_service.retrieveFavorites(req.user, null,
+				req.params.period_from, req.params.period_to, function(err, data) {
+			
+			if (err) {
+						res.jsonp({
+							status : 'failed',
+							err : err
+						});
+					} else {
+						res.jsonp({
+							status : 'success',
+							contents : data,
+							lastVisited: log?log.visited:null
+						});
+					}
+				});
+		
+	});
+	
+	
 };
 
 exports.highlights = function(req, res) {
-
-	highlight_service.retrieveHighlights(req.user, req.params.owner, null,
-			req.params.period_from, req.params.period_to, function(err, data) {
-				if (err) {
-					res.jsonp({
-						status : 'failed',
-						err : err
-					});
-				} else {
-					res.jsonp({
-						status : 'success',
-						contents : data
-					});
-				}
-			});
+	highlight_service.retrieveHighlightLog( req.user, function(err, log){
+		highlight_service.retrieveHighlights(req.user, req.params.owner, null,
+				req.params.period_from, req.params.period_to, function(err, data) {
+					if (err) {
+						res.jsonp({
+							status : 'failed',
+							err : err
+						});
+					} else {
+						res.jsonp({
+							status : 'success',
+							contents : data,
+							lastVisited: log?log.visited:null
+						});
+					}
+				});
+	});
 };
 
 exports.highlightsbefore = function(req, res) {
-	highlight_service.retrieveHighlights(req.user, req.params.owner,
-			req.params.ts, req.params.period_from, req.params.period_to,
-			function(err, data) {
-				if (err) {
-					res.jsonp({
-						status : 'failed',
-						err : err
-					});
-				} else {
-					res.jsonp({
-						status : 'success',
-						contents : data
-					});
-				}
-			});
-}
+	
+	highlight_service.retrieveHighlightLog( req.user, function(err, log){
+		highlight_service.retrieveHighlights(req.user, req.params.owner,
+				req.params.ts, req.params.period_from, req.params.period_to,
+				function(err, data) {
+					if (err) {
+						res.jsonp({
+							status : 'failed',
+							err : err
+						});
+					} else {
+						res.jsonp({
+							status : 'success',
+							contents : data,
+							lastVisited: log?log.visited:null
+						});
+					}
+				});
+	});
+};
 
 exports.save_highlight = function(req, res) {
 
@@ -501,17 +514,19 @@ exports.save_highlight = function(req, res) {
 						err : err
 					});
 				} else {
-					res.jsonp({
-						status : 'success',
-						content : data
+					
+					highlight_service.retrieveHighlightLinkMedia(data, function(err,data){
+						res.jsonp({
+							status : 'success',
+							content : data
+						});
 					});
 				}
 			});
 };
 
 exports.save_highlightmedia = function(req, res) {
-	highlight_service.createHighlight(req.params.id, req.user, null, null, null, "",
-			"", req.files, function(err, data) {
+		highlight_service.save_highlightmedia(req.params.id, req.user, req.files, function(err, data) {
 				if (err) {
 					res.jsonp({
 						status : 'failed',
@@ -522,8 +537,6 @@ exports.save_highlightmedia = function(req, res) {
 						status : 'success',
 						content : data
 					});
-					
-					
 				}
 			});
 };
@@ -649,6 +662,22 @@ exports.favorite_highlight = function(req, res){
 
 exports.findHighlightFromLink = function(req, res){
 	highlight_service.findHighlightFromLink(req.body.link_id, function(err, docs){
+		if (err) {
+			res.jsonp({
+				status : 'failed',
+				err : err
+			});
+		} else {
+			res.jsonp({
+				status : 'success',
+				result : docs[0]
+			});
+		}
+	});
+};
+
+exports.addHighlightComment = function(req, res){
+	highlight_service.addHighlightComment(req.user, req.params.highlight_id, req.body.comment,function(err, docs){
 		if (err) {
 			res.jsonp({
 				status : 'failed',

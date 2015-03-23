@@ -179,7 +179,7 @@ define(function(require){
         
         render: function() {           
             $(this.el).html(this.template({ mobile: window.platform?true:false, edit: this.highlightId?true:false }));
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Add Highlight").render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( this.highlightId==""?"Add Highlight":"Edit Highlight").render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             this.mediaListView = new mediaListView({ el: $("#divSelectedMedias", this.el), model: this.highlight });
             
@@ -204,7 +204,12 @@ define(function(require){
     				$("#radSharedWith-friend").attr("checked", false);
     				$("#radSharedWith-all").attr("checked", false);
     				$("#radSharedWith-none").attr("checked", false);
-    				$("#txtSharedLink").val(doc.shared_link);
+    				
+    				if( doc.shared_link != undefined)
+    					$("#txtSharedLink").val(typeof doc.shared_link == "string" ? doc.shared_link:  doc.shared_link.link);
+    				else
+    					$("#txtSharedLink").val("");
+    				
     				
     				switch(doc.shared){
     				    case 1:

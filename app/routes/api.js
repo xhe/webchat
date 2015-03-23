@@ -75,6 +75,8 @@ module.exports = function(app){
 	
 	app.route('/api/favorite/:highlight_id').post(user_service.requiresLogin, api.favorite_highlight);
 	
+	app.route('/api/highlight_comment/:highlight_id').post(user_service.requiresLogin, api.addHighlightComment);
+	
 	app.route('/api/updateHighlight/:id').post( user_service.requiresLogin, api.updateHighlight );
 	app.route('/api/relationship').put( user_service.requiresLogin, api.updateRelationship);
 	

@@ -411,6 +411,13 @@ define(function (require) {
 			}
 		},
 		
+		retrieveHighlight: function(id){
+			var highlight = _.find( this.result.contents, function(highlight){
+				return highlight._id==id;
+			});
+			return highlight;
+		},
+		
 		createHighlightWithLink : function(linkId, cb){
 			$.post( config.serverUrl+'sharelink/'+linkId, {}, function(result){
 				cb(result);
@@ -419,6 +426,12 @@ define(function (require) {
 		
 		favoriteHighlight: function(highlightId, cb){
 			$.post( config.serverUrl+'favorite/'+highlightId, {}, function(result){
+				cb(result);
+			});
+		},
+		
+		addComment: function(highlightId, comment, cb){
+			$.post( config.serverUrl+'highlight_comment/'+highlightId, {comment: comment}, function(result){
 				cb(result);
 			});
 		},
