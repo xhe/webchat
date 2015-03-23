@@ -95,17 +95,10 @@
 			</ul>
 		</div>
 		<div class='cfx'></div>
-		
 		<div class="divAddComment" id="divAddComment_<%= highlight._id%>">
 			<input type="text" id="txtHighlightComment_<%= highlight._id%>">
-			<button class="btnHighlightCommentConfirm" data-id="<%= highlight._id%>">
-				<span class='spanHighlightCommentConfirm' ></span>
-			</button>
-			<button class="btnHighlightCommentCancel"  data-id="<%= highlight._id%>">
-				<span class="spanHighlightCommentCancel"></span>
-			</button>
-			
-			
+			<input type="button" data-id="<%= highlight._id%>" data-role="button" data-icon="check" data-inline="true" data-mini="true" class="btnHighlightCommentConfirm" id="btnHighlightCommentConfirm_<%= highlight._id%>" value="Save"/>
+			<input type="button" data-id="<%= highlight._id%>" data-role="button" data-icon="delete" data-inline="true" data-mini="true"  class="btnHighlightCommentCancel" id="btnHighlightCommentCancel_<%= highlight._id%>"  value="Cancel"/>
 		</div>
 		
 		

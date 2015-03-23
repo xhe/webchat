@@ -59,6 +59,8 @@ define(function(require){
 	      	}
       		
       		$("#txtHighlightComment_"+highlight._id).textinput().textinput("refresh");
+      		$("#btnHighlightCommentConfirm_"+highlight._id).button().button("refresh");
+      		$("#btnHighlightCommentCancel_"+highlight._id).button().button("refresh");
       };
       
       var  appendHighlightTmp = function(highlight){ 
