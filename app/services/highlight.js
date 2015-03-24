@@ -42,11 +42,11 @@ var generateHighlightCreators = function(currentUser,  owner,  cb ){
 		relationship_service.retrieveRelatedUsers(currentUser, 3, cb );
 		//find all
 	} else {
-		if(owner!==user.screenName){
+		if(owner!==currentUser.screenName){
 			//checking authority here
 			relationship_service.detectRelationship( currentUser, owner, cb  );
 		} else {
-			cb ( null, [user] );
+			cb ( null, [currentUser] );
 		}
 	}
 };
