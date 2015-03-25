@@ -140,7 +140,7 @@ define(function(require){
         	"click .hrefFavorite": "toggleFavorite",
         	"click .spanHighlightAbstract": "showHighlightDetail",
         	"click #divHighlightContentWrapper": "hideHighlightDetail",
-        	"click .spanAddCommentHighlight": "addCommentHighlight",
+        	"click .divAddCommentHighlight": "addCommentHighlight",
         	"click .btnHighlightCommentCancel": "highlightCommentCancel",
         	"click .btnHighlightCommentConfirm": "highlightCommentConfirm",
         	"click .spanHighlightCommentAbstract": "showCommentOriginal"

@@ -42,6 +42,7 @@ var getChatMsgBefore = function(days, cb){
 				}
 		)
 		.populate('photo audio video')
+		.deepPopulate('creator.membership')
 		.exec(function(err, chats){
 			cb(err, chats);
 		})
@@ -246,3 +247,6 @@ exports.cleanChatAndMedia = function(max, days, cb){
 	);
 }
 
+exports.removeHighlights = function(max, cb){
+	
+}

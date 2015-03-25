@@ -17,6 +17,7 @@ var mongoose = require('mongoose'),
 var ObjectId = require('mongoose').Types.ObjectId; 
 var ChatRoom = mongoose.model('ChatRoom');
 var Invitation = mongoose.model('Invitation');
+var deepPopulate = require('mongoose-deep-populate');
 
 var PhotoRenderSchema = new Schema({
 	filename: String,
@@ -43,9 +44,25 @@ PhotoSchema.pre('remove', function (doc) {
 			});
 });
 
+var MembershipSchema = new Schema({
+	
+	level: {
+		type: Number,
+		default: 0
+	},
+	fromDate: {
+		type: Date,
+		default: Date.now
+	},
+	toDate: {
+		type: Date,
+		default: Date.now
+	}
+	
+});
 
 var UserSchema = new Schema({
-	 
+	
 	countryCode: {
 		type: Number,
 		required: 'Country code cannot be blank'
@@ -166,12 +183,18 @@ var UserSchema = new Schema({
 	is_family: {
 		type: Boolean, 
 		default: false
-	}	,
+	},
 	newMessages:{
 		type: Number,
 		default: 0
+	},
+	membership: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Membership'
 	}
 });
+
+UserSchema.plugin( deepPopulate  );
 
 UserSchema.statics.findByUsername = function(screenName, cb){
 	this.findOne({screenName: screenName}, function(err, user){
@@ -450,3 +473,4 @@ UserSchema.methods.deleteChatRoom = function(roomId, cb){
 mongoose.model('Client', UserSchema);
 mongoose.model('PhotoSchema', PhotoSchema);
 mongoose.model('PhotoRenderSchema', PhotoRenderSchema);
+mongoose.model('Membership', MembershipSchema);

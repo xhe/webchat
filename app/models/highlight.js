@@ -1,6 +1,8 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema
 	;
+var deepPopulate = require('mongoose-deep-populate');
+
 var fs = require('fs'),
 	path = require('path'),
 	async=require('async'),
@@ -113,7 +115,7 @@ var HighlightSchema = new Schema({
 	          ]
 });
 
-var deepPopulate = require('mongoose-deep-populate');
+
 HighlightSchema.plugin( deepPopulate  );
 
 HighlightSchema.methods.removePhotos = function(photoIds, callback){ 

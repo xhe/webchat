@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
 var fs = require('fs'),
 	path = require('path')
 ;
+var deepPopulate = require('mongoose-deep-populate');
 
 var AudioSchema = new Schema({
 	filename: String,
@@ -71,6 +72,8 @@ var ChatMessageSchema = new Schema({
 		ref: 'HighlightLink' 
 	},
 });
+
+ChatMessageSchema.plugin( deepPopulate  );
 
 var ChatRoomVisitLogSchema =  new Schema({
 	visitor: {

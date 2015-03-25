@@ -704,12 +704,12 @@ span.favorited{
 .spanAddCommentHighlight::before {
     content: "\f0e5";
     font-family: FontAwesome;
-    font-size: 30px;
+    font-size: 25px;
 }
 .spanAddCommentHighlight {
     float: right;
     margin-right: 4px;
-    margin-top: -4px;
+    margin-top: -10px;
     cursor: pointer;
 }
 
