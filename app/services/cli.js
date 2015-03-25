@@ -14,7 +14,8 @@ var mongoose = require('mongoose'),
 	Audio= mongoose.model('Audio'),
 	Video= mongoose.model('Video'),
 	path = require('path'),
-	Client = mongoose.model('Client')
+	Client = mongoose.model('Client'),
+	Membership =  mongoose.model('Membership')
 	;
 	
 var getChatMsgBefore = function(days, cb){
@@ -249,4 +250,36 @@ exports.cleanChatAndMedia = function(max, days, cb){
 
 exports.removeHighlights = function(max, cb){
 	
+}
+
+
+exports.addMemberShip = function(userName, startDt, days, level, cb){
+	
+	var ts = startDt.getTime()+days*3600*24*1000;
+	var endDt = new Date(ts);
+	
+	Client.findOne({screenName: userName}).exec(function(err, client){
+		Membership.findOne({user: client}).exec(function(err, membership){
+			if(membership == null){
+				membership = new Membership();
+			} 
+			
+			membership.user = client;
+			membership.level = level;
+			membership.fromDate = startDt;
+			membership.toDate = endDt;
+				
+			membership.save(function(err, data){
+				if(err){
+					cb(err);
+				}else{
+					client.membership = data;
+					client.save( function(err, doc){
+						cb(err, client);
+					});
+				}
+			});
+		});
+		
+	});
 }

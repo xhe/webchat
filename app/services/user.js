@@ -10,7 +10,8 @@ var mongoose = require('mongoose'),
 	Refer = mongoose.model('Refer'),
 	invitation_service = require('./invitation'),
 	Relationship = mongoose.model("Relationship"),
-	config = require('../../config/config')
+	config = require('../../config/config'),
+	Membership = mongoose.model('Membership')
 	;
 var async = require('async');
 
@@ -282,52 +283,6 @@ exports.get_contacts = function(userName, cb){
 	                 	async.apply( findByUserName, userName ),
 	                 	async.apply( findRelationships)
 	                 ], cb);
-	
-	
-	
-	//first find all rooms owned or participated
-	/*Client.findByUsername(userName, function(err, user){
-		if(err)
-			console.log(err);
-		
-		var searchArray =[
-			   {
-					creator: user
-			   },
-			   {
-				   members: user
-			   }
-		   ]; 
-		//console.log(searchArray)
-		var contacts = [];
-		ChatRoom
-			.find({$or:searchArray})
-			.populate('creator')
-			.populate('members')
-			.exec(function(err, rooms){ //console.log('found rooms '); console.log(user._id); console.log(rooms)
-				for(var i=0; i<rooms.length; i++){
-					var creator = rooms[i].creator;
-					var members = rooms[i].members;
-					contacts=_.union(contacts, [creator]);
-					contacts=_.union(contacts, members);
-				}
-				
-				var finalContacts = [];
-				var ids={};
-				_.forEach(contacts, function(contact){ 
-					if(contact.screenName!=userName ){
-						if( !(contact._id in ids) ){
-							ids[contact._id]=0;
-							finalContacts.push( utils.simplifyUser(contact, true));
-						}
-					}
-				});
-				
-				cb( finalContacts )
-			});
-		}
-	);
-	*/
 };
 
 exports.sendResetPwdEmail = function(email, cb){
@@ -422,3 +377,4 @@ exports.getRefer = function(refer_id, cb){
 		});
 		
 }
+

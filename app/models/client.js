@@ -46,6 +46,11 @@ PhotoSchema.pre('remove', function (doc) {
 
 var MembershipSchema = new Schema({
 	
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Client'
+	},
+
 	level: {
 		type: Number,
 		default: 0
