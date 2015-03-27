@@ -8,6 +8,7 @@ var fs = require('fs'),
 	async=require('async'),
 	_=require('lodash')
 ;
+var ObjectId = require('mongoose').Types.ObjectId; 
 
 var HighlightVisitLogSchema =  new Schema({
 	visitor: {
@@ -119,7 +120,7 @@ var HighlightSchema = new Schema({
 HighlightSchema.plugin( deepPopulate  );
 
 HighlightSchema.methods.removePhotos = function(photoIds, callback){ 
-	
+
 	var path_original = __dirname+'/../../www/uploads/original_highlight/';
 	var path_thumb =  __dirname+'/../../www/uploads/thumb_highlight/';
 	var _self = this;

@@ -1,6 +1,6 @@
 require('../models/chat');
 require('../models/client');
-
+require("../models/highlight");
 
 var mongoose = require('mongoose'),
 	_ = require('lodash'),
@@ -15,7 +15,9 @@ var mongoose = require('mongoose'),
 	Video= mongoose.model('Video'),
 	path = require('path'),
 	Client = mongoose.model('Client'),
-	Membership =  mongoose.model('Membership')
+	Membership =  mongoose.model('Membership'),
+	Highlight = mongoose.model('Highlight'),
+	Favorite = mongoose.model('Favorite')
 	;
 	
 var getChatMsgBefore = function(days, cb){
@@ -45,6 +47,9 @@ var getChatMsgBefore = function(days, cb){
 		.populate('photo audio video')
 		.deepPopulate('creator.membership')
 		.exec(function(err, chats){
+			var chats = _.filter(chats, function(chat){
+				return chat.creator.isPaidMember()?false:true;
+			});
 			cb(err, chats);
 		})
 };
@@ -132,7 +137,11 @@ var getUsersToProcess = function(max, days, cb){
 					}
 				)
 		.limit(max)
+		.populate('membership')
 		.exec(function(err, clients){ 
+			var clients = _.filter(clients, function(client){
+				return client.isPaidMember()?false:true;
+			});
 			cb(err, clients);
 		})
 		;
@@ -246,12 +255,123 @@ exports.cleanChatAndMedia = function(max, days, cb){
 			}
 			
 	);
-}
+};
 
-exports.removeHighlights = function(max, cb){
+
+var getHighlightsBefore = function(days, cb){
 	
-}
+	var ts = new Date().getTime()-days*3600*24*1000;
+	var preDate = new Date( ts ); 
+	Highlight
+		.find(	
+				{
+					$and: [
+					       	{
+					       		created: { "$lt": preDate },
+					       	},
+					       	
+					       	{ 
+								$or:[ 
+						             	{ photos: { $ne: null }},
+						             	{ audios: { $ne: null }}
+						             ]
+							}
+					       	
+					       ]
+				}
+		)
+		.deepPopulate('creator.membership')
+		.populate("photos audios shared_link")
+		.exec(function(err, highlights){
+			var highlights = _.filter(highlights, function(highlight){
+				return highlight.creator.isPaidMember()?false:true;
+			});
+			
+			cb(err, highlights);
+		})
+};
 
+
+
+var deleteHighlight = function(highlight, cb){
+	
+	var removeHighlightPhotos = function(highlight, cb){
+		highlight.removePhotos(_.pluck(highlight.photos, function(photo){ return photo._id }), cb);
+	};
+	
+	var checkRefereCountForLink = function(link, cb){
+		Highlight.where({"shared_link": link}).count(function(err, cn1){
+			ChatMessage.where({"shared_link": link}).count(function(err, cn2){
+				cb(err, cn1+cn2);
+			});
+		});
+	};
+	
+	var removeHighlightLink = function(highlight, cb){
+		if(highlight.shared_link){
+			//checking total reference
+			checkRefereCountForLink(highlight.shared_link, function(err, count){
+				if(err){
+					cb(err);
+				}else {
+					if( count==1 ){
+						//only delete the link obj if it is ONLY referered by this highlight
+						highlight.shared_link.remove(function(err, doc){
+							cb(err, highlight);
+						});
+					} else {
+						cb(null, highlight);
+					}
+				}	
+			});
+			
+		}else{
+			cb(null, highlight);
+		}
+	};
+	
+	var removeFavorite = function(highlight, cb){
+		Favorite.remove({ highlight: highlight }, function(err, docc){
+			cb(err, highlight);
+		});
+	};
+	
+	
+	var removeHighlightAudios = function(highlight, cb){
+		highlight.removeAudios(_.pluck(highlight.audios, function(audio){ return audio._id }), cb);
+	};
+	
+	var removeHighlight = function(highlight, cb){
+		highlight.remove(cb)
+	};
+	
+	async.waterfall([
+	                 	async.apply( removeHighlightPhotos, highlight ),
+	                 	async.apply( removeHighlightAudios ),
+	                 	async.apply( removeHighlightLink ),
+	                 	async.apply( removeFavorite),
+	                 	async.apply( removeHighlight ),
+	                 ], cb );
+	
+};
+
+var cleanHighlights = function(highlights, cb){
+	async.eachLimit( highlights, 10, deleteHighlight, function(err, results){
+		cb(err, results);
+	})
+};
+
+exports.removeHighlights = function(days, cb){
+	async.waterfall(
+			[
+				async.apply(getHighlightsBefore, days),
+				async.apply(cleanHighlights)
+			 ],
+			 function(err, result){
+				cb(err, result);
+			}
+	);	
+};
 
 exports.addMemberShip = function(userName, startDt, days, level, cb){
 	

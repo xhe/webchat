@@ -66,6 +66,9 @@ var MembershipSchema = new Schema({
 	
 });
 
+
+
+
 var UserSchema = new Schema({
 	
 	countryCode: {
@@ -200,6 +203,13 @@ var UserSchema = new Schema({
 });
 
 UserSchema.plugin( deepPopulate  );
+
+UserSchema.methods.isPaidMember = function(){
+	return  this.membership && this.membership.level>0 
+			&& new Date().getTime()>this.membership.fromDate.getTime() 
+			&&  new Date().getTime()<this.membership.toDate.getTime();
+};
+
 
 UserSchema.statics.findByUsername = function(screenName, cb){
 	this.findOne({screenName: screenName}, function(err, user){
