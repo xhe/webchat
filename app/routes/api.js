@@ -80,5 +80,7 @@ module.exports = function(app){
 	app.route('/api/updateHighlight/:id').post( user_service.requiresLogin, api.updateHighlight );
 	app.route('/api/relationship').put( user_service.requiresLogin, api.updateRelationship);
 	
+	app.route('/api/member/:id').get( user_service.requiresLogin, api.getMember );
+	
 	app.route('/api/uploadTest').post(api.uploadTest);
 }

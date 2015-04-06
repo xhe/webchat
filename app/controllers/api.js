@@ -690,4 +690,21 @@ exports.addHighlightComment = function(req, res){
 			});
 		}
 	});
-}
+};
+
+exports.getMember = function(req, res){
+	
+	user_service.get_contact(req.user, req.params.id, function(err, data){
+		if (err) {
+			res.jsonp({
+				status : 'failed',
+				err : err
+			});
+		} else {
+			res.jsonp({
+				status : 'success',
+				result : data
+			});
+		}
+	});
+};

@@ -57,7 +57,13 @@ define(function(require){
         events:{
         	"click #btnNewChatRoom": "newChatRoom",
         	"click .hrefDeleteRoom": "deleteChatRoom",
-        	"click .hrefFavoriteToRoom": "favoriteToRoom"
+        	"click .hrefFavoriteToRoom": "favoriteToRoom",
+        	"click .divRoomHeads": "showRoomMembers"
+        },
+        
+        showRoomMembers: function(event){
+        	event.preventDefault();
+        	window.location = "#room_members/"+event.currentTarget.getAttribute('data-roomid');
         },
         
         favoriteToRoom: function(event){

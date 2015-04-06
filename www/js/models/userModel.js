@@ -1,7 +1,6 @@
 define(function (require) {
 	var Backbone 		= require('backbone');
 	var config = require('common/app-config');
-	//var util = require('common/utils');
 	
 	User = Backbone.Model.extend({
 		urlRoot  : config.serverUrl +'users'
@@ -90,6 +89,12 @@ define(function (require) {
 						cb(result);
 					}
 			);
+		},
+		
+		getMember : function(memberId, cb){
+			$.get(config.serverUrl+'member/'+memberId, function(data){
+				cb( data )
+			});
 		},
 	});
 	

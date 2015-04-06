@@ -11,9 +11,9 @@ var mongoose = require('mongoose'),
 	invitation_service = require('./invitation'),
 	Relationship = mongoose.model("Relationship"),
 	config = require('../../config/config'),
-	Membership = mongoose.model('Membership')
+	Membership = mongoose.model('Membership'),
+	async = require('async')
 	;
-var async = require('async');
 
 exports.createUser = function(req, res){
 	
@@ -248,6 +248,52 @@ exports.search_friend = function(id, cb){
 			cb({ status: 'success', client: utils.simplifyUser(client, true) })
 		}
 	});
+};
+
+exports.get_contact = function(user, member_id, cb){
+	
+	var findClient = function(member_id, cb){
+		Client.findOne( { _id: member_id }, function(err, client){
+			cb(err, utils.simplifyUser(client, true) )
+		});
+	};
+	
+	var havingOneToOneRelationship = function(from, to, cb){
+		ChatRoom.find({
+			$or:[
+				     {
+				    	  creator: from ,
+				    	  members: to 
+				     },
+				     {
+				    	  creator: to ,
+				    	  members: from 
+				     }
+			     ]
+		})
+		.exec(function(err, rooms){
+			if(err){
+				cb(err);
+			}else{
+				var bOneToOne = false;
+				_.each(rooms, function(room){
+					if(room.members.length==1){
+						bOneToOne = true;
+					}
+				});
+				
+				cb(null, { client: to, havingOneToOne: bOneToOne});
+			}
+		});
+	};
+	
+	async.waterfall(
+			[
+				async.apply( findClient, member_id ),
+				async.apply( havingOneToOneRelationship, user )
+			],
+			cb
+	);
 };
 
 exports.get_contacts = function(userName, cb){

@@ -45,14 +45,34 @@ define(function (require) {
 			cb(rooms);
 		}else{
 			util.ajax_get(config.serverUrl+'chatrooms', function(data){
-				cb(rooms);
+				cb(data);
 			}, true);
 		}
+	};
+	
+	getRoom = function(roomId, cb){
+		
+		getRooms(function(rooms){
+			var r = null;
+			_.each(rooms['join_rooms'], function(room){
+				if(room._id==roomId)
+					r = room;
+			});
+			if(r==null){
+				_.each(rooms['own_rooms'], function(room){
+					if(room._id==roomId)
+						r = room;
+				});
+			};
+			cb(r);
+		});
+		
 	};
 	
 	return {
 			Chatroom: Chatroom,
 			ChatroomCollection: ChatroomCollection,
-			getRooms: getRooms
+			getRooms: getRooms,
+			getRoom: getRoom
 		   }
 });

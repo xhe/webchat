@@ -1,0 +1,22 @@
+
+<div class='divRoomMemberItem' data-memberid="<%= member._id%>">
+
+	<table class='<%= self?"self":"none"%>'>
+		<tr>
+			<td>
+			<% if(photoPath){%>
+				<img src="<%= photoPath%>"/>
+				<%}else{%>
+				<i class="fa fa-user"></i>
+				<%}%>
+			</td>
+		</tr>
+	</table>
+	
+	<div class="divRoomMemberItemName">
+		<%= member.screenName%> 
+		<% if(bCreator){%> (Owner)<%}%>
+		<br/><%= member.firstName%> <%= member.lastName%>
+	</div>
+
+</div>

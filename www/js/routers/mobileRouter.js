@@ -24,7 +24,9 @@ define(function(require){
 		io = require("socket.io"),
 		HighlightView = require('views/HighlightView'),
 		AddHighlightView = require('views/AddHighlightView'),
-		HighlightLinkView = require('views/HighlightLinkView')
+		HighlightLinkView = require('views/HighlightLinkView'),
+		RoomMembersView = require('views/RoomMembersView'),
+		RoomMemberView = require('views/RoomMemberView')
 		;
     // Extends Backbone.Router
 	return Backbone.Router.extend( {
@@ -68,10 +70,26 @@ define(function(require){
             "add_highlights": "add_highlights",
             "update_highlight/:id": "update_highlight",
             "highlight/:id/link":"showHighlightLink",
-            "sharetoroom/:link_id": "sharetoroom"
+            "sharetoroom/:link_id": "sharetoroom",
+            "room_members/:room_id":"showRoomMembers",
+            "room_member/:member_id":"showRoomMember"
         },
         
-       
+        showRoomMember: function(member_id){
+        	if (this.login())
+        		return;
+        	this.changePage(new RoomMemberView(member_id));
+        	return true;
+        },
+        
+        
+        showRoomMembers: function(room_id){
+        	if (this.login())
+        		return;
+        	v = new RoomMembersView(room_id);
+        	this.changePage(v);
+        	return true;
+        },
         
         showHighlightLink: function(id){
         	if (this.login())
