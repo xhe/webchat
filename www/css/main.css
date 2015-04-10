@@ -830,6 +830,24 @@ li.highlightUnseenNum{
 	text-align: center;
 	text-align: center;
 }
+
+
+#divRoomMemberDetailImg{
+	text-align: center;
+	padding-top: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#divRoomMemberDetailImg img{
+	max-width: 80%;
+	max-height: 250px;
+}
+#divRoomMemberDetailImg i {
+	font-size: 150px;
+}
+
+
 .cfx{
 	clear: both;
 }

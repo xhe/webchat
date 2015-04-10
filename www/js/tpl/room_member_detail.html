@@ -1,14 +1,24 @@
-<% if(photoPath){%>
-				<img src="<%= photoPath%>"/>
-<%}else{%>
-				<i class="fa fa-user"></i>
-<%}%>
+<div id="divRoomMemberDetailImg">
+	<% if(photoPath){%>
+					<img src="<%= photoPath%>"/>
+	<%}else{%>
+					<i class="fa fa-user""></i>
+	<%}%>
+	
+	<h3>
+		<%= member.firstName %> <%= member.lastName%> ( <%= member.screenName%> )
+	</h3>
+
+
+
 
 <% if(related){%>
-	Send Msg
+	<input type="button" id="btnMemberDetail_send_msg" value="Send Message" class="btn"/>
 <%}else{%>
-	Invite
+	<input type="button" id="btnMemberDetail_inv_private" value="Invite for Private Chatting" class="btn"/>
 <%}%>
 
-<br/>
-Check Posts
+<input type="button" value="List of Highligts" id="btnMemberDetail_list_highlights"  class="btn"/>
+
+
+</div>

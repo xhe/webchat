@@ -78,8 +78,13 @@ define(function (require) {
 		},
 		
 		callback: function(data){
-			_self.latestTime = data[0].created;
-			_self.result = data;
+			if( data.length==0){
+				_self.latestTime = null
+				_self.result = [];
+			}else{
+				_self.latestTime = data[0].created;
+				_self.result = data;
+			}
 			_self.reset();
 		},
 		

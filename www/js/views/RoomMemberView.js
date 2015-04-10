@@ -15,6 +15,9 @@ define(function(require){
     var RoomMemberView = Backbone.View.extend( {
     	
     	memberId: null,
+    	room: null,
+    	member: null,
+    	
         initialize: function(memberId) {
         	 this.template = _.template( members_tpl );
         	 if(memberId){
@@ -23,11 +26,32 @@ define(function(require){
         	this.userCollection = new UserModel.UserCollection();
         },
         
+        events: {
+        	"click #btnMemberDetail_send_msg": "sendMsg",
+        	"click #btnMemberDetail_inv_private": "invite",
+        	"click #btnMemberDetail_list_highlights": "listHiglights"
+        },
+        
+        sendMsg: function(){
+        	window.location="#chatroom/"+room._id;
+        },
+        
+        invite: function(){
+        	window.location="#request_friend/"+this.memberId;
+        },
+        
+        listHiglights: function(){
+        	window.location="#highlights/"+window.room_member.screenName+"/null/null";
+        },
+        
         render: function() { 
         		$(this.el).html(this.template({ user: util.getLoggedInUser() }));
 	            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Member Detail").render();
 	            new FooterView({ el: $(".footerContent", this.el)}).render();
+	            
 	            this.userCollection.getMember( this.memberId, function(data){
+	            	room = data.result.room;
+	            	window.room_member = data.result.client;
 		        	  $('#divRoomMemberDetail')
 		        		  	.html(
 		        		  			_.template( member_detail_tpl,
@@ -40,6 +64,7 @@ define(function(require){
 		 								  )				
 		        		  	
 		        		);
+		        	$(".btn").button().button('refresh');
 		          });
 	           return this;
         }

@@ -276,13 +276,15 @@ exports.get_contact = function(user, member_id, cb){
 				cb(err);
 			}else{
 				var bOneToOne = false;
-				_.each(rooms, function(room){
-					if(room.members.length==1){
+				var room="";
+				_.each(rooms, function(r){
+					if(r.members.length==1){
 						bOneToOne = true;
+						room = r;
 					}
 				});
 				
-				cb(null, { client: to, havingOneToOne: bOneToOne});
+				cb(null, { client: to, havingOneToOne: bOneToOne, room : room});
 			}
 		});
 	};
