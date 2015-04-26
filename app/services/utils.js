@@ -52,7 +52,7 @@ exports.generateDateStr = function(dt){
 		dtStr +=" ago";
 	}
 	
-	var dateStr = (date.getMonth()<10?"0":"")+date.getMonth();
+	var dateStr = ((date.getMonth()+1)<10?"0":"")+(date.getMonth()+1);
 	dateStr += "/";
 	dateStr += (date.getDate()<10?"0":"") + date.getDate();
 	
