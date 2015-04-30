@@ -528,7 +528,32 @@ define(function(require){
 			var dt2 = new Date(date2.substr(0,4), date2.substr(5,2), date2.substr(8,2),  date2.substr(11,2), date2.substr(14,2), date2.substr(17,2));
 			return dt1.getTime()>dt2.getTime();
 		},
+		
+		
+		resolveLocalFileSystemUrl: function( imgUrl, cb ) {
+			var imgName = imgUrl.substr( imgUrl.lastIndexOf('/') );
+			var localUrl = window.appLocalFileDirectory + imgName;
+			window.resolveLocalFileSystemURL(localUrl, 
+					function(){
+						cb(localUrl);
+					},
+					function(){
+						//download and the back
+						var fileTransfer = new FileTransfer();
+						fileTransfer.download(imgUrl, localUrl, 
+								function(entry) {
+									cb(localUrl);
+								}, 
+								function(err) {
+									cb(null);
+								});
+					}
+			);
+		},
 	};
-
+	
+	
+	
+	
 	return util;
 });

@@ -46,8 +46,8 @@ define(function(require){
         		  });
         },
         
-        render: function() {           
-            $(this.el).html(this.template({ url:window.hostURL?window.hostURL:'',  
+        render: function() {    
+        	$(this.el).html(this.template({ url:window.hostURL?window.hostURL:'',  
             				mobile: window.platform==undefined?false:true,
             				util: util
             }));

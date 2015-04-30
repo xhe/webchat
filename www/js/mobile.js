@@ -59,7 +59,7 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 	
 	if( window.platform ){
 		document.addEventListener("deviceready",function(){
-			
+			window.appLocalFileDirectory = cordova.file.dataDirectory;
 			navigator.splashscreen.hide();
 				
 			require( [ "jquerymobile","jquery.cookie" ], function() { 
