@@ -190,7 +190,8 @@ define(function(require){
         	if (this.login())
         		return;
         	
-        	videoChatRoom = new VideoChatRoom(room);
+        	videoChatRoom = new VideoChatRoom();
+        	videoChatRoom.setRoom(room);
         	this.changePage(videoChatRoom);
         },
         

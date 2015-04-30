@@ -14,15 +14,17 @@ define(function(require){
 
         // The View Constructor
     	xirSysConfig: null,
-        initialize: function(room) {
+        initialize: function() {
+        	this.template = _.template( videochat_tpl );
+        },
+        
+        setRoom: function(room){
         	var _self = this;
         	this.room = room;
         	util.getXirSysCredential(room, function(data){
         		_self.xirSysConfig = data;
         		_self.startVideo(room);
         	});
-        	
-        	this.template = _.template( videochat_tpl );
         },
         
         startVideo: function(room){
