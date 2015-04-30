@@ -1,6 +1,6 @@
 var http = require('http'), https = require('https');
 var config = require('../../config/config');
-var request = require("request");
+
 
 exports.generateDateStr = function(dt){
 	var date = new Date(dt);
@@ -95,7 +95,7 @@ exports.simplifyUser = function(client, noToken, noMedias) {
 
 
 exports.getXirSysInfo = function(room,cb) {
-
+	var request = require("request");
 	var xirsys = config.xirsys;
 	request.post('https://api.xirsys.com/getIceServers', {
 		form : {
