@@ -308,6 +308,12 @@ exports.getXirsysInfo = function(req, res) {
 	});
 }
 
+exports.getSignallingInfo = function(req, res){
+	util.getSignallingInfo(req.params.room, function(err, data) {
+		res.jsonp(data);
+	});
+}
+
 exports.call = function(req, res) {
 	chat_service.call(req.body.type, req.user, req.body.user_name, function(
 			err, response) {

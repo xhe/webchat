@@ -22,6 +22,8 @@ module.exports = {
 		domain:'www.dealsmatcher.com'
 	}, 
 	
+	rtc_switchboard: true,
+	rtc_switchboard_url: 'http://www.chat4each.com:8997',
 	
 	push_notification: {
 		supported_platform_android: true,

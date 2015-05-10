@@ -93,6 +93,31 @@ exports.simplifyUser = function(client, noToken, noMedias) {
 }
 
 
+exports.getSignallingInfo = function(room, cb){
+	
+	if(config.rtc_switchboard) {
+		cb(null,  { rtc_switchboard: true, content: config.rtc_switchboard_url });
+	} else {
+		var request = require("request");
+		var xirsys = config.xirsys;
+		request.post('https://api.xirsys.com/getIceServers', {
+			form : {
+				ident : xirsys.ident,
+				secret : xirsys.secret,
+				domain : xirsys.domain,
+				application : "default",
+				room : room,
+				secure : 1
+			},
+			json : true
+		}, function(error, response, body) {
+			if (!error && response.statusCode == 200) {
+				// body.d.iceServers is where the array of ICE servers lives
+				cb(null,  { rtc_switchboard: false, content: body.d.iceServers });
+			}
+		});
+	}
+}
 
 exports.getXirSysInfo = function(room,cb) {
 	var request = require("request");
@@ -111,6 +136,7 @@ exports.getXirSysInfo = function(room,cb) {
 		if (!error && response.statusCode == 200) {
 			// body.d.iceServers is where the array of ICE servers lives
 			iceConfig = body.d.iceServers;
+			
 			cb(null, iceConfig);
 		}
 	});

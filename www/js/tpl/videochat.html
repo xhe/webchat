@@ -15,7 +15,6 @@
 			#remotesVideos video{
 				width: 100%;
 			}
-			
 			#localVideo{
 				height: 25%;
 			    position: absolute;
@@ -23,14 +22,42 @@
 			    top: 27px;
 			    width: 25%;
 			}
+			
+			#l-video{
+				position: absolute;
+			    right: 0;
+			    top: 27px;
+			    width: 100px;
+			    height: 100px;
+			}
+			#l-video video{
+				width: 100%;
+			}
+			
+			#r-video{
+				height: 100%;
+			    left: 0;
+			    position: absolute;
+			    right: 0;
+			    top: 50px;
+			    width: 100%;
+			}
+			#r-video video{
+				width: 100%;
+			}
 		
 		</style>
 		
 		<div data-role="content">
 			<div style="text-align: center;">
-				
+				<!-- 
 				<div id="remotesVideos"></div>
 				<video id="localVideo"></video>
+				 -->
+				
+        		
+        		 <div id="l-video"></div>
+    			<div id="r-video"></div>
         		
 			</div>
 			

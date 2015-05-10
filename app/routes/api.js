@@ -43,6 +43,8 @@ module.exports = function(app){
 	app.route('/api/upload_chat_audio_file/:roomId').post(user_service.requiresLogin,  api.upload_chat_audio_file);
 	
 	app.route('/api/get_xirsys/:room').get(user_service.requiresLogin, api.getXirsysInfo);
+	app.route('/api/get_signalling_config/:room').get(user_service.requiresLogin, api.getSignallingInfo);
+	
 	app.route('/api/call').post(user_service.requiresLogin, api.call); 
 	
 	app.route("/api/android_register").post(user_service.requiresLogin, api.android_register );

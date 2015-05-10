@@ -513,6 +513,12 @@ define(function(require){
 			})
 		},
 		
+		getSignallingConfig: function(room, cb){
+			$.get(appConfig.serverUrl+ 'get_signalling_config/'+room, function(data){
+				cb(data);
+			})
+		},
+		
 		generateUUID: function(){
 		    var d = new Date().getTime();
 		    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {

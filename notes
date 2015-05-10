@@ -180,3 +180,10 @@ adding this to init.d/mongod
 	http://www.chat4each.com:81/webmail/src/login.php
 	http://www.raywenderlich.com/32960/apple-push-notification-services-in-ios-6-tutorial-part-1
 	
+	
+	Install rtc-switchboard:
+	1) https://rtc.io/module-rtc-switchboard.html
+	2) start.sh:
+	
+	export NODE_PORT=8997
+cd /srv/nodejs/rtc-switchboard && /usr/local/bin/forever start server.js
