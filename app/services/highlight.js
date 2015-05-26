@@ -51,7 +51,7 @@ var generateHighlightCreators = function(currentUser,  owner,  cb ){
 	}
 };
 
-var executeRetrieHighlighQueue = function(q,levelsArray, cb){
+var executeRetrieHighlighQueue = function(q,levelsArray, currentUser,  cb){
 	q.sort('-created');
 	q.limit(20);
 	q.populate('creator');
@@ -114,7 +114,7 @@ exports.retrieveFavorites = function(user, before_ts, period_from, period_to, cb
 					$in:  _.pluck(docs, function(doc){return new ObjectId(doc.highlight) })
 				}	
 		});
-		executeRetrieHighlighQueue(q, null, cb);
+		executeRetrieHighlighQueue(q, null, user, cb);
 	});
 };
 
@@ -147,7 +147,7 @@ exports.retrieveHighlights = function(user, owner, before_ts, period_from, perio
 			if( period_from!=="null" && period_to!=="null") 
 				q.where("created").gte(period_from).lt(period_to);
 			
-			executeRetrieHighlighQueue(q, levelsArray, cb);
+			executeRetrieHighlighQueue(q, levelsArray, currentUser, cb);
 	};
 	
 	var populateFavorite = function(user, highlights, cb){
