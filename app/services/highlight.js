@@ -51,7 +51,7 @@ var generateHighlightCreators = function(currentUser,  owner,  cb ){
 	}
 };
 
-var executeRetrieHighlighQueue = function(q, cb){
+var executeRetrieHighlighQueue = function(q,levelsArray, cb){
 	q.sort('-created');
 	q.limit(20);
 	q.populate('creator');
@@ -75,9 +75,9 @@ var executeRetrieHighlighQueue = function(q, cb){
 					if(doc.creator.screenName == currentUser.screenName )
 						toAdd = true;
 				} else if(doc.shared==1) { //family
-					if( levelsArray[doc.creator.screenName] || doc.creator.screenName == currentUser.screenName)
+					if(levelsArray && levelsArray[doc.creator.screenName] || doc.creator.screenName == currentUser.screenName)
 						toAdd = true;
-				} else if(doc.shared==2 ){ //friend
+				} else if(levelsArray && doc.shared==2 ){ //friend
 					if( !levelsArray[doc.creator.screenName] || doc.creator.screenName == currentUser.screenName)
 						toAdd = true;
 				}else { //all
@@ -114,7 +114,7 @@ exports.retrieveFavorites = function(user, before_ts, period_from, period_to, cb
 					$in:  _.pluck(docs, function(doc){return new ObjectId(doc.highlight) })
 				}	
 		});
-		executeRetrieHighlighQueue(q, cb);
+		executeRetrieHighlighQueue(q, null, cb);
 	});
 };
 
@@ -147,7 +147,7 @@ exports.retrieveHighlights = function(user, owner, before_ts, period_from, perio
 			if( period_from!=="null" && period_to!=="null") 
 				q.where("created").gte(period_from).lt(period_to);
 			
-			executeRetrieHighlighQueue(q, cb);
+			executeRetrieHighlighQueue(q, levelsArray, cb);
 	};
 	
 	var populateFavorite = function(user, highlights, cb){
