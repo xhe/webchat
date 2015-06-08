@@ -51,11 +51,25 @@ onclick="$('#popupBasic').popup( { positionTo:'.profSettingLnk',dismissible: tru
 						       -->
 						    <%}%>
 						    
+						 
+						    
 						    
 						    <% if (!homeHeader ){%>
 						    	<li data-icon="home"><a  href="#">Home</a></li>
 						    <%}%>
 						    <li data-icon="back"><a  href='#logout'>Logout</a></li>
+						    
+						    <% if(platform==='ios' || platform==='android'){%>
+							    <li data-icon="mail">
+							    	<a onclick="window.open('http://chat4each.com:81', '_system')" style=" background-color: #e9e9e9; color: #000;">
+									 	Contact Us
+									 </a>
+								 </li>
+						    <%}else{%>
+						    	<li data-icon="mail">
+						    		<a href='http://chat4each.com:81' target="_blank" style=" background-color: #e9e9e9; color: #000;">Contact Us</a>
+								</li>
+							<%}%>
 						</ul>
 					</div>
 		</div>

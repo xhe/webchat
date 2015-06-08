@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin
+    xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="com.kumbe.phonegap.zoom.zoomcontrol"
+    version="0.1.7">
+
+    <name>ZoomControl</name>
+    <description>ZoomControl - allow the use of the native zoom/pan features</description>
+    <license>Apache 2.0</license>
+    <keywords>zoom</keywords>
+    <repo>https://github.com/kumbe/Phonegap-ZoomControl.git</repo>
+    <issue>https://github.com/kumbe/Phonegap-ZoomControl/issues</issue>
+
+    <engines>
+        <engine name="cordova" version=">=3.1.0" />
+    </engines>
+    
+    <js-module src="www/plugins.ZoomControl.js" name="ZoomControl">
+        <clobbers target="cordova.plugins.ZoomControl" />
+    </js-module>
+
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+                <feature name="ZoomControl">
+                        <param name="android-package" value="com.kumbe.phonegap.zoom.ZoomControl" />
+                </feature>
+        </config-file>
+	<config-file parent="/*" target="AndroidManifest.xml"/>
+	<source-file src="src/android/com/kumbe/phonegap/zoom/ZoomControl.java" target-dir="src/com/kumbe/phonegap/zoom/ZoomControl"/>
+    </platform>
+
+</plugin>
