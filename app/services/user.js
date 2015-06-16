@@ -12,7 +12,8 @@ var mongoose = require('mongoose'),
 	Relationship = mongoose.model("Relationship"),
 	config = require('../../config/config'),
 	Membership = mongoose.model('Membership'),
-	async = require('async')
+	async = require('async'),
+	relationship_service = require('./relationship')
 	;
 
 exports.createUser = function(req, res){
@@ -35,7 +36,7 @@ exports.createUser = function(req, res){
 					res.jsonp({'status':'failed', 'errors': err});
 				}
 			}else{
-				updateToken(client, req, res, updateUser);
+				updateToken(client, req, res, updateUser, cb);
 			}
 			if(cb){
 				cb( err, doc );
@@ -58,7 +59,11 @@ exports.createUser = function(req, res){
 									if(result.status=='failed'){
 										cb(result.error);
 									}else{
-										cb(null, result.invitation)
+										relationship_service.upsertRelationship(doc.from, invitee, false, function(err, doc){
+											relationship_service.upsertRelationship(invitee, doc.from, false, function(err, doc){
+												cb(err, invitee)
+											});
+										});
 									}
 								},
 								true );
@@ -74,11 +79,11 @@ exports.createUser = function(req, res){
 		                  async.apply( updatePwdToken, client, true, false),
 		                  async.apply( createRelationship, req.body.refer_id)
 		                 ], 
-		                 function(err, doc){
+		                 function(err, doc){ 
 							if(err){
-								res.jsonp({'status':'failed', 'err': err });
+								res.jsonp({'status':'failed', 'errors': err });
 							}else{
-								res.jsonp({'status':'success', 'invitation': doc });
+								res.jsonp({'status':'success', 'user': doc });
 							}
 						 }
 		);
@@ -168,7 +173,7 @@ exports.activate = function(email, token, cb){
 	});
 };
 
-var updateToken = function(user, req, res, userUpdate){
+var updateToken = function(user, req, res, userUpdate, cb){
 	user.updateToken(function(client){ 
 		if(client.code){
 			res.jsonp({'status':'failed', 'errors': client});
@@ -181,18 +186,27 @@ var updateToken = function(user, req, res, userUpdate){
 			req.session.token = client.token;
 			
 			if(userUpdate){
-				res.jsonp({'status':'success', 'user':client, 'msg':'Your profile has been updated successfully.' });	
+				if ( cb)
+					cb(null, client);
+				else
+					res.jsonp({'status':'success', 'user':client, 'msg':'Your profile has been updated successfully.' });	
 			}else{
 					//let's send activation email here
 					//send activation email here
 					if(!client.activated){
-						res.jsonp({
-							'status':'success', 
-							'user':client, 
-							'msg':'Your account has not been activated yet, an email will be sent to your email box, please follow the link to activate your account.' });
+						if(cb)
+							cb(null, client);
+						else
+							res.jsonp({
+								'status':'success', 
+								'user':client, 
+								'msg':'Your account has not been activated yet, an email will be sent to your email box, please follow the link to activate your account.' });
 						email_service.sendActivationEmail(client);
 					}else{
-						res.jsonp({'status':'success', 'user':client });
+						if(cb)
+							cb(null, client);
+						else
+							res.jsonp({'status':'success', 'user':client });
 					}
 			}
 		}
