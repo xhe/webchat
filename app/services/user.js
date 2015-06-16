@@ -334,7 +334,7 @@ exports.get_contacts = function(userName, cb){
 			var finalResults = [];
 			_.each(docs, function(doc){
 				var u = utils.simplifyUser(doc.to, true);
-				u.is_family = doc.is_family;
+				u.is_family = doc.is_family?true:false;
 				finalResults.push( u );
 			});
 			cb(err, finalResults);
