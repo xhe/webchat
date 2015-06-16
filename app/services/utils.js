@@ -60,7 +60,8 @@ exports.generateDateStr = function(dt){
 }
 
 exports.simplifyUser = function(client, noToken, noMedias) {
-/*	client.password = undefined;
+	
+	client.password = undefined;
 	client.password_salt = undefined;
 	client.token_date = undefined;
 	client.token_expire_date = undefined;
@@ -87,7 +88,7 @@ exports.simplifyUser = function(client, noToken, noMedias) {
 		client.thumbFileName = undefined;
 		client.photos = undefined;
 	}
-*/	
+
 	
 	return client;
 }

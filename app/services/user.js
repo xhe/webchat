@@ -333,13 +333,11 @@ exports.get_contacts = function(userName, cb){
 		.exec(function(err, docs){
 			var finalResults = [];
 			_.each(docs, function(doc){
-				var u = utils.simplifyUser(doc.to, true);
-				if(doc.is_family==null || doc.is_family==false || doc.is_family==undefined){
-					u.is_family=false;
-				}else{
-					u.is_family=true;
+				if(doc.to){
+					var u = utils.simplifyUser(doc.to, true);
+					u.is_family = doc.is_family;
+					finalResults.push( u );
 				}
-				finalResults.push( u );
 			});
 			cb(err, finalResults);
 		})
