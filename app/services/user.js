@@ -60,9 +60,7 @@ exports.createUser = function(req, res){
 										cb(result.error);
 									}else{
 										relationship_service.upsertRelationship(doc.from, invitee, false, function(err, doc){
-											relationship_service.upsertRelationship(invitee, doc.from, false, function(err, doc){
 												cb(err, invitee)
-											});
 										});
 									}
 								},
