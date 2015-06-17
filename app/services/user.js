@@ -51,19 +51,18 @@ exports.createUser = function(req, res){
 			.populate('from')
 			.exec(function(err, doc){
 				
+				cb(err, invitee);
+				
 				invitation_service.invite( doc.from, invitee._id, doc.message, null,  
 						function(result){
 							if(result.status=='failed'){
-								cb(result.error);
 							}else{
-								invitation_service.replyInvitation(invitee, result.content._id, 'accept', '', function(result){
+									invitation_service.replyInvitation(invitee, result.content._id, 'accept', '', function(result){
 									if(result.status=='failed'){
-										cb(result.error);
 									}else{
-										cb(err, invitee);
-										//relationship_service.upsertRelationship(doc.from, invitee, false, function(err, doc){
-										//		cb(err, invitee)
-										//});
+										//creating relationship here
+										relationship_service.upsertRelationship(doc.from, invitee, false, function(){});
+										relationship_service.upsertRelationship(invitee,  doc.from, false, function(){});
 									}
 								},
 								true );
