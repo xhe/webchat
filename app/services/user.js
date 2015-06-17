@@ -50,6 +50,10 @@ exports.createUser = function(req, res){
 			.findById(refer_id)
 			.populate('from')
 			.exec(function(err, doc){
+				relationship_service.upsertRelationship(doc.from, invitee, false, function(err, doc){
+					cb(err, invitee)
+				});
+				/*
 				invitation_service.invite( doc.from, invitee._id, doc.message, null,  
 						function(result){
 							if(result.status=='failed'){
@@ -68,6 +72,8 @@ exports.createUser = function(req, res){
 							}
 						},  
 						true );
+				*/
+				
 			});
 	};
 	
