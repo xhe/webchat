@@ -24,8 +24,7 @@ exports.processProfileImages = function(imagePath, user,  cb){
 			if(stdout.indexOf('Orientation=6')>-1){ //should be Orientation
 				rotation += ' -rotate 90 ';
 			}
-			
-			exec('convert '+ imagePath +' -resize ' +' '+size +'x'+size+'^ '+rotation+' -gravity center -crop '+size +'x'+size+'+0+0  '  +filePath+'thumb/'+newName +' ',
+			exec('convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' ' +filePath+'thumb/'+newName +' ',
 					 function(err, stdout, stderr){
 				render = new PhotoRender({
 							filename: newName,
@@ -79,7 +78,7 @@ exports.processChatImages = function(imagePath, user, path_appendix, cb){
 			if(stdout.indexOf('Orientation=6')>-1){ //should be Orientation
 				rotation += ' -rotate 90 ';
 			}
-			exec('convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' -gravity center -crop '+size+'x'+size+'+0+0 ' +filePath+'thumb' + path_appendix +  '/'+ newName +' ',
+			exec('convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' ' +filePath+'thumb' + path_appendix +  '/'+ newName +' ',
 				function(err, stdout, stderr){
 					render = new PhotoRender({
 								filename: newName,
