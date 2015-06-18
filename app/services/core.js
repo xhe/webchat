@@ -28,16 +28,15 @@ exports.processProfileImages = function(imagePath, user,  cb){
 			exec('identify ' + imagePath, function(err, stdout, stderr){
 				var stdoutArray = stdout.split(' ');
 				var dimArray = stdoutArray[2].split('x');
-				var w=dimArray[0];
-				var h=dimArray[1];
-				
+				var w= parseInt( dimArray[0] );
+				var h= parseInt (dimArray[1]);
 				var croppedSize = w>h?h:w;
 				var cmd = 'convert '+ imagePath  + ' -gravity center -crop ' + croppedSize +'x'+croppedSize+'+0+0 '+' -resize '+size +'x'+size+' '+rotation + ' '+filePath+'thumb/'+newName +' ';
 				
 				if(size>100){
 					cmd = 'convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' '+filePath+'thumb/'+newName +' ';
 				}
-				
+				console.log ( cmd )
 				exec(cmd,
 						function(err, stdout, stderr){
 					render = new PhotoRender({
@@ -98,8 +97,8 @@ exports.processChatImages = function(imagePath, user, path_appendix, cb){
 			exec('identify ' + imagePath, function(err, stdout, stderr){
 				var stdoutArray = stdout.split(' ');
 				var dimArray = stdoutArray[2].split('x');
-				var w=dimArray[0];
-				var h=dimArray[1];
+				var w= parseInt(dimArray[0]);
+				var h= parseInt(dimArray[1]);
 				
 				
 				var croppedSize = w>h?h:w;
