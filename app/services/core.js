@@ -31,18 +31,12 @@ exports.processProfileImages = function(imagePath, user,  cb){
 				var w=dimArray[0];
 				var h=dimArray[1];
 				
-				var maxRate = 1.2;
-				if(w>h){
-					rate = w/h;
-				}else{
-					rate = h/w;
-				}
-				maxRate = rate>maxRate?maxRate:rate;
-				newSize = size;
-				var cmd = 'convert '+ imagePath +' -resize ' +' '+newSize +'x'+newSize+' '+rotation+' -gravity center -crop '+size +'x'+size+'+0+0 '  +filePath+'thumb/'+newName +' ';
+				var croppedSize = w>h?h:w;
 				
-				if(size>200){
-					cmd = 'convert '+ imagePath +' -resize ' +' '+newSize +'x'+newSize+' '+rotation+' '+filePath+'thumb/'+newName +' ';
+				var cmd = 'convert '+ imagePath  + ' -gravity center -crop ' + croppedSize +'x'+croppedSize+'+0+0 '+' -resize '+size +'x'+size+' '+rotation + ' '+filePath+'thumb/'+newName +' ';
+				
+				if(size>100){
+					cmd = 'convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' '+filePath+'thumb/'+newName +' ';
 				}
 				
 				exec(cmd,
@@ -108,15 +102,10 @@ exports.processChatImages = function(imagePath, user, path_appendix, cb){
 				var w=dimArray[0];
 				var h=dimArray[1];
 				
-				if(w>h){
-					newSize = size*w/h;
-				}else{
-					newSize = size*h/w;
-				}
-				newSize = size;
-				var cmd = 'convert '+ imagePath +' -resize ' +' '+newSize +'x'+newSize+' '+rotation+' -gravity center -crop '+size +'x'+size+'+0+0 '  +filePath+'thumb' + path_appendix + '/'+ newName +' ';
 				
-				if(size>200){
+				var croppedSize = w>h?h:w;
+				var cmd = 'convert '+ imagePath  + ' -gravity center -crop ' + croppedSize +'x'+croppedSize+'+0+0 '+' -resize '+size +'x'+size+' '+rotation + ' ' +filePath+'thumb' + path_appendix + '/'+ newName +' ';
+				if(size>100){
 					cmd = 'convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' '+filePath+'thumb' + path_appendix + '/'+ newName +' ';
 				}
 				
