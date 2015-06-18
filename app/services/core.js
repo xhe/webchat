@@ -24,6 +24,8 @@ exports.processProfileImages = function(imagePath, user,  cb){
 			if(stdout.indexOf('Orientation=6')>-1){ //should be Orientation
 				rotation += ' -rotate 90 ';
 			}
+			var cmd = 'convert '+ imagePath +' -resize ' +' '+size +'x'+size+'^ '+rotation+' -gravity center -crop '+size +'x'+size+'+0+0 '  +filePath+'thumb/'+newName +' ';
+			console.log( cmd );
 			exec('convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' ' +filePath+'thumb/'+newName +' ',
 					 function(err, stdout, stderr){
 				render = new PhotoRender({
@@ -50,7 +52,7 @@ exports.processProfileImages = function(imagePath, user,  cb){
 				
 				wr = fs.createWriteStream( filePath+'original/'+user._id+"_"+ts+"_"+fileName);
 				wr.on('close', function(ex){
-					fs.unlink(imagePath);
+					//fs.unlink(imagePath);
 					cb(true);
 				});
 				fs.createReadStream(imagePath).pipe(wr);
