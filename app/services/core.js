@@ -39,7 +39,7 @@ exports.processProfileImages = function(imagePath, user,  cb){
 				
 				var cmd = 'convert '+ imagePath +' -resize ' +' '+newSize +'x'+newSize+' '+rotation+' -gravity center -crop '+size +'x'+size+'+0+0 '  +filePath+'thumb/'+newName +' ';
 				
-				if(size>100){
+				if(size>200){
 					cmd = 'convert '+ imagePath +' -resize ' +' '+newSize +'x'+newSize+' '+rotation+' '+filePath+'thumb/'+newName +' ';
 				}
 				
@@ -114,7 +114,7 @@ exports.processChatImages = function(imagePath, user, path_appendix, cb){
 				
 				var cmd = 'convert '+ imagePath +' -resize ' +' '+newSize +'x'+newSize+' '+rotation+' -gravity center -crop '+size +'x'+size+'+0+0 '  +filePath+'thumb' + path_appendix + '/'+ newName +' ';
 				
-				if(size>100){
+				if(size>200){
 					cmd = 'convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' '+filePath+'thumb' + path_appendix + '/'+ newName +' ';
 				}
 				
