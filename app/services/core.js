@@ -25,7 +25,7 @@ exports.processProfileImages = function(imagePath, user,  cb){
 				rotation += ' -rotate 90 ';
 			}
 			
-			exec('convert '+ imagePath +' -resize ' +' '+size +'x'+size+'^ '+rotation+' '  +filePath+'thumb/'+newName +' ',
+			exec('convert '+ imagePath +' -resize ' +' '+size +'x'+size+'^ '+rotation+' -gravity center -crop '+size +'x'+size+'+0+0  '  +filePath+'thumb/'+newName +' ',
 					 function(err, stdout, stderr){
 				render = new PhotoRender({
 							filename: newName,
