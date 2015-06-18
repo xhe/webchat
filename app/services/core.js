@@ -31,12 +31,14 @@ exports.processProfileImages = function(imagePath, user,  cb){
 				var w=dimArray[0];
 				var h=dimArray[1];
 				
+				var maxRate = 1.2;
 				if(w>h){
-					newSize = size*w/h;
+					rate = w/h;
 				}else{
-					newSize = size*h/w;
+					rate = h/w;
 				}
-				
+				maxRate = rate>maxRate?maxRate:rate;
+				newSize = size*maxRate;
 				var cmd = 'convert '+ imagePath +' -resize ' +' '+newSize +'x'+newSize+' '+rotation+' -gravity center -crop '+size +'x'+size+'+0+0 '  +filePath+'thumb/'+newName +' ';
 				
 				if(size>200){
