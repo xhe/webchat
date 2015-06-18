@@ -24,16 +24,34 @@ exports.processProfileImages = function(imagePath, user,  cb){
 			if(stdout.indexOf('Orientation=6')>-1){ //should be Orientation
 				rotation += ' -rotate 90 ';
 			}
-			var cmd = 'convert '+ imagePath +' -resize ' +' '+size +'x'+size+'^ '+rotation+' -gravity center -crop '+size +'x'+size+'+0+0 '  +filePath+'thumb/'+newName +' ';
-			console.log( cmd );
-			exec('convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' ' +filePath+'thumb/'+newName +' ',
-					 function(err, stdout, stderr){
-				render = new PhotoRender({
-							filename: newName,
-							dimension: size
-				});
+			
+			exec('identify ' + imagePath, function(err, stdout, stderr){
+				var stdoutArray = stdout.split(' ');
+				var dimArray = stdoutArray[2].split('x');
+				var w=dimArray[0];
+				var h=dimArray[1];
+				
+				if(w>h){
+					newSize = size*w/h;
+				}else{
+					newSize = size*h/w;
+				}
+				
+				var cmd = 'convert '+ imagePath +' -resize ' +' '+newSize +'x'+newSize+' '+rotation+' -gravity center -crop '+size +'x'+size+'+0+0 '  +filePath+'thumb/'+newName +' ';
+				
+				if(size>100){
+					cmd = 'convert '+ imagePath +' -resize ' +' '+newSize +'x'+newSize+' '+rotation+' '+filePath+'thumb/'+newName +' ';
+				}
+				
+				exec(cmd,
+						function(err, stdout, stderr){
+					render = new PhotoRender({
+								filename: newName,
+								dimension: size
+					});
 				cb(null, render);
-			});
+				});
+			});	
 		});
 	}
 	async.map(sizes, processImage, function(err, results){
@@ -52,7 +70,7 @@ exports.processProfileImages = function(imagePath, user,  cb){
 				
 				wr = fs.createWriteStream( filePath+'original/'+user._id+"_"+ts+"_"+fileName);
 				wr.on('close', function(ex){
-					//fs.unlink(imagePath);
+					fs.unlink(imagePath);
 					cb(true);
 				});
 				fs.createReadStream(imagePath).pipe(wr);
@@ -80,14 +98,35 @@ exports.processChatImages = function(imagePath, user, path_appendix, cb){
 			if(stdout.indexOf('Orientation=6')>-1){ //should be Orientation
 				rotation += ' -rotate 90 ';
 			}
-			exec('convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' ' +filePath+'thumb' + path_appendix +  '/'+ newName +' ',
-				function(err, stdout, stderr){
+			
+			
+			exec('identify ' + imagePath, function(err, stdout, stderr){
+				var stdoutArray = stdout.split(' ');
+				var dimArray = stdoutArray[2].split('x');
+				var w=dimArray[0];
+				var h=dimArray[1];
+				
+				if(w>h){
+					newSize = size*w/h;
+				}else{
+					newSize = size*h/w;
+				}
+				
+				var cmd = 'convert '+ imagePath +' -resize ' +' '+newSize +'x'+newSize+' '+rotation+' -gravity center -crop '+size +'x'+size+'+0+0 '  +filePath+'thumb' + path_appendix + '/'+ newName +' ';
+				
+				if(size>100){
+					cmd = 'convert '+ imagePath +' -resize ' +' '+size +'x'+size+' '+rotation+' '+filePath+'thumb' + path_appendix + '/'+ newName +' ';
+				}
+				
+				exec(cmd,
+						function(err, stdout, stderr){
 					render = new PhotoRender({
 								filename: newName,
 								dimension: size
 					});
 				cb(null, render);
-			});
+				});
+			});	
 		});
 		
 	}
