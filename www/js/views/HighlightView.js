@@ -354,7 +354,7 @@ define(function(require){
         	if( $(event.target).hasClass('recordAudioMsg') )
         		return;
         	
-        	currentIndex = 0;
+        	currentIndex = event.target.getAttribute("data-index");
         	highlightPhotoRenders_s = this.highlightCollection.getHighlightPhotos( event.currentTarget.getAttribute("data-id"), 50 );
         	highlightPhotoRenders_l = this.highlightCollection.getHighlightPhotos( event.currentTarget.getAttribute("data-id"), 1000 );
             

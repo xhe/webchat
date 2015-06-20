@@ -239,7 +239,7 @@ define(function(require){
 		detectServerStatus: function(){
 			$.ajax({url: window.hostURL?  window.hostURL:"/",
 			        type: "HEAD",
-			        timeout:1000,
+			        timeout:5000,
 			        statusCode: {
 			            400: function (response) {
 			                util.alert('Server is not reachable, please try later.');
@@ -249,8 +249,9 @@ define(function(require){
 			            }              
 			        }
 				});
-			
 		},
+		
+	
 		
 		//used to save static url request
 		urlRequstCache: [],

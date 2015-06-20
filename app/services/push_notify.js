@@ -232,7 +232,7 @@ var sendNotificationMsg = function(receipients, msg, cb){
 				    delayWhileIdle: true,
 				    timeToLive: 3,
 				    data: {
-				    	message: msg 
+				    	message: msg
 				    }
 			}); 
 			var sender = new gcm.Sender(config.push_notification.gcm_api_key);

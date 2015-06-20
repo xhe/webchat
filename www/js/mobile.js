@@ -90,8 +90,7 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 						window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_RESUME_ROOM);
 						window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_RESUME_ROOMS);
 						window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_RESUME_HOME);
-					}
-						 
+					}	 
 			    }
 				
 				document.addEventListener("offline", onOffline, false);
@@ -112,7 +111,9 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 								router = new Mobile();
 							});
 				        }, 2000);
-				}				
+				}
+				
+				
 			});
 		},false);
 	

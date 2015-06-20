@@ -27,8 +27,10 @@
 			<%}%>
 			
 			<div class="divHighlightItems" data-id="<%= highlight._id%>">
+				<% index=0 %>
 				<%_.each( highlight.photos, function(photo){ %>
-					<img src="<%= util.retrieveHighlightThumbNailPath( photo, 50 )%>" width="50px" height="50px;" class='highlightMediaItem' />
+					<img src="<%= util.retrieveHighlightThumbNailPath( photo, 50 )%>" data-index="<%= index%>" width="50px" height="50px;" class='highlightMediaItem' />
+				<% index++; %>
 				<% }) %>
 				
 				<%_.each( highlight.audios, function(audio){ %>
