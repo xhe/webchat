@@ -552,7 +552,7 @@ define(function(require){
 			if( util.getLoggedInUser() && util.getLoggedInUser().settings_language){
 				language = util.getLoggedInUser().settings_language;
 			}
-			return language || localStorage.language || 'en';
+			return  localStorage.language || language  || 'en';
 		}
 		
 	};
