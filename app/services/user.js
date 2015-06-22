@@ -119,9 +119,16 @@ exports.login = function(req, res){
 	Client.findByUsername(req.body.userName, function(err, user){	
 		if(err)
 			console.log(err);
-		if(user){	
+		if(user){
 			if(user.authenticate(req.body.passWord)){
-				updateToken(user, req, res);
+				if(req.body.language!=''){
+					user.settings_language = req.body.language;
+					user.save(function(err, doc){
+						updateToken(doc, req, res);
+					})
+				} else {
+					updateToken(user, req, res);
+				}
 			}else{
 				res.json({'status':'failed'});
 			}

@@ -35,7 +35,8 @@ define(function(require){
         	$.post(appConfig.serverUrl + 'login', 
         		  {
         			'userName': username,
-        			'passWord': password
+        			'passWord': password,
+        			'language': localStorage.language?localStorage.language:""
         		  },
         		  function(data){
         			 $("#loginError").hide(); 
