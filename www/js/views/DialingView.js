@@ -60,7 +60,7 @@ define(function(require){
         
         render: function() {           
             $(this.el).html(this.template({ callee: this.callee, thumbNail: util.retrieveThumbNailPath(this.callee, 250) }));
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Dialing").render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( util.translate("Dialing")).render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             return this;
         }

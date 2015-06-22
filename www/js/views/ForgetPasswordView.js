@@ -24,7 +24,7 @@ define(function(require){
         
         retrievePwd: function(){
         	if(!util.isEmail( $("#pwdRetrieve_email").val() )){
-        		$("#divErrorGeneral").html("Please enter valid email address");
+        		$("#divErrorGeneral").html(util.translate("Please enter valid email address"));
         	}else{
         		$("#divErrorGeneral").html("");
         		
@@ -35,7 +35,7 @@ define(function(require){
             		  },
             		  function(data){
             			  if(data.status=='success'){
-            				  util.alert('An password reset email has been sent to your email box, please follow the link to reset your password.') 
+            				  util.alert(util.translate('An password reset email has been sent to your email box, please follow the link to reset your password.')) 
             			  }else{
             				  $("#divErrorGeneral").html( data.err);
             			  }
@@ -46,7 +46,7 @@ define(function(require){
         render: function() {           
             $(this.el).html(this.template());
             new FooterView({ el: $(".footerContent", this.el)}).render();
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( 'Password Reminder' ).render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle(util.translate( 'Password Reminder' ) ).render();
             
             return this;
         }

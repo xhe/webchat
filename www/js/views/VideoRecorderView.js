@@ -111,7 +111,7 @@ define(function(require){
         
         render: function() {           
             $(this.el).html(this.template());
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Video Message").render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle(util.translate("Video Message")).render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             return this;
         }

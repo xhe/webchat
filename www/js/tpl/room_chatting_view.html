@@ -5,9 +5,9 @@
 		<div style="margin:0px; padding:0px" data-role="content" > 
 				
 				<div style='text-align: center; '>
-					<a style="font-size: 70%" data-icon="plus" data-role="button" data-inline="true" data-mini="true" href="#invite/<%= roomId%>">User</a>
-					<a id='hrefShowAttController' style="font-size: 70%"  data-icon="plus" data-role="button" data-inline="true" data-mini="true" >Msg</a>
-					<a style="font-size: 70%"  data-icon="arrow-u" data-role="button" id="btnMorePrev" data-mini="true" data-inline="true">More</a>
+					<a style="font-size: 70%" data-icon="plus" data-role="button" data-inline="true" data-mini="true" href="#invite/<%= roomId%>"><%= window.util.translate("User") %></a>
+					<a id='hrefShowAttController' style="font-size: 70%"  data-icon="plus" data-role="button" data-inline="true" data-mini="true" ><%= window.util.translate("Msg") %></a>
+					<a style="font-size: 70%"  data-icon="arrow-u" data-role="button" id="btnMorePrev" data-mini="true" data-inline="true"><%= window.util.translate("More") %></a>
 					
 				</div>
 				
@@ -48,10 +48,10 @@
 			     			<td><input id="txtMsg" autocomplete="off" />
 			    			</td>
 			    			<td style="width:50px">
-			    				<a data-role="button" data-icon="check" data-mini="true"  id='btnSubmit'>Send</a> 	
+			    				<a data-role="button" data-icon="check" data-mini="true"  id='btnSubmit'><%= window.util.translate("Send") %></a> 	
 			    			</td>
 			    			<td style="width:50px">
-			    				<a data-role="button"  data-mini="true"  id='btnAttach'>Attach</a> 	
+			    				<a data-role="button"  data-mini="true"  id='btnAttach'><%= window.util.translate("Attach") %></a> 	
 			    			</td>
 			    		</tr>
 			     	</table>

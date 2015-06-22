@@ -20,25 +20,25 @@
 					</tr>
 				</table>
 				
-				<h4>Short Message for invitation:</h4>	
+				<h4><%= window.util.translate("Short Message for invitation") %>:</h4>	
 				
 				<textarea id="friendRequestMsg"></textarea>	
 				
-				<h4>Relationship:</h4>
+				<h4><%= window.util.translate("Relationship") %>:</h4>
 				
 				<div data-role="fieldcontain">
 				    <fieldset data-role="controlgroup" data-type="horizontal">
 				    
 				    	 	<input type="radio" name="radRelationship" value="1" id="radRelationship-family"  />
-				         	<label for="radRelationship-family">Family</label>
+				         	<label for="radRelationship-family"><%= window.util.translate("Family") %></label>
 				
 				         	<input type="radio" name="radRelationship" value="2" id="radRelationship-friend" checked="checked"/>
-				         	<label for="radRelationship-friend">Friend</label>
+				         	<label for="radRelationship-friend"><%= window.util.translate("Friend") %></label>
 				    
 				    </fieldset>
 				</div>
 				
 				
-				<input type='button' id="btnSendFriendRequest" value='Submit'/>
+				<input type='button' id="btnSendFriendRequest" value="<%= window.util.translate('Submit')%>"/>
 				
 			

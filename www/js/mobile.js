@@ -31,11 +31,12 @@ require.config( {
 } );
 
 // Includes File Dependencies
-require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "common/utils",  "services/socketEvents", "jquery.cookie"],
+require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "common/utils", "services/socketEvents", "jquery.cookie"],
 		function( $, Backbone, Mobile, appConfig, utils, SocketEventService ) {
 	
 	Backbone.emulateHTTP = true;
-
+	window.util = utils;
+	
 	$( document ).on( "mobileinit",
 		// Set up the "mobileinit" handler before requiring jQuery Mobile's module
 		function() {

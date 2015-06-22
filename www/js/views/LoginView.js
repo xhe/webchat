@@ -18,7 +18,14 @@ define(function(require){
         },
         
         events:{
-        	"click #btnLogin": "login"
+        	"click #btnLogin": "login",
+        	"click .divChangeLanguageLink": "toggleLanguage"
+        },
+        
+        toggleLanguage: function(){
+        	localStorage.language = util.getCurrentLanguage()=='en'?'zh':'en';
+        	router.navigate('#'+Math.random());
+	        router.navigate('#', {trigger:true});
         },
         
         login: function(){

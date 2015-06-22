@@ -111,7 +111,8 @@ var UserSchema = new Schema({
 		default: '',
 		trim: true,
 		required: 'Screen name cannot be blank',
-		unique: true
+		unique: true,
+		index: true
 	},
 	
 	password: {
@@ -160,6 +161,10 @@ var UserSchema = new Schema({
 	settings_disable_sounds: {
 		type: Boolean,
 		default: false
+	},
+	
+	settings_language:{
+		type:String
 	},
 	
 	thumbFileName: {
@@ -224,6 +229,10 @@ UserSchema.statics.findByUsername = function(screenName, cb){
 
 UserSchema.pre('save', function (next) {
 	this.phoneNumber = this.phoneNumber.toString().replace( /^\D+/g, '');
+	if(this.settings_language=="" || this.settings_language==null){
+		this.settings_language = this.countryCode==86?"zh":"en";
+	}
+	
 	if(this.phoneNumber==""){
 		self.invalidate("phoneNumber", "Phone number must have digits");
 		next(new Error("Phone number must have digits."));

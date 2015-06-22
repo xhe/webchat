@@ -23,7 +23,7 @@ define(function(require){
        
         render: function() {           
             $(this.el).html(this.template({ user: util.getLoggedInUser() }));
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Invitations").render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle(util.translate( "Invitations" )).render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             new InvitationListView({el: $("#divInvitationList", this.el), model: this.invitationCollection});
             this.invitationCollection.getMyPendingInvitations();

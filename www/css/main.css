@@ -395,6 +395,14 @@ img.offline{
     top: 8px;
     width: 40px;
 }
+
+.divChangeLanguageLink{
+	cursor: pointer;
+    position: absolute;
+    right: 24px;
+    top: 14px;
+}
+
 .divSettingItem{
 	margin-bottom: 20px;
 }
@@ -763,7 +771,10 @@ li.unseen{
 	cursor: pointer;
 }
 .spanAbstractlink{
-	color: 	blue;
+	color: 	blue;cursor: pointer;
+}
+.spanAbstractlinkCmt{
+	color: 	blue;cursor: pointer;
 }
 
 li.highlightUnseenNum{

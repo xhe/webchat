@@ -2,7 +2,7 @@
 
 <% if (own_rooms.length>0){%>
 	
-	<h4>Rooms created by you (<%= own_rooms.length%>) </h4>
+	<h4><%= window.util.translate("Rooms created by you") %> (<%= own_rooms.length%>) </h4>
 	
 	<ul data-role="listview" data-split-theme="a" data-split-icon="<%= link_to_share.length>0?'check':'delete' %>" class="listview" data-count-theme="c">
 	
@@ -23,7 +23,7 @@
 						<td valign="top" style="padding-left: 15px">
 							<%= room.name%>
 							<% if(room.members.length==0){%>
-								(Yourself only)
+								(<%= window.util.translate("Yourself only") %>)
 							<%}%>
 							
 							<% if(room.new_messages>0){%>
@@ -36,22 +36,22 @@
 			 </a>
 		
 			<% if(link_to_share.length>0){%> 
-				<a data-roomid="<%= room._id%>" class="hrefFavoriteToRoom">Favorite</a>	 
+				<a data-roomid="<%= room._id%>" class="hrefFavoriteToRoom"><%= window.util.translate("Favorite") %></a>	 
 			<%}else{%>
-				<a class="hrefDeleteRoom" data-roomid="<%= room._id%>" data-action='delete'>Delete</a>	 
+				<a class="hrefDeleteRoom" data-roomid="<%= room._id%>" data-action='delete'><%= window.util.translate("Delete") %></a>	 
 			<%}%>
 		</li>
 	<%})%>
 	</ul>
 <%}else{%>
-	<h4>You have not created any rooms yet.</h4>	
+	<h4><%= window.util.translate("You have not created any rooms yet") %></h4>	
 <%}%>
 
 <hr/>
 
 <% if (join_rooms.length>0){%>
 	
-	<h4>Rooms you have joined <%= join_rooms.length%></h4>
+	<h4><%= window.util.translate("Rooms you have joined") %> <%= join_rooms.length%></h4>
 	<ul data-role="listview" data-split-theme="a" data-split-icon="<%= link_to_share.length>0?'check':'delete' %>"class="listview" data-count-theme="c">
 	
 	<% _.each(join_rooms, function(room){%>
@@ -67,7 +67,7 @@
 						<td valign="top" style="padding-left: 15px">
 							<%= room.name%>
 							<% if(room.members.length==0){%>
-								(Yourself only)
+								(<%= window.util.translate("Yourself only") %>)
 							<%}%>
 							
 							<% if(room.new_messages>0){%>
@@ -81,9 +81,9 @@
 			 </a> 
 			 
 			 <% if(link_to_share.length>0){%> 
-				<a data-roomid="<%= room._id%>" class="hrefFavoriteToRoom">Favorite</a>	 
+				<a data-roomid="<%= room._id%>" class="hrefFavoriteToRoom"><%= window.util.translate("Favorite") %></a>	 
 			<%}else{%>
-				<a class="hrefDeleteRoom" data-roomid="<%= room._id%>" data-action='leave'>Leave</a>	  
+				<a class="hrefDeleteRoom" data-roomid="<%= room._id%>" data-action='leave'><%= window.util.translate("Leave") %></a>	  
 			<%}%>
 			 
 			
@@ -92,5 +92,5 @@
 	</ul>
 	
 <%}else{%>
-	<h4>You have not joined any room yet.</h4>
+	<h4><%= window.util.translate("You have not joined any room yet") %>.</h4>
 <%}%>

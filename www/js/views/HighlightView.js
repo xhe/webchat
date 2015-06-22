@@ -139,11 +139,13 @@ define(function(require){
         	"click .divHighlighSharedLink":"clkItemLink",
         	"click .hrefFavorite": "toggleFavorite",
         	"click .spanHighlightAbstract": "showHighlightDetail",
+        	"click .spanAbstractlink": "showHighlightDetail",
         	"click #divHighlightContentWrapper": "hideHighlightDetail",
         	"click .divAddCommentHighlight": "addCommentHighlight",
         	"click .btnHighlightCommentCancel": "highlightCommentCancel",
         	"click .btnHighlightCommentConfirm": "highlightCommentConfirm",
-        	"click .spanHighlightCommentAbstract": "showCommentOriginal"
+        	"click .spanHighlightCommentAbstract": "showCommentOriginal",
+        	"click .spanAbstractlinkCmt": "showCommentOriginal"
         },
         
         highlightCommentConfirm: function(event){
@@ -424,19 +426,19 @@ define(function(require){
         
         render: function() {           
             $(this.el).html(this.template({ mobileOS:window.platform }));
-            var title = "My Highlights"
+            var title = util.translate( "My Highlights" )
             
             if(this.favorite){
-            	title = 'Hightlights | Favorite';
+            	title = util.translate('Hightlights | Favorite');
             }
             	
             if(this.creator){
             	if(this.creator=="all_families"){
-            		title = 'Hightlights | Families';
+            		title =  util.translate('Hightlights | Families');
             	} else if(this.creator=="all_friends"){
-            		title = 'Hightlights | Friendes';
+            		title = util.translate('Hightlights | Friendes');
             	} else 
-            		title = 'Hightlights | ' + this.creator;
+            		title = util.translate('Hightlights | ') + this.creator;
             }
             new HeaderView({ el: $(".headerContent", this.el)}).setTitle(title).render();
             new FooterView({ el: $(".footerContent", this.el)}).render();

@@ -13,7 +13,7 @@
 
 <% if(invitation.room){%>
 	<p>
-		You are invited to join room: <strong><%= invitation.room.name%></strong>
+		<%= window.util.translate("You are invited to join room") %>: <strong><%= invitation.room.name%></strong>
 	</p>
 <%}%>
 
@@ -23,11 +23,11 @@
 
 <hr/>
 
-<h4>Short message to inviter</h4>	
+<h4><%= window.util.translate("Short message to inviter") %></h4>	
 				
 <textarea id="friendRequestReplyMsg"></textarea>	
 				
-<h4>Relationship:</h4>
+<h4><%= window.util.translate("Relationship") %>:</h4>
 				
 				<div data-role="fieldcontain">
 				    <fieldset data-role="controlgroup" data-type="horizontal">
@@ -36,19 +36,19 @@
 				    		<% if(invitation.is_family){ %>
 				    		<input type="radio" name="radRelationship-reply" value="1" id="radRelationship-reply-family" checked="checked"
 				    	 	/>
-				    	 		<label for="radRelationship-reply-family">Family</label>
+				    	 		<label for="radRelationship-reply-family"><%= window.util.translate("Family") %></label>
 				         	<input type="radio" name="radRelationship-reply" value="2" id="radRelationship-reply-friend" 
 				         	/>
-				    		<label for="radRelationship-reply-friend">Friend</label>
+				    		<label for="radRelationship-reply-friend"><%= window.util.translate("Friend") %></label>
 					     	
 				         	
 				    	<%}else{%>
 				    		<input type="radio" name="radRelationship-reply" value="1" id="radRelationship-reply-family" 
 				    	 	/>
-				    	 		<label for="radRelationship-reply-family">Family</label>
+				    	 		<label for="radRelationship-reply-family"><%= window.util.translate("Family") %></label>
 				         	<input type="radio" name="radRelationship-reply" value="2" id="radRelationship-reply-friend" checked="checked"
 				         	/>
-				    		<label for="radRelationship-reply-friend">Friend</label>
+				    		<label for="radRelationship-reply-friend"><%= window.util.translate("Friend") %></label>
 					     	
 				    	<%}%>
 				    	 	
@@ -61,8 +61,8 @@
 				    </fieldset>
 				</div>				
 				
-<input type='button' id="btnFriendRequestAccept" value='Accept'/>
+<input type='button' id="btnFriendRequestAccept" value='<%= window.util.translate("Accept") %>'/>
 
-<input type='button' id="btnFriendRequestReject" value='Reject'/>
+<input type='button' id="btnFriendRequestReject" value='<%= window.util.translate("Reject") %>'/>
 				
 			

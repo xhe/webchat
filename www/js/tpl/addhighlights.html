@@ -4,36 +4,36 @@
 		
 		<div data-role="content" > 
 				
-				<label>Contents:</label>
+				<label><%= window.util.translate("Contents") %>:</label>
 				
 				<textarea id='txtHightContent'/>
 				
 				
-				<input type="text" id="txtSharedLink"  placeholder="Shared link (optional)"/>
+				<input type="text" id="txtSharedLink"  placeholder="<%= window.util.translate('Shared link (optional)') %>"/>
 				
-				<label>Shared with:</label>
+				<label><%= window.util.translate("Shared with") %>:</label>
 				
 				<div id='highlightSharedDiv'>
 				<div data-role="fieldcontain">
 				    <fieldset data-role="controlgroup" data-type="horizontal">
 				    
 				    	 	<input type="radio" name="radSharedWith" value="1" id="radSharedWith-family" data-mini="true" />
-				         	<label for="radSharedWith-family">Family</label>
+				         	<label for="radSharedWith-family"><%= window.util.translate("Family") %></label>
 				
 				         	<input type="radio" name="radSharedWith" value="2" id="radSharedWith-friend" data-mini="true" />
-				         	<label for="radSharedWith-friend">Friend</label>
+				         	<label for="radSharedWith-friend"><%= window.util.translate("Friend") %></label>
 				
 				         	<input type="radio" name="radSharedWith" value="3" id="radSharedWith-all" checked="checked" data-mini="true" />
-				         	<label for="radSharedWith-all">All</label>
+				         	<label for="radSharedWith-all"><%= window.util.translate("All") %></label>
 				
 				         	<input type="radio" name="radSharedWith" value="0" id="radSharedWith-none" data-mini="true" />
-				         	<label for="radSharedWith-none">None</label>
+				         	<label for="radSharedWith-none"><%= window.util.translate("None") %></label>
 				    
 				    </fieldset>
 				</div>
 				</div>
 				
-				<label>Attachment</label>
+				<label><%= window.util.translate("Attachment") %></label>
 				
 				<div>
 					<% if(mobile){%>
@@ -48,9 +48,9 @@
 								</form>
 						</div>
 						
-						<button type="button" id="upload-button-chat-h" data-inline="true" class="attachImage withText">Images</button> 
+						<button type="button" id="upload-button-chat-h" data-inline="true" class="attachImage withText"><%= window.util.translate("Images") %></button> 
 						
-						<button type="button" id="recordAudio-h" data-inline="true" class="recordAudio withText">Sound</button> 
+						<button type="button" id="recordAudio-h" data-inline="true" class="recordAudio withText"><%= window.util.translate("Record Audio") %></button> 
 						
 																
 					<%}%>
@@ -63,10 +63,10 @@
 				
 				<div class='cfx'></div>
 				
-				<button data-role="button" data-icon='check' id="btnSave" style="margin-top: 10px;">Sumbit</button>
+				<button data-role="button" data-icon='check' id="btnSave" style="margin-top: 10px;"><%= window.util.translate("Sumbit") %></button>
 				
 				<% if(edit){%>
-					<button data-role="button" " data-icon="delete" id="btnRemove" style="margin-top: 10px;">Delete</button>
+					<button data-role="button" " data-icon="delete" id="btnRemove" style="margin-top: 10px;"><%= window.util.translate("Delete") %></button>
 				<%}%>
 		</div>
 		

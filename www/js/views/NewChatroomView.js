@@ -47,7 +47,7 @@ define(function(require){
        
         render: function() {           
             $(this.el).html(this.template({ user: util.getLoggedInUser() }));
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Create Room").render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle(util.translate("Create Room")).render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             return this;
         }

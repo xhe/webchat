@@ -37,7 +37,14 @@ define(function(require){
     	
     	events:{
          	"click .home": "home",
-         	"click #lnkRefresh": "refresh"
+         	"click #lnkRefresh": "refresh",
+         	"click .divChangeLanguageLink": "toggleLanguage"
+         },
+         
+         toggleLanguage: function(){
+         	localStorage.language = util.getCurrentLanguage()=='en'?'zh':'en';
+         	location.reload(); 
+         	return false;
          },
          
          refresh: function(){

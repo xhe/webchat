@@ -19,7 +19,7 @@
 			<% if( highlight.contents  ) {%>
 				<% if( highlight.contents.length>50 ){%>
 					<span class="spanHighlightAbstract" data-id="<%= highlight._id%>">
-						<%=  highlight.contents.substr(0, 50)  %>... (<span class="spanAbstractlink">more</span>)
+						<%=  highlight.contents.substr(0, 50)  %>... (<span class="spanAbstractlink" data-id="<%= highlight._id%>">more</span>)
 					</span>
 				<%} else {%>
 					<%=  highlight.contents %>
@@ -52,7 +52,7 @@
 					<%} else if(highlight.shared_link.title!=undefined && highlight.shared_link.title.trim()!="" ){%>
 						<%= highlight.shared_link.title %>
 					<%} else {%>
-						Shared Link
+						<%= window.util.translate("Shared Link") %>
 					<%}%>
 			</div>
 			<%}%>
@@ -85,7 +85,7 @@
 										<%=comment.creator.firstName%> <%=comment.creator.lastName%>:
 										<% if(comment.comment.length>50 ){%>
 											<span class="spanHighlightCommentAbstract" data-id="<%= comment._id%>">
-											 	<%= comment.comment.substr(0,50) %>...(<span class="spanAbstractlink">more</span>)
+											 	<%= comment.comment.substr(0,50) %>...(<span class="spanAbstractlinkCmt" data-id="<%= comment._id%>">more</span>)
 											</span> <span id="comment_<%=comment._id%>" style="display:none"><%= comment.comment%></span>
 										<%}else{%>
 											<%= comment.comment%>
@@ -99,8 +99,8 @@
 		<div class='cfx'></div>
 		<div class="divAddComment" id="divAddComment_<%= highlight._id%>">
 			<input type="text" id="txtHighlightComment_<%= highlight._id%>">
-			<input type="button" data-id="<%= highlight._id%>" data-role="button" data-icon="check" data-inline="true" data-mini="true" class="btnHighlightCommentConfirm" id="btnHighlightCommentConfirm_<%= highlight._id%>" value="Save"/>
-			<input type="button" data-id="<%= highlight._id%>" data-role="button" data-icon="delete" data-inline="true" data-mini="true"  class="btnHighlightCommentCancel" id="btnHighlightCommentCancel_<%= highlight._id%>"  value="Cancel"/>
+			<input type="button" data-id="<%= highlight._id%>" data-role="button" data-icon="check" data-inline="true" data-mini="true" class="btnHighlightCommentConfirm" id="btnHighlightCommentConfirm_<%= highlight._id%>" value="<%= window.util.translate('Save') %>"/>
+			<input type="button" data-id="<%= highlight._id%>" data-role="button" data-icon="delete" data-inline="true" data-mini="true"  class="btnHighlightCommentCancel" id="btnHighlightCommentCancel_<%= highlight._id%>"  value="<%= window.util.translate('Cancel') %>"/>
 		</div>
 		
 		

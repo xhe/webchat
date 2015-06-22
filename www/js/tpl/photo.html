@@ -4,7 +4,7 @@
 		
 		<div data-role="content">
 				
-			<h1>Photo Detail</h1>	
+			<h1><%= window.util.translate("Photo Detail") %></h1>	
 			
 			<div class='divPhotoItem'>
 				<% _.each(item.get('renders'), function(render){%>
@@ -15,17 +15,17 @@
 			</div>	
 			
 			<div class="ui-field-contain">
-					<label for="photoTitle">Title:</label>
-					<input type="text" id="photoTitle" value="<%= item.get('title')%>" placeholder="Photo Title"/>
+					<label for="photoTitle"><%= window.util.translate("Title") %>:</label>
+					<input type="text" id="photoTitle" value="<%= item.get('title')%>" placeholder="<%= window.util.translate('Photo Title') %>"/>
 			</div>
 			
 			<div class="ui-field-contain">
-				<label for="photoDescription">Description:</label>
+				<label for="photoDescription"><%= window.util.translate("Description") %>:</label>
 				<textarea name="photoDescription" id="photoDescription"><%= item.get("description")%></textarea>
 			</div>
 			
 			<div data-role="fieldcontain" >
-					<button id='btnPhotoEdit' class="ui-btn ui-btn-b">Submit</button>
+					<button id='btnPhotoEdit' class="ui-btn ui-btn-b"><%= window.util.translate("Submit") %></button>
 			</div>	
 		</div>
 		

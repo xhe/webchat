@@ -20,7 +20,7 @@
 							
 					</div>
 			<%}else{%>
-				<a data-rel="back" data-icon="back" class='btnBack'  data-role="button">Back</a>
+				<a data-rel="back" data-icon="back" class='btnBack'  data-role="button"><%= window.util.translate("Back") %></a>
 			<%}%>
 			
 			<h1 id="headerTitle">
@@ -28,49 +28,60 @@
 				
 			</h1>
 				
+				<% if (window.util.isUserLoggedIn()){%>
+				
 				<i class="profSettingLnk fa fa-th" style="font-size: 35px;"
 onclick="$('#popupBasic').popup( { positionTo:'.profSettingLnk',dismissible: true, transition: 'pop'} ).popup( 'open');"></i>
 
 				
 					<div data-role="popup" id="popupBasic">
 						<ul data-role="listview" data-inset="true">
-						    <li  data-icon="false"><a href='#settings'>Settings...</a></li>
+						    <li  data-icon="false"><a href='#settings'><%= window.util.translate("Settings") %>...</a></li>
 						    <li  data-icon="false">
-						    	<a href="#add_friend">Add Friend</a>
+						    	<a href="#add_friend"><%= window.util.translate("Add Friend") %></a>
 						    </li>
-						    <li data-icon="false"><a href="#profiles">Update Profile</a></li>
+						    <li data-icon="false"><a href="#profiles"><%= window.util.translate("Update Profile") %></a></li>
 						    
-						    <li data-icon="false"><a href="#favorites">My Favorites</a></li>
+						    <li data-icon="false"><a href="#favorites"><%= window.util.translate("My Favorites") %></a></li>
 						    
 						    <% if(sharedLinkView){%>
 						    
-						      <li  data-icon="false"><a id="hrefSharedToFriend">Shared to room</a></li>
-						      <li  data-icon="false"><a id="hrefSharedToHighlight">Shared to highlight</a></li>
+						      <li  data-icon="false"><a id="hrefSharedToFriend"><%= window.util.translate("Shared to room") %></a></li>
+						      <li  data-icon="false"><a id="hrefSharedToHighlight"><%= window.util.translate("Shared to highlight") %></a></li>
 						      <!-- 
 						         <li  data-icon="false"><a id="hrefAddToFavorite">Add to my favorite</a></li>
 						       -->
 						    <%}%>
 						    
-						 
-						    
-						    
 						    <% if (!homeHeader ){%>
-						    	<li data-icon="home"><a  href="#">Home</a></li>
+						    	<li data-icon="home"><a  href="#"><%= window.util.translate("Home") %></a></li>
 						    <%}%>
-						    <li data-icon="back"><a  href='#logout'>Logout</a></li>
+						    <li data-icon="back"><a  href='#logout'><%= window.util.translate("Logout") %></a></li>
 						    
 						    <% if(platform==='ios' || platform==='android'){%>
 							    <li data-icon="mail">
 							    	<a onclick="window.open('http://chat4each.com:81', '_system')" style=" background-color: #e9e9e9; color: #000;">
-									 	Contact Us
+									 	<%= window.util.translate("Contact Us") %>
 									 </a>
 								 </li>
 						    <%}else{%>
 						    	<li data-icon="mail">
-						    		<a href='http://chat4each.com:81' target="_blank" style=" background-color: #e9e9e9; color: #000;">Contact Us</a>
+						    		<a href='http://chat4each.com:81' target="_blank" style=" background-color: #e9e9e9; color: #000;"><%= window.util.translate("Contact Us") %></a>
 								</li>
 							<%}%>
 						</ul>
 					</div>
+					
+					<%}else{%>
+						
+						<div class="divChangeLanguageLink">
+							<% if(window.util.getCurrentLanguage()=='en'){%>
+							中文
+							<%}else{%>
+							English
+							<%}%>
+						</div>
+						
+					<%}%>
 		</div>
 		

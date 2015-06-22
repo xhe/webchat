@@ -138,7 +138,11 @@ exports.autologin = function(req, res){
 		&&
 	   req.session.token && req.session.token==token 
 	){
-		res.json({'status':'success'});
+		Client.findByUsername(screenName,function(err, client){
+			res.json({'status':'success', 'user': client});
+		});
+		
+		
 	}else{
 		Client.findByUsername(screenName,function(err, client){
 			if(err)

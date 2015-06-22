@@ -46,7 +46,7 @@ define(function(require){
         
         render: function() { 
         		$(this.el).html(this.template({ user: util.getLoggedInUser() }));
-	            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Member Detail").render();
+	            new HeaderView({ el: $(".headerContent", this.el)}).setTitle(util.translate("Member Detail")).render();
 	            new FooterView({ el: $(".footerContent", this.el)}).render();
 	            
 	            this.userCollection.getMember( this.memberId, function(data){

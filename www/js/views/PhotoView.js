@@ -40,7 +40,7 @@ define(function(require){
         	}else{
         		$(this.el).html(this.template({ user: util.getLoggedInUser(), item: this.photo, serverUrl: (window.hostURL?window.hostURL:"")  }));
            }
-        	new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Find Friends").render();
+        	new HeaderView({ el: $(".headerContent", this.el)}).setTitle(util.translate("Find Friends")).render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
            
            return this;

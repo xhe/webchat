@@ -5,20 +5,20 @@
 		
 		<div data-role="content">
 			
-			<h4>Please enter chat room info:<h4>
+			<h4><%= window.util.translate("Please enter chat room info") %>:<h4>
 					
 				<div data-role="fieldcontain" class="ui-hide-label">
-					<label for="txtChatRoomTitle">Chat Room Name:</label>
+					<label for="txtChatRoomTitle"><%= window.util.translate("Chat Room Name") %>:</label>
 					<input type="text" id="txtChatRoomTitle" 
-							value="" placeholder="Chat Room Name" />
+							value="" placeholder="<%= window.util.translate('Chat Room Name') %>" />
 				</div>
 				
 				<div data-role="fieldcontain" class="ui-hide-label">
-					<label id='txtChatRoomDesc'>Room Description</label>
+					<label id='txtChatRoomDesc'><%= window.util.translate('Room Description') %></label>
 					<textarea  id='txtChatRoomDesc'></textarea>
 				</div>
 			
-			<input type='button' id="btnSubmitNewChatRoom" value='Submit'/>
+			<input type='button' id="btnSubmitNewChatRoom" value="<%= window.util.translate('Submit') %>"/>
 			
 		</div>
 		

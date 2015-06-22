@@ -37,6 +37,7 @@ define(function(require){
 	
 	var appConfig = require('common/app-config');
 	var User = require('models/userModel');
+	var dict = require('common/dict');
 	
 	var util = {
 		
@@ -87,6 +88,8 @@ define(function(require){
 			window.user.thumbFileName=user.thumbFileName;
 			delete user.photos
 			$.cookie('token', JSON.stringify(user));
+			//update localStorage for displaying language
+			localStorage.language = user.settings_language;
 		},
 		
 		setLoggedInUser: function(user, getRegId){
@@ -97,9 +100,9 @@ define(function(require){
 			$.cookie('token', JSON.stringify(user));
 			
 			//now let's set into  localStorage for mobile app user
-			//if( window.platform ){
-				localStorage.user = JSON.stringify(user);
-			//}
+			localStorage.user = JSON.stringify(user);
+			localStorage.language = user.settings_language;
+		
 			//set socket here
 			window.socketEventService.connect(user.screenName);
 			
@@ -529,6 +532,29 @@ define(function(require){
 			var dt2 = new Date(date2.substr(0,4), date2.substr(5,2), date2.substr(8,2),  date2.substr(11,2), date2.substr(14,2), date2.substr(17,2));
 			return dt1.getTime()>dt2.getTime();
 		},
+		
+		getText: function(term, language){
+			if( language=='en'){
+				return term;
+			} else if(dict[term]){
+				return dict[term][language];
+			} else {
+				return term;
+			}	
+		},
+		
+		translate: function(term){
+			return  util.getText(term, util.getCurrentLanguage());
+		},
+		
+		getCurrentLanguage: function(){
+			var language = null;
+			if( util.getLoggedInUser() && util.getLoggedInUser().settings_language){
+				language = util.getLoggedInUser().settings_language;
+			}
+			return language || localStorage.language || 'en';
+		}
+		
 	};
 
 	return util;

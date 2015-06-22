@@ -84,7 +84,7 @@ define(function(require){
        	},
         render: function() { 
             $(this.el).html(this.template({ mobileOS:window.platform   }));
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Shared Link").setSharedLinkView().render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( util.translate("Shared Link" )).setSharedLinkView().render();
             this.highlight = HighlightModel.getCurrentHighlight();
             _self=this;
 	       	if(this.highlight==null){

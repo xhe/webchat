@@ -50,7 +50,7 @@ define(function(require){
         	$("#divSuggestedName").empty();
         	
 			if($("#password").val()!== $("#passwordAgain").val()){
-        		$("#passwordAgain").parent().prev().html("Password does not match other.");
+        		$("#passwordAgain").parent().prev().html(util.translate("Password does not match other"));
         	}else{
             	
             	if(this.user){
@@ -63,7 +63,8 @@ define(function(require){
 		        		email: $("#email").val(),
 		        		password:  $("#password").val(),
 		        		userId: this.user._id,
-		        		refer_id: this.refer_id
+		        		refer_id: this.refer_id,
+		        		settings_language: localStorage.language ||""
             		});
             	}else{
             		var user = new User.User({
@@ -74,12 +75,13 @@ define(function(require){
 		        		screenName: $("#screenName").val(),
 		        		email: $("#email").val(),
 		        		password:  $("#password").val(),
-		        		refer_id: this.refer_id
+		        		refer_id: this.refer_id,
+		        		settings_language: localStorage.language ||""
             		});
             	}
             	
             	if( $("#phoneNumber").val().replace(/\D+/g,'').length==0 ||  isNaN(  $("#phoneNumber").val().replace(/\D+/g,'') )){
-            		$("#phoneNumber").parent().prev().html("plese enter valid phone number");
+            		$("#phoneNumber").parent().prev().html(util.translate("Please enter valid phone number"));
             	}else{
             		user.save(
 	            			{},
@@ -91,25 +93,42 @@ define(function(require){
 	            							pos1 = err.indexOf(":");
 	            							pos2= err.indexOf("$", pos1+1);
 	            							errStr = err.substr(0, pos1)+": "+err.substr(pos2+1);
-	            							$("#divErrorGeneral").html("Error" +": " + errStr);
+	            							
+	            							
+	            							
+	            							var ex=/(.+)\$(.+)_1  dup key: { : "(.+)".+/g
+	            							var arr = ex.exec(err);
+	            							if(arr.length==4){
+	            								var fieldName = arr[2];
+	            								var value = arr[3];
+	            								errStr = util.translate("%1 (%2) already exist");
+	            								errStr = errStr.replace("%1", fieldName).replace("%2", value);
+	            							}
+	            							
+	            							
+	            							$("#divErrorGeneral").html(util.translate("Error") +": " + errStr);
 	            							
 	            							if(response.suggestedName){
-	            								$("#divSuggestedName").html("Suggested name: " + response.suggestedName);
+	            								$("#divSuggestedName").html(util.translate("Suggested name")+" :" + response.suggestedName);
 	            							}
 	            							
 	            						}else if(response.errors.errors){
 	            							_.each(response.errors.errors, function(value, key){
-		            							$("#"+key).parent().prev().html(value.message);
+		            							$("#"+key).parent().prev().html(util.translate(value.message));
 		            						});
 	            						}else{
 	            							$("#"+response.errors.path).parent().prev().html(response.errors.message);
 	            						}
 	            					}else{
-	            						if(response.msg){
+	            						if(response.msg && util.isUserLoggedIn()){
 	            							util.alert(response.msg);
 	            						}else{
-	            							util.alert("You have succcessfully created an account with us, please proceed to your home page to start using our service.\An activation email has already been sent to your email box, please click the link to activate your account.");
-            							}
+	            							if(util.getCurrentLanguage()=='zh'){
+	            								util.alert("您已经成功创建账户，请前往您的主页以继续适用我们的服务。\另外，我们已经向您的邮箱发送了一封账户激活邮件，请点击所提供的链接激活您的账户。");
+	                						} else {
+	                							util.alert("You have succcessfully created an account with us, please proceed to your home page to start using our service.\An activation email has already been sent to your email box, please click the link to activate your account.");
+		                					}
+	            						}
 	            						util.setLoggedInUser( response.user, true );
             		        			$.mobile.navigate("#");
             						}
@@ -128,7 +147,7 @@ define(function(require){
         render: function() {           
             $(this.el).html(this.template({ user: this.user, mode: this.refer_id?"refer":"register" }));
             new FooterView({ el: $(".footerContent", this.el)}).render();
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( this.refer_id?"Accept Invitation":( this.user?'Profile Update':'Register' ) ).render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( this.refer_id? util.translate( "Accept Invitation" ) :( this.user?util.translate('Profile Update'):util.translate('Register') ) ).render();
             new CountryListView({model: new CountryCollection.CountryCollection()});
             return this;
         }

@@ -48,7 +48,7 @@ define(function(require){
         render: function() { 
         		
         		$(this.el).html(this.template({ user: util.getLoggedInUser(), roomId: this.roomId }));
-	            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Members").render();
+	            new HeaderView({ el: $(".headerContent", this.el)}).setTitle(util.translate("Members")).render();
 	            new FooterView({ el: $(".footerContent", this.el)}).render();
 		        
 	            Chatroom.getRoom( this.roomId, function(room){

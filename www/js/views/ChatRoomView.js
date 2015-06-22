@@ -96,7 +96,7 @@ define(function(require){
        
         render: function() {           
           	$(this.el).html(this.template({ user: util.getLoggedInUser(), link_to_share: this.link_to_share }));
-          	new HeaderView({ el: $(".headerContent", this.el)}).setTitle( this.link_to_share==""?"Chat Rooms":"Share highlight to...").render();
+          	new HeaderView({ el: $(".headerContent", this.el)}).setTitle( this.link_to_share==""?util.translate("Chat Rooms"):util.translate("Share highlight to...")).render();
           	new FooterView({ el: $(".footerContent", this.el)}).render();
             
           	this.chatRoomListView = new ChatRoomListView({ el: $("#divChatRoomList", this.el), model: chatroomCollection }).setSharedLink(this.link_to_share);

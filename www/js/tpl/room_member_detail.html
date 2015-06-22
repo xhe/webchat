@@ -13,12 +13,12 @@
 
 
 <% if(related){%>
-	<input type="button" id="btnMemberDetail_send_msg" value="Send Message" class="btn"/>
+	<input type="button" id="btnMemberDetail_send_msg" value="<%= window.util.translate('Send Message') %>" class="btn"/>
 <%}else{%>
-	<input type="button" id="btnMemberDetail_inv_private" value="Invite for Private Chatting" class="btn"/>
+	<input type="button" id="btnMemberDetail_inv_private" value="<%= window.util.translate('Invite for Private Chatting') %>" class="btn"/>
 <%}%>
 
-<input type="button" value="List of Highligts" id="btnMemberDetail_list_highlights"  class="btn"/>
+<input type="button" value="<%= window.util.translate('List of Highligts') %>" id="btnMemberDetail_list_highlights"  class="btn"/>
 
 
 </div>

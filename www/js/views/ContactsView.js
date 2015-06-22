@@ -43,7 +43,7 @@ define(function(require){
         render: function() { 
         		
         		$(this.el).html(this.template({ user: util.getLoggedInUser(), roomId: this.roomId }));
-	            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Contacts").render();
+	            new HeaderView({ el: $(".headerContent", this.el)}).setTitle(util.translate( "Contacts") ).render();
 	            new FooterView({ el: $(".footerContent", this.el)}).render();
 	            
 	            new ContactListView({el: $("#divContactsList", this.el), model: contactCollection});

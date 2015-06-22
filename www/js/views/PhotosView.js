@@ -122,7 +122,7 @@ define(function(require){
         
         render: function() {           
             $(this.el).html(this.template({ user: util.getLoggedInUser(), mobile: window.platform?true:false }));
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("My Photos").render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( util.translate("My Photos")).render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             this.photoListView = new PhotoListView({ el: $("#divPhotoList", this.el), model: this.photoCollection });
             this.photoCollection.fetch({reset: true});

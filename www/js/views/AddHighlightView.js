@@ -179,7 +179,7 @@ define(function(require){
         
         render: function() {           
             $(this.el).html(this.template({ mobile: window.platform?true:false, edit: this.highlightId?true:false }));
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( this.highlightId==""?"Add Highlight":"Edit Highlight").render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( this.highlightId==""?util.translate("Add Highlight"):util.translate("Edit Highlight")).render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             this.mediaListView = new mediaListView({ el: $("#divSelectedMedias", this.el), model: this.highlight });
             

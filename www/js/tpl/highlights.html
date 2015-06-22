@@ -4,20 +4,20 @@
 	<div id="divHighlightFilter" class="divHighlightFilterHidden">
 		<div class="ui-field-contain">
 			<select id="showHightlightType">
-				<option value="0">My Own</option>
-				<option value="1">My Families</option>
-				<option value="2">My Friends</option>
-				<option value="3">All</option>
+				<option value="0"><%= window.util.translate('My Own') %></option>
+				<option value="1"><%= window.util.translate('My Families') %></option>
+				<option value="2"><%= window.util.translate('My Friends') %></option>
+				<option value="3"><%= window.util.translate('All') %></option>
 			</select>
 
 			<div id='divRelationList' style="display: none;">
 				<select id="selRelationship">
-					<option>All</option>
+					<option><%= window.util.translate('All') %></option>
 				</select>
 			</div>
 
 			<label> <input type="checkbox" checked="checked"
-				id="chkFilterPeriod"> Whole Period
+				id="chkFilterPeriod"><%= window.util.translate('Whole Period') %> 
 			</label>
 
 			<div id="divPeriod" style="display: none;">
@@ -32,7 +32,7 @@
 					<option value="<%= d%>"><%= (d<10?"0":"") + d %></option> <%}%>
 				</select>
 
-				<div style="clear: both;">To</div>
+				<div style="clear: both;"><%= window.util.translate('To') %> </div>
 
 				<select id="selPeriod_to_y" style="float: left;" data-inline="true">
 					<% for(var y=2015; y<2020; y++){%>
@@ -50,8 +50,8 @@
 
 
 		<a id="hrefCancel" data-role="button" data-inline="true"
-			data-icon="back">Cancel</a> <a id="hrefSubmit" data-role="button"
-			data-inline="true" data-icon="check">Submit</a>
+			data-icon="back"><%= window.util.translate('Cancel') %></a> <a id="hrefSubmit" data-role="button"
+			data-inline="true" data-icon="check"><%= window.util.translate('Submit') %></a>
 
 	</div>
 
@@ -65,9 +65,9 @@
 		<div style="width: 100%; text-align: center;">
 			<div data-role="controlgroup" data-type="horizontal">
 				<button data-icon='search' data-inline="true"
-					id='btnFilterHighlights'>Search</button>
-				<a href="#add_highlights" data-role="button" data-icon='plus'>Add</a>
-				<a data-role="button" id="btnMorePrevHighlight" data-icon='arrow-u'>More</a>
+					id='btnFilterHighlights'><%= window.util.translate('Search') %></button>
+				<a href="#add_highlights" data-role="button" data-icon='plus'><%= window.util.translate('Add') %></a>
+				<a data-role="button" id="btnMorePrevHighlight" data-icon='arrow-u'><%= window.util.translate('More') %></a>
 			</div>
 		</div>
 
@@ -101,11 +101,11 @@
 		</div>
 		
 		<div style="position: fixed; width:100%;bottom: 0px;text-align: center;" >
-		<button data-inline="true"  data-mini="true" data-icon="arrow-l" style="position: fixed;left: 0px;bottom: 0px" id="btnHighligtPrev">Prev</button> 
+		<button data-inline="true"  data-mini="true" data-icon="arrow-l" style="position: fixed;left: 0px;bottom: 0px" id="btnHighligtPrev"><%= window.util.translate('Prev') %></button> 
 		
-			<button data-inline="true"  data-mini="true" data-icon="back" id="btnHighlightBack">Back</button> 
+			<button data-inline="true"  data-mini="true" data-icon="back" id="btnHighlightBack"><%= window.util.translate('Back') %></button> 
 		
-		<button data-inline="true"  data-mini="true" data-icon="arrow-r" style="position: fixed;right: 0px;bottom: 0px"  id="btnHighligtNext">Next</button>
+		<button data-inline="true"  data-mini="true" data-icon="arrow-r" style="position: fixed;right: 0px;bottom: 0px"  id="btnHighligtNext"><%= window.util.translate('Next') %></button>
 		</div>
 	</div>
 

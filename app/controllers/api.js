@@ -400,6 +400,8 @@ exports.update_settings = function(req, res) {
 	req.user.settings_records_days = req.body.records_days;
 	req.user.settings_media_days = req.body.media_days;
 	req.user.settings_disable_sounds = req.body.disable_sounds;
+	req.user.settings_language = req.body.language;
+	
 	req.user.save(function(err, doc) {
 		res.jsonp({
 			status : 'success',

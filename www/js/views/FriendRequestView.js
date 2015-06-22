@@ -32,7 +32,7 @@ define(function(require){
         
         render: function() {  
         	$(this.el).html(this.template());
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Friend Request").render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( util.translate("Friend Request")).render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             new FriendRequestDetailView({ el: $("#divRequestFriendDetail", this.el), model: this.userCollection })   
             

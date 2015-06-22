@@ -38,7 +38,7 @@ define(function(require){
         
         render: function() {           
             $(this.el).html(this.template());
-            new HeaderView({ el: $(".headerContent", this.el)}).setTitle("Find Friends").render();
+            new HeaderView({ el: $(".headerContent", this.el)}).setTitle( util.translate( "Find Friends" )).render();
             new FooterView({ el: $(".footerContent", this.el)}).render();
             new SearchResultView({ el: $("#divContactSearchResult", this.el), model: this.userCollection });
             
