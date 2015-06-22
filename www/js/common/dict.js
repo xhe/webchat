@@ -239,8 +239,8 @@ define(function(require){
 		'Chat4Each':{
 			zh: '人人聊天网'
 		},
-		'Please enter your username and password to start using this service':{
-			zh: '请输入您的用户名及密码以开始使用我们的服务'
+		'Please enter your username and password':{
+			zh: '请输入您的用户名及密码'
 		},
 		'userName':{
 			zh: '用户名'
