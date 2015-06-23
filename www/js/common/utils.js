@@ -37,7 +37,6 @@ define(function(require){
 	
 	var appConfig = require('common/app-config');
 	var User = require('models/userModel');
-	var dict = require('common/dict');
 	
 	var util = {
 		
@@ -163,39 +162,51 @@ define(function(require){
 			window.user = new User.User();
 			$.removeCookie('token');
 			localStorage.removeItem('user');
+			localStorage.removeItem('dict');
 			
 			return false;
 		},
 		
 		autoLogin: function(cb){
 			var _this=this;
-			if($.cookie('token') || window.user || localStorage.user){
-				var user = window.user;
-				if(!user){
-					if(localStorage.user){
-						user = $.parseJSON( localStorage.user);
-					}else{
-						user = $.parseJSON($.cookie('token') );
-					}
-				}
-				$.post( appConfig.serverUrl + 'autologin', 
-						{ screenName: user.screenName, token: user.token },
-						function(data){ 
-							if(data.status=='success'){
-								if(data.hasOwnProperty('user') ){
-									_this.setLoggedInUser(data.user);
-								}else{
-									_this.setLoggedInUser(user);
-								}
+			
+			if(!localStorage.dict){
+				
+				$.get((window.hostURL?window.hostURL:'')  +'/js/common/dict.json', function(data){
+					//window.dict = JSON.stringify(data);
+					
+					localStorage.dict = JSON.stringify(data);
+					
+					if($.cookie('token') || window.user || localStorage.user){
+						var user = window.user;
+						if(!user){
+							if(localStorage.user){
+								user = $.parseJSON( localStorage.user);
 							}else{
-								_this.logout();
+								user = $.parseJSON($.cookie('token') );
 							}
-							if(cb){
-								cb();
-							}	
-						});
-			}else{
-				cb();
+						}
+						$.post( appConfig.serverUrl + 'autologin', 
+								{ screenName: user.screenName, token: user.token },
+								function(data){ 
+									if(data.status=='success'){
+										if(data.hasOwnProperty('user') ){
+											_this.setLoggedInUser(data.user);
+										}else{
+											_this.setLoggedInUser(user);
+										}
+									}else{
+										_this.logout();
+									}
+									if(cb){
+										cb();
+									}	
+								});
+					}else{
+						cb();
+					}
+				});
+				
 			}
 		},
 		
@@ -532,15 +543,27 @@ define(function(require){
 			var dt2 = new Date(date2.substr(0,4), date2.substr(5,2), date2.substr(8,2),  date2.substr(11,2), date2.substr(14,2), date2.substr(17,2));
 			return dt1.getTime()>dt2.getTime();
 		},
-		
+		dictionary: null,
 		getText: function(term, language){
+			if(util.dictionary==null){
+				//util.dictionary = JSON.parse(window.dict);
+				util.dictionary = JSON.parse(localStorage.dict);
+			}
 			if( language=='en'){
 				return term;
-			} else if(dict[term]){
-				return dict[term][language];
+			} else if(util.dictionary[term]){
+				return util.dictionary[term][language];
 			} else {
 				return term;
 			}	
+		},
+		
+		getTranslateWithKey: function(key,language){
+			if(util.dictionary==null){
+				//util.dictionary = JSON.parse(window.dict);
+				util.dictionary = JSON.parse(localStorage.dict);
+			}
+			return util.dictionary[key][language];
 		},
 		
 		translate: function(term){

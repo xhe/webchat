@@ -8,22 +8,14 @@
 				<%= window.util.translate("Chat4Each") %>
 			</h1>
 			<div class="divChangeLanguageLink">
-				<% if(window.util.getCurrentLanguage()=='en'){%>
-				中文
-				<%}else{%>
-				English
-				<%}%>
+				<%= window.util.getTranslateWithKey('lang',window.util.getCurrentLanguage()=='en'?'zh':'en')%>
 			</div>
 		</header>
 		
 		<div data-role="content">
 	
 				<div class='divHomeSubTitle'>
-				<% if(window.util.getCurrentLanguage()=='en'){%>
-				Video/Audio/Text chat available for you across all available platforms, mobile, web and apps.Our service is absolutely free.
-				<%}else{%>
-				我们向您提供完全免费的通过所有平台，包括手机及电脑的浏览器及应用程式所进行的视频／音频及文字聊天服务。
-				<%}%>
+					<%= window.util.getTranslateWithKey('home_1', window.util.getCurrentLanguage())%>
 				</div>
 						
 				<hr/>
@@ -58,23 +50,9 @@
 				
 				<div class='divHomeSubTitle' style="font-weight:normal">
 				<%if(mobile){%>
-					<% if(window.util.getCurrentLanguage()=='zh'){%>
-						我们建议您使用<a onclick="window.open('http://www.google.com/chrome/', '_system')">Google Chrome</a>或<a onclick="window.open('https://www.mozilla.org/en-US/firefox/new/', '_system')">Firefox</a>
-						浏览器以便全面使用我们为您提供的视频及音频聊天服务。目前，我们的视频服务只局限于以上两种网络浏览器，手机应用暂不适用。
-					<%}else{%>
-						We suggest you use <a onclick="window.open('http://www.google.com/chrome/', '_system')">Google Chrome</a>  or <a onclick="window.open('https://www.mozilla.org/en-US/firefox/new/', '_system')">Firefox</a> web browser
-						in order to fully use video or audio chat service. Currently, video feature is only available in above two web browsers and not in mobile app yet.
-					<%}%>
+					<%= window.util.getTranslateWithKey('home_3', window.util.getCurrentLanguage())%>
 				<%}else{%>
-					<% if(window.util.getCurrentLanguage()=='zh'){%>
-							我们建议您使用<a onclick="window.open('http://www.google.com/chrome/', '_blank')">Google Chrome</a>或<a onclick="window.open('https://www.mozilla.org/en-US/firefox/new/', '_blank')">Firefox</a>
-						浏览器以便全面使用我们为您提供的视频及音频聊天服务。目前，我们的视频服务只局限于以上两种网络浏览器。
-				
-					<%}else{%>
-						We suggest you use <a href="http://www.google.com/chrome/" target="_blank">Google Chrome</a>  or <a href="https://www.mozilla.org/en-US/firefox/new/" target="_blank">Firefox</a> web browser
-						in order to fully use video or audio chat service. Currently, video feature is only available in above two web browsers.
-				
-					<%}%>
+				  	<%= window.util.getTranslateWithKey('home_2', window.util.getCurrentLanguage())%>
 				<%}%>
 					
 				</div>

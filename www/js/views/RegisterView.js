@@ -123,12 +123,8 @@ define(function(require){
 	            						if(response.msg && util.isUserLoggedIn()){
 	            							util.alert(response.msg);
 	            						}else{
-	            							if(util.getCurrentLanguage()=='zh'){
-	            								util.alert("您已经成功创建账户，请前往您的主页以继续适用我们的服务。\另外，我们已经向您的邮箱发送了一封账户激活邮件，请点击所提供的链接激活您的账户。");
-	                						} else {
-	                							util.alert("You have succcessfully created an account with us, please proceed to your home page to start using our service.\An activation email has already been sent to your email box, please click the link to activate your account.");
-		                					}
-	            						}
+	            							util.alert(window.util.getTranslateWithKey('register_1',window.util.getCurrentLanguage());
+		        						}
 	            						util.setLoggedInUser( response.user, true );
             		        			$.mobile.navigate("#");
             						}
