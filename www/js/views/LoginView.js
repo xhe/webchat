@@ -57,7 +57,8 @@ define(function(require){
         render: function() {           
             $(this.el).html(this.template({ url:window.hostURL?window.hostURL:'',  
             				mobile: window.platform==undefined?false:true,
-            				util: util
+            				util: util,
+            				platform: window.platform
             }));
             //new FooterView({ el: $(".footerContent", this.el)}).render();
             return this;

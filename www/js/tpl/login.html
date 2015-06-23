@@ -1,6 +1,10 @@
 <section id="splashPage">
-		
+
+		<% if(platform=='ios'){ %>
+		<header data-role="header" class="headerIos">
+		<%} else {%>
 		<header data-role="header">
+		<%}%>
 			<div id="loginHeadImg">
 				<img src="<%=url%>/img/logo-50.png" />
 			</div>
@@ -8,7 +12,11 @@
 				<%= window.util.translate("Chat4Each") %>
 			</h1>
 			<div class="divChangeLanguageLink">
-				<%= window.util.getTranslateWithKey('lang',window.util.getCurrentLanguage()=='en'?'zh':'en')%>
+			<% if(window.util.getCurrentLanguage()=='en'){%>
+				<%= window.util.getTranslateWithKey('lang_zh',window.util.getCurrentLanguage())%>
+			<%}else{%>
+				<%= window.util.getTranslateWithKey('lang_en',window.util.getCurrentLanguage())%>
+			<%}%>
 			</div>
 		</header>
 		

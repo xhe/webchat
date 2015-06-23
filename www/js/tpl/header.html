@@ -75,7 +75,12 @@ onclick="$('#popupBasic').popup( { positionTo:'.profSettingLnk',dismissible: tru
 					<%}else{%>
 						
 						<div class="divChangeLanguageLink">
-								<%= window.util.getTranslateWithKey('lang',window.util.getCurrentLanguage()=='en'?'zh':'en')%>
+								
+								<% if(window.util.getCurrentLanguage()=='en'){%>
+									<%= window.util.getTranslateWithKey('lang_zh',window.util.getCurrentLanguage())%>
+								<%}else{%>
+									<%= window.util.getTranslateWithKey('lang_en',window.util.getCurrentLanguage())%>
+								<%}%>
 						</div>
 						
 					<%}%>

@@ -441,6 +441,14 @@
 			"en": "英文",
 			"zh": "中文"
 		},
+		"lang_zh": {
+			"en": "Chinese",
+			"zh": "中文"
+		},
+		"lang_en": {
+			"en": "English",
+			"zh": "英文"
+		},
 		"home_1":{
 			"en":"Video/Audio/Text chat available for you across all available platforms, mobile, web and apps.Our service is absolutely free.",
 			"zh":"我们向您提供完全免费的通过所有平台，包括手机及电脑的浏览器及应用程式所进行的视频／音频及文字聊天服务。"

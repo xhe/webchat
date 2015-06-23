@@ -398,9 +398,12 @@ img.offline{
 
 .divChangeLanguageLink{
 	cursor: pointer;
+    height: 30px;
     position: absolute;
-    right: 24px;
+    right: 30px;
+    text-align: right;
     top: 14px;
+    width: 66px;
 }
 
 .divSettingItem{
