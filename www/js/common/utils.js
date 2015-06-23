@@ -162,20 +162,16 @@ define(function(require){
 			window.user = new User.User();
 			$.removeCookie('token');
 			localStorage.removeItem('user');
-			localStorage.removeItem('dict');
 			
 			return false;
 		},
 		
 		autoLogin: function(cb){
 			var _this=this;
-			
-			if(!localStorage.dict){
 				
 				$.get((window.hostURL?window.hostURL:'')  +'/js/common/dict.json', function(data){
-					//window.dict = JSON.stringify(data);
 					
-					localStorage.dict = JSON.stringify(data);
+					window.dict = JSON.stringify(data);
 					
 					if($.cookie('token') || window.user || localStorage.user){
 						var user = window.user;
@@ -206,8 +202,6 @@ define(function(require){
 						cb();
 					}
 				});
-				
-			}
 		},
 		
 		showBusy: function(){ 
@@ -546,8 +540,7 @@ define(function(require){
 		dictionary: null,
 		getText: function(term, language){
 			if(util.dictionary==null){
-				//util.dictionary = JSON.parse(window.dict);
-				util.dictionary = JSON.parse(localStorage.dict);
+				util.dictionary = JSON.parse(window.dict);
 			}
 			if( language=='en'){
 				return term;
@@ -561,7 +554,7 @@ define(function(require){
 		getTranslateWithKey: function(key,language){
 			if(util.dictionary==null){
 				//util.dictionary = JSON.parse(window.dict);
-				util.dictionary = JSON.parse(localStorage.dict);
+				util.dictionary = JSON.parse(window.dict);
 			}
 			return util.dictionary[key][language];
 		},
