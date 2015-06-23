@@ -123,7 +123,7 @@ define(function(require){
 	            						if(response.msg && util.isUserLoggedIn()){
 	            							util.alert(response.msg);
 	            						}else{
-	            							util.alert(window.util.getTranslateWithKey('register_1',window.util.getCurrentLanguage());
+	            							util.alert(window.util.getTranslateWithKey('register_1',window.util.getCurrentLanguage()));
 		        						}
 	            						util.setLoggedInUser( response.user, true );
             		        			$.mobile.navigate("#");
