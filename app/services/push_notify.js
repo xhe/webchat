@@ -229,19 +229,16 @@ var sendNotificationMsg = function(receipients, msg, cb){
 			&& config.push_notification.supported_platform_android){
 			var message = new gcm.Message({
 				    collapseKey: 'Chat4Each Message',
-				    delayWhileIdle: true,
+				    delayWhileIdle: false,
 				    timeToLive: 3,
 				    data: {
+				    	title: "Chat4Each",
 				    	message: msg
 				    }
 			}); 
 			var sender = new gcm.Sender(config.push_notification.gcm_api_key);
 			try{
 				sender.send(message, gcm_registrationIds, 4, function (err, result) {
-					
-					//console.log("err for android: ");
-					//console.log(err)
-					//console.log(result)
 					
 					if(cb)
 						if(err){
