@@ -108,19 +108,25 @@ exports.broadcastChatMessage = function(message, room){
 	var receipients = [];
 	
 	_.forEach( room.members, function(member){
-		if(message.creator.screenName!==member.screenName){ 
-			receipients.push(member);
-		}
+		if(member.settings_disable_notification && member.settings_disable_notification===true){
+		}else
+			if(message.creator.screenName!==member.screenName){ 
+				receipients.push(member);
+			}
 	});
 	
 	if(message.creator.screenName!=room.creator.screenName){
-		var bExist = false;
-		_.each( receipients, function(member){
-			if(member.screenName === room.creator.screenName)
-				bExist = true;
-		})
-		if(!bExist)
-			receipients.push(room.creator);
+		
+		if(room.creator.settings_disable_notification && room.creator.settings_disable_notification===true){
+		}else{
+			var bExist = false;
+			_.each( receipients, function(member){
+				if(member.screenName === room.creator.screenName)
+					bExist = true;
+			})
+			if(!bExist)
+				receipients.push(room.creator);
+		}
 	}
 	
 	var msg = message.message;
@@ -211,13 +217,18 @@ var sendNotificationMsg = function(receipients, msg, cb){
 		}
 		
 		var notification = new apn.Notification();
-		notification.sound = "ping.aiff";
+		
 		async.map(ios_registrationIds, function(ios){
 			var receipient = _.find(receipients, function(receipient){
 				return receipient.ios_registration_id==ios;
 			});
-			if(receipient)
+			if(receipient){
 				notification.badge = receipient.newMessages;
+				if(receipient.settings_disable_sounds && receipient.settings_disable_sounds===true){
+					delete notification.sound;
+				}else
+					notification.sound = "ping.aiff";
+			}	
 			else
 				notification.badge = 1;
 			apnConnection.pushNotification(notification, ios);

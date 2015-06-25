@@ -10,18 +10,22 @@ define(function(require){
 
 	// Extends Backbone.View
     var SettingsView = Backbone.View.extend( {
-
+    	
+    	self: null,
+    	
         // The View Constructor
         initialize: function() {
         	 this.template = _.template( settings_tpl );
+        	 self=this;
         },
         events:{
         	"slidestop #selKeepChattingRecord": "selKeepChattingRecord",
         	"slidestop #txtDaysRecordAlive": "updateSettings",
         	"slidestop #txtDaysMediaAlive": "updateSettings",
         	"slidestop #selSilentNotification": "updateSettings",
-        	"change #radDisplayLanguage-En":"updateSettings",
-        	"change #radDisplayLanguage-Zh":"updateSettings"
+        	"change #radDisplayLanguage-En":"updateSettingsLan",
+        	"change #radDisplayLanguage-Zh":"updateSettingsLan",
+        	"slidestop #selDisableNotification": "updateSettings",
         		
         },
         
@@ -29,6 +33,12 @@ define(function(require){
         	$("#divChatRecordDays").slideToggle('slow');
         	$("#divChatMediaDays").slideToggle('slow');
         	this.updateSettings();
+        },
+        
+        refreshpage: false,
+        updateSettingsLan: function(){
+        	self.refreshpage = true;
+        	self.updateSettings();
         },
         
         updateSettings: function(){
@@ -43,21 +53,22 @@ define(function(require){
        	 			$("#txtDaysMediaAlive").val(),
        	 			$("#selSilentNotification").val()=='on'?true:false,
        	 			language,
+       	 			$("#selDisableNotification").val()=='on'?true:false,
        	 			function(result){
        	 				util.getLoggedInUser().settings_disable_sounds = result.user.settings_disable_sounds;
        	 				util.getLoggedInUser().settings_media_days = result.user.settings_media_days;
        	 				util.getLoggedInUser().settings_records_days = result.user.settings_records_days;
        	 				util.getLoggedInUser().settings_records_forever = result.user.settings_records_forever;
        	 				util.getLoggedInUser().settings_language = result.user.settings_language;
+       	 				util.getLoggedInUser().settings_notificatin_disabled = result.user.settings_notificatin_disabled;
        	 				util.updateLoggedUser( util.getLoggedInUser() );
-       	 			//router.navigate('#settings?'+Math.random());
-       		        //router.navigate('#settings', {trigger:true});
-       	 				location.reload();
+       	 				if(self.refreshpage)
+       	 					location.reload();
        	 			}
        	 	);
         },
         
-        render: function() {  
+        render: function() { 
             $(this.el).html(this.template({ user: util.getLoggedInUser() }));
             new HeaderView({ el: $(".headerContent", this.el)}).setTitle(util.translate("Settings")).render();
             new FooterView({ el: $(".footerContent", this.el)}).render();

@@ -59,10 +59,6 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"PushPlugin\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"Camera\"><param name=\"ios-package\" value=\"CDVCamera\" /></feature>",
                             "count": 1
                         },
@@ -101,6 +97,10 @@
                         {
                             "xml": "<feature name=\"InAppBrowser\"><param name=\"ios-package\" value=\"CDVInAppBrowser\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"PushPlugin\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -119,9 +119,6 @@
     },
     "installed_plugins": {
         "com.hutchind.cordova.plugins.streamingmedia": {
-            "PACKAGE_NAME": "com.chat4each"
-        },
-        "com.phonegap.plugins.PushPlugin": {
             "PACKAGE_NAME": "com.chat4each"
         },
         "org.apache.cordova.camera": {
@@ -149,6 +146,9 @@
             "PACKAGE_NAME": "com.chat4each"
         },
         "org.apache.cordova.inappbrowser": {
+            "PACKAGE_NAME": "com.chat4each"
+        },
+        "com.phonegap.plugins.PushPlugin": {
             "PACKAGE_NAME": "com.chat4each"
         }
     },

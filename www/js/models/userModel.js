@@ -17,14 +17,15 @@ define(function (require) {
 			});
 		},
 		
-		updateSettings: function(records_forever, records_days, media_days, disable_sounds, language, cb){
+		updateSettings: function(records_forever, records_days, media_days, disable_sounds, language, disable_notification, cb){
 			$.post( config.serverUrl+'update_settings', 
 					{
 						records_forever: records_forever,
 						records_days: records_days,
 						media_days: media_days,
 						disable_sounds:disable_sounds,
-						language: language
+						language: language,
+						disable_notification: disable_notification
 					},
 					function(result){
 						cb(result);

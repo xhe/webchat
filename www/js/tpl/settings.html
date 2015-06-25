@@ -57,6 +57,18 @@
 	<strong style="margin-top: 20px;"><%= window.util.translate("Notification Setting") %></strong>
     	<hr/>
     	<table>
+    	
+    			<tr>
+    			<td><label for="selEnableNotification"><%= window.util.translate("Disable Notification") %>:</label></td>
+				<td>
+					<select name="selDisableNotification" id="selDisableNotification" data-role="slider">
+					    <option value="on" <%= user.settings_disable_notification?"selected='selected'":'' %> ><%= window.util.translate("On") %></option>
+					    <option value="off" <%= user.settings_disable_notification?'':"selected='selected'" %> ><%= window.util.translate("Off") %></option>
+					</select>
+				</td>
+				</tr>
+    			
+    	
 				<tr>
 				<td><label for="selSilentNotification"><%= window.util.translate("Disable Notification Sound") %>:</label></td>
 				<td>
@@ -66,6 +78,9 @@
 					</select>
 				</td>
 				</tr>
+				
+				
+				
 			</table>
 	</div>
 	

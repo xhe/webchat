@@ -167,6 +167,11 @@ var UserSchema = new Schema({
 		type:String
 	},
 	
+	settings_disable_notification:{
+		type: Boolean,
+		default: false
+	},
+	
 	thumbFileName: {
 		type: String,
 		default: ''
