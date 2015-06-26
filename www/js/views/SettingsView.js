@@ -25,7 +25,7 @@ define(function(require){
         	"slidestop #selSilentNotification": "updateSettings",
         	"change #radDisplayLanguage-En":"updateSettingsLan",
         	"change #radDisplayLanguage-Zh":"updateSettingsLan",
-        	"slidestop #selDisableNotification": "updateSettings",
+        	"slidestop #selDisableNotification": "updateSettingsLan",
         		
         },
         
@@ -55,15 +55,20 @@ define(function(require){
        	 			language,
        	 			$("#selDisableNotification").val()=='on'?true:false,
        	 			function(result){
-       	 				util.getLoggedInUser().settings_disable_sounds = result.user.settings_disable_sounds;
-       	 				util.getLoggedInUser().settings_media_days = result.user.settings_media_days;
-       	 				util.getLoggedInUser().settings_records_days = result.user.settings_records_days;
-       	 				util.getLoggedInUser().settings_records_forever = result.user.settings_records_forever;
-       	 				util.getLoggedInUser().settings_language = result.user.settings_language;
-       	 				util.getLoggedInUser().settings_notificatin_disabled = result.user.settings_notificatin_disabled;
-       	 				util.updateLoggedUser( util.getLoggedInUser() );
+       	 				
        	 				if(self.refreshpage)
        	 					location.reload();
+       	 				else
+       	 					{
+		       	 				util.getLoggedInUser().settings_disable_sounds = result.user.settings_disable_sounds;
+		       	 				util.getLoggedInUser().settings_media_days = result.user.settings_media_days;
+		       	 				util.getLoggedInUser().settings_records_days = result.user.settings_records_days;
+		       	 				util.getLoggedInUser().settings_records_forever = result.user.settings_records_forever;
+		       	 				util.getLoggedInUser().settings_language = result.user.settings_language;
+		       	 				util.getLoggedInUser().settings_notificatin_disabled = result.user.settings_notificatin_disabled;
+		       	 				util.updateLoggedUser( util.getLoggedInUser() );
+       	 					}
+       	 				
        	 			}
        	 	);
         },
