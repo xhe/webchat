@@ -149,6 +149,7 @@ define(function(require){
         								//for video, remove last one here
         								removeSelectedMedia();
         								appendChatMsg( msg);
+        								_self.chatMessageCollection.latestTime=msg.created;
         							}	
         							else
 	        							if( util.getLoggedInUser().screenName!== msg.creator.screenName

@@ -68,7 +68,7 @@ define(function (require) {
 		
 		fetchNew: function(cb){
 			if(this.latestTime){
-				_self = this;
+				_self = this; 
 				util.ajax_get(config.serverUrl+'chatmessages_after/'+this.roomId +'/'+this.latestTime, 
 						function(data){
 							_self.latestTime = data[0].created;
