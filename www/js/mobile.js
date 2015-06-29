@@ -119,7 +119,7 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 		},false);
 	
 	}else{
-	
+		
 		require( [ "jquerymobile","jquery.cookie" ], function() {
 			// Instantiates a new Backbone.js Mobile Router
 			window.socketEventService = new SocketEventService( io );
@@ -128,6 +128,56 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 				router = new Mobile();
 			});
 		});
+		
+		
+		
+		
+		
+		
+		// Set the name of the hidden property and the change event for visibility
+		var hidden, visibilityChange; 
+		if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+		  hidden = "hidden";
+		  visibilityChange = "visibilitychange";
+		} else if (typeof document.mozHidden !== "undefined") {
+		  hidden = "mozHidden";
+		  visibilityChange = "mozvisibilitychange";
+		} else if (typeof document.msHidden !== "undefined") {
+		  hidden = "msHidden";
+		  visibilityChange = "msvisibilitychange";
+		} else if (typeof document.webkitHidden !== "undefined") {
+		  hidden = "webkitHidden";
+		  visibilityChange = "webkitvisibilitychange";
+		}
+		
+		function handleVisibilityChange() {
+		  if (document[hidden]) {
+			  // Handle the pause event
+				window.socketEventService.logout();
+		  } else {
+			  if(window.user && window.user!=null)
+					window.socketEventService.connect(window.user.screenName);
+				
+				if( location.hash.indexOf('#chatrooms')>-1 
+						|| location.hash.indexOf('#chatroom')>-1
+						|| location.hash===""
+					){
+					//location.reload();
+					window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_RESUME_ROOM);
+					window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_RESUME_ROOMS);
+					window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_RESUME_HOME);
+				}	 
+		  }
+		}
+
+		// Warn if the browser doesn't support addEventListener or the Page Visibility API
+		if (typeof document.addEventListener === "undefined" || 
+		  typeof document[hidden] === "undefined") {
+		} else {
+		  // Handle page visibility change   
+		  document.addEventListener(visibilityChange, handleVisibilityChange, false);
+		}
+		
 	
 	}
 	

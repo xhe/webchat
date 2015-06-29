@@ -42,6 +42,7 @@ define(function (require) {
 						message: msg
 					},
 					function(result){
+						_this.latestTime = result.created;
 						cb(result);
 					}
 			);

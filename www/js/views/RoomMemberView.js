@@ -5,7 +5,7 @@ define(function(require){
 		HeaderView = require('views/HeaderView'),
 		FooterView = require('views/FooterView'),
 		util = require('common/utils'),
-		UserModel = require('models/UserModel'),
+		UserModel = require('models/userModel'),
 		member_detail_tpl	= require('text!tpl/room_member_detail.html')
 		;
 
