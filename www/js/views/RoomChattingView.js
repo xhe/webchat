@@ -156,8 +156,10 @@ define(function(require){
 	        								||
 	        								util.getLoggedInUser().screenName=== msg.creator.screenName
 	        								&& !msg.photo && !msg.audio && !msg.video
-	        							)
-				        					appendChatMsg( msg);
+	        							){
+	        								appendChatMsg( msg);
+	        								_self.chatMessageCollection.latestTime=msg.created;
+	        							}	
         						}
             		);
         		 
