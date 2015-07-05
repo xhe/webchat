@@ -91,7 +91,10 @@ require([ "jquery", "backbone", "routers/mobileRouter", "common/app-config", "co
 						window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_RESUME_ROOM);
 						window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_RESUME_ROOMS);
 						window.socketEventService.trigger(window.socketEventService.EVENT_TYPE_RESUME_HOME);
-					}	 
+					}
+					//autologin each time asap user is resuming back
+					//don't have to, need to monitor
+					utils.autoLogin();
 			    }
 				
 				document.addEventListener("offline", onOffline, false);

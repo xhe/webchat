@@ -4,7 +4,7 @@ function onNotification(e) {
     	case 'registered':
 			if ( e.regid.length > 0 )
 			{
-				var url = window.hostURL+'/api/android_register'
+				var url = window.hostURL+'/api/android_register';
 					$.post( url, { regId: e.regid, type: window.platform })
 					  .done(function( data ) {
 					    console.log( "Data Loaded: " + data );
@@ -187,9 +187,9 @@ define(function(require){
 								function(data){ 
 									if(data.status=='success'){
 										if(data.hasOwnProperty('user') ){
-											_this.setLoggedInUser(data.user);
+											_this.setLoggedInUser(data.user, true);
 										}else{
-											_this.setLoggedInUser(user);
+											_this.setLoggedInUser(user, true);
 										}
 									}else{
 										_this.logout();
