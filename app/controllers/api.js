@@ -326,33 +326,31 @@ exports.call = function(req, res) {
 }
 
 exports.android_register = function(req, res) {
-	
-	
-	req.user.gcm_registration_id=req.body.regId;
+	/*req.user.gcm_registration_id=req.body.regId;
 	req.user.save(function(err, data){
 		res.jsonp("updated");
 		
-	});
-	/*
+	});*/
+	
 	var regId = req.body.regId;
 	push_notification_service.updateRegistrationId(req.user, regId,
 			req.body.type, function(data) {
 				res.jsonp(data);
-			}); */
+			}); 
 }
 
 exports.ios_register = function(req, res) {
-	
+	/*
 	req.user.ios_registration_id=req.body.regId;
 	req.user.save(function(err, data){
 		res.jsonp("updated");
 		
-	});
-	/*
+	});*/
+	
 	push_notification_service.updateRegistrationId(req.user, req.body.regId,
 			req.body.type, function(data) {
 				res.jsonp(data);
-			});*/
+			});
 }
 
 exports.refer = function(req, res) {
