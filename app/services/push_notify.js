@@ -7,9 +7,15 @@ var config = require('../../config/config'),
 	//chat_service = require('./chat'),
 	async = require('async');
 
+var utils = require('./utils');
+
 exports.updateRegistrationId = function(user, reg_id, type, cb){
 	
+	utils.log("updateRegistrationId: " + user.screenName+", "+type+", "+ reg_id);
+	
 	var findAndResetIOS = function(user, reg_id, cb){
+		utils.log("findAndResetIOS: ");
+		
 		var resetIOSRegId = function(user, reg_id, client, cb){
 			if(user.screenName===client.screenName
 				&&
@@ -69,6 +75,7 @@ exports.updateRegistrationId = function(user, reg_id, type, cb){
 		async.waterfall([
 		                 	async.apply( findAndResetIOS, user, reg_id),
 		                 	function(){
+		                 		utils.log("updata ios id: " + reg_id);
 		                 		user.updateRegistrationId( reg_id, 'ios', cb );	
 		                 	}
 		                 ], 

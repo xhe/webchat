@@ -1,5 +1,6 @@
 var http = require('http'), https = require('https');
 var config = require('../../config/config');
+var fs = require('fs');
 
 
 exports.generateDateStr = function(dt){
@@ -213,3 +214,19 @@ exports.get = function(url, cb) {
 	};
 	request(options, url, cb);
 };
+
+var path = require('path');
+
+exports.log = function(msg){
+	 fs.open(path.join(__dirname, '..', '..', 'dev.log') ,'a', function(err, fd){
+		 if(err){
+			 console.log(err);
+		 }else{
+			 var buffer = new Buffer( new Date().toUTCString() +":" + msg +'\n'
+					  );
+					  fs.write(fd, buffer, 0, buffer.length, null, function(err) {
+						 fs.close(fd);
+					  });
+		 }
+	  });
+}
