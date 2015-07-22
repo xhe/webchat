@@ -331,7 +331,7 @@ exports.android_register = function(req, res) {
 		res.jsonp("updated");
 		
 	});*/
-	
+	util.log( "android_register:"+ req.body);
 	var regId = req.body.regId;
 	push_notification_service.updateRegistrationId(req.user, regId,
 			req.body.type, function(data) {
@@ -346,7 +346,7 @@ exports.ios_register = function(req, res) {
 		res.jsonp("updated");
 		
 	});*/
-	
+	util.log( "ios_register:"+ req.body);
 	push_notification_service.updateRegistrationId(req.user, req.body.regId,
 			req.body.type, function(data) {
 				res.jsonp(data);
